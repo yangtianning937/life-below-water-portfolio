@@ -3,6 +3,8 @@ from fastapi.middleware.cors import CORSMiddleware
 
 import csv_utils
 
+# python -m uvicorn Backend.main:app --reload
+
 app = FastAPI()
 
 app.add_middleware(
