@@ -121,6 +121,8 @@ import axios from 'axios'
 import L from 'leaflet'
 import Chart from 'chart.js/auto'
 import Header from "@/components/Header.vue";
+import {fetch_sites} from "@/assets/ts/fetch_site";
+import {fetch_water_quality} from "@/assets/ts/fetch_water_quality";
 
 // Fix Leaflet markers
 delete L.Icon.Default.prototype._getIconUrl
@@ -136,23 +138,23 @@ export default {
   setup() {
     // API Configuration
     const API_BASE_URL = import.meta.env.VITE_APP_API_URL || 'http://localhost:3000/api'
-    
+
     // State
     const loading = ref(false)
     const error = ref(null)
     const activeTab = ref('dashboard')
     const selectedStation = ref(null)
     const selectedTimeRange = ref('1 Month')
-    
+
     // Configuration
     const tabs = [
       { id: 'dashboard', name: 'Dashboard', icon: '📊' },
       { id: 'map', name: 'Map', icon: '🗺️' },
       { id: 'timeseries', name: 'Trends', icon: '📈' }
     ]
-    
+
     const timeRanges = ['1 Month']
-    
+
     // Demo Data
     const quickStats = ref([
       { label: 'Temperature', value: '18.5°C' },
@@ -160,28 +162,28 @@ export default {
       { label: 'Water Quality', value: '85%' },
       { label: 'Active Stations', value: '5' }
     ])
-    
+
     // Simple 8x8 heatmap data
     const heatmapData = ref(Array(64).fill(0).map(() => Math.random() * 100))
-    
+
     // Demo station data
     const stations = [
       { id: 1, lat: -38.15, lng: 144.85, name: 'Central Bay', status: 'Active', temperature: 18.5 },
       { id: 2, lat: -38.10, lng: 144.90, name: 'North Monitor', status: 'Warning', temperature: 19.2 },
       { id: 3, lat: -38.20, lng: 144.80, name: 'West Station', status: 'Active', temperature: 17.8 }
     ]
-    
+
     // Map and Chart refs
     const map = ref(null)
     const chart = ref(null)
-    
+
     // Methods
     const getHeatmapColor = (value) => {
       const colors = ['#10b981', '#84cc16', '#eab308', '#f97316', '#ef4444']
       const index = Math.floor((value / 100) * colors.length)
       return colors[Math.min(index, colors.length - 1)]
     }
-    
+
     const getStatusColor = (status) => {
       const colors = {
         'Active': 'text-green-600',
@@ -190,22 +192,22 @@ export default {
       }
       return colors[status] || 'text-gray-600'
     }
-    
+
     const initMap = () => {
       nextTick(() => {
         const mapElement = document.getElementById('marineMap')
         if (!mapElement) return
-        
+
         if (map.value) {
           map.value.remove()
         }
-        
+
         map.value = L.map('marineMap').setView([-38.15, 144.85], 10)
-        
+
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
           attribution: '© OpenStreetMap contributors'
         }).addTo(map.value)
-        
+
         // Add demo markers
         stations.forEach(station => {
           const color = station.status === 'Warning' ? 'red' : 'green'
@@ -216,7 +218,7 @@ export default {
             weight: 2,
             fillOpacity: 0.8
           }).addTo(map.value)
-          
+
           marker.bindPopup(`<b>${station.name}</b><br>Status: ${station.status}`)
           marker.on('click', () => {
             selectedStation.value = station
@@ -224,23 +226,23 @@ export default {
         })
       })
     }
-    
+
     const updateChart = () => {
       nextTick(() => {
         const ctx = document.getElementById('timeSeriesChart')
         if (!ctx) return
-        
+
         if (chart.value) {
           chart.value.destroy()
         }
-        
+
         // Generate demo data based on selected time range
-        const dataPoints = selectedTimeRange.value === '1 Week' ? 7 : 
+        const dataPoints = selectedTimeRange.value === '1 Week' ? 7 :
                           selectedTimeRange.value === '1 Month' ? 30 : 90
-        
+
         const labels = Array(dataPoints).fill(0).map((_, i) => `Day ${i + 1}`)
         const data = Array(dataPoints).fill(0).map(() => Math.random() * 10 + 15)
-        
+
         chart.value = new Chart(ctx, {
           type: 'line',
           data: {
@@ -266,7 +268,7 @@ export default {
         })
       })
     }
-    
+
     // API Methods (kept for future use)
     const fetchData = async (endpoint) => {
       try {
@@ -282,12 +284,12 @@ export default {
         loading.value = false
       }
     }
-    
+
     const retryConnection = () => {
       error.value = null
       // Retry logic here
     }
-    
+
     // Watchers
     watch(activeTab, (newTab) => {
       if (newTab === 'map') {
@@ -296,13 +298,13 @@ export default {
         setTimeout(updateChart, 100)
       }
     })
-    
+
     // Lifecycle
     onMounted(() => {
       // Initialize with dashboard
       console.log('Marine Hub initialized')
     })
-    
+
     return {
       // State
       loading,
@@ -314,7 +316,7 @@ export default {
       timeRanges,
       quickStats,
       heatmapData,
-      
+
       // Methods
       getHeatmapColor,
       getStatusColor,
