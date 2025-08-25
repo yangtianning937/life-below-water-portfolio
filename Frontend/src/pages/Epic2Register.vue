@@ -13,7 +13,7 @@
       <!-- Not Found -->
       <div v-if="!activity" class="text-slate-600">
         Activity not found.
-        <RouterLink class="text-blue-600 hover:underline" :to="{ name: 'epic2' }">
+        <RouterLink class="text-blue-600 hover:underline" :to="{ name: 'activity' }">
           Back to list
         </RouterLink>
       </div>
@@ -23,21 +23,21 @@
         <div>
           <label class="block font-semibold mb-1 text-slate-700">Full Name</label>
           <input
-            v-model="form.name"
-            required
-            class="w-full border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-            placeholder="Enter your name"
+              v-model="form.name"
+              required
+              class="w-full border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              placeholder="Enter your name"
           />
         </div>
 
         <div>
           <label class="block font-semibold mb-1 text-slate-700">Email Address</label>
           <input
-            type="email"
-            v-model="form.email"
-            required
-            class="w-full border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-            placeholder="Enter your email"
+              type="email"
+              v-model="form.email"
+              required
+              class="w-full border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              placeholder="Enter your email"
           />
         </div>
 
@@ -46,21 +46,22 @@
             Any special requirements? (optional)
           </label>
           <textarea
-            v-model="form.notes"
-            rows="3"
-            class="w-full border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-            placeholder="e.g., bringing kids, accessibility needs…"
+              v-model="form.notes"
+              rows="3"
+              class="w-full border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              placeholder="e.g., bringing kids, accessibility needs…"
           ></textarea>
         </div>
 
         <div class="flex items-center gap-3">
           <button
-            type="submit"
-            class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-5 py-2 rounded-lg"
+              type="submit"
+              class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-5 py-2 rounded-lg"
           >
             Submit
           </button>
-          <RouterLink :to="{ name: 'epic2' }" class="text-slate-600 hover:text-slate-800">
+          <RouterLink :to="{ name: 'activity' }"
+                      class="bg-red-600 hover:bg-red-700 text-white font-semibold px-5 py-2 rounded-lg">
             Cancel
           </RouterLink>
         </div>
@@ -78,21 +79,21 @@
 </template>
 
 <script setup>
-import { computed, reactive, ref } from 'vue'
-import { useRoute } from 'vue-router'
-import { activities } from '@/data/activities'
+import {computed, reactive, ref} from 'vue'
+import {useRoute} from 'vue-router'
+import {activities} from '@/data/activities'
 
 const route = useRoute()
 const currentId = route.params.id // string
 
 const activity = computed(() => activities.find(a => a.id === currentId))
 
-const form = reactive({ name: '', email: '', notes: '' })
+const form = reactive({name: '', email: '', notes: ''})
 const submitted = ref(false)
 
 function handleSubmit() {
   submitted.value = true
-  
-  console.log('Registration payload:', { activityId: currentId, ...form })
+
+  console.log('Registration payload:', {activityId: currentId, ...form})
 }
 </script>

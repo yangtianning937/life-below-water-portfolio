@@ -1,15 +1,10 @@
 <template>
   <div class="epic1-container">
     <!-- Header -->
-    <header class="bg-gradient-to-r from-blue-600 to-cyan-600 text-white shadow-lg">
-      <div class="container mx-auto px-4 py-6">
-        <h1 class="text-3xl font-bold flex items-center gap-3">
-          <span class="text-4xl">🌊</span>
-          Marine Environment Data Hub
-        </h1>
-        <p class="mt-2 text-blue-100">Port Phillip Bay Marine Health Monitoring</p>
-      </div>
-    </header>
+    <Header
+        :title="'Marine Environment Data Hub'"
+        :subtitle="'Port Phillip Bay Marine Health Monitoring'"
+    />
 
     <!-- Navigation Tabs -->
     <div class="bg-white shadow-md sticky top-0 z-40">
@@ -125,6 +120,7 @@ import { ref, reactive, onMounted, watch, nextTick } from 'vue'
 import axios from 'axios'
 import L from 'leaflet'
 import Chart from 'chart.js/auto'
+import Header from "@/components/Header.vue";
 
 // Fix Leaflet markers
 delete L.Icon.Default.prototype._getIconUrl
@@ -136,6 +132,7 @@ L.Icon.Default.mergeOptions({
 
 export default {
   name: 'Epic1Page',
+  components: {Header},
   setup() {
     // API Configuration
     const API_BASE_URL = import.meta.env.VITE_APP_API_URL || 'http://localhost:3000/api'

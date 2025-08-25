@@ -47,7 +47,7 @@ function close() {
       >
         <div class="py-1">
           <RouterLink
-              :to="{ name: 'epic1' }"
+              :to="{ name: 'data_hub' }"
               class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
               role="menuitem"
               @click="close()"
@@ -55,7 +55,7 @@ function close() {
             Marine Environment Data Hub
           </RouterLink>
           <RouterLink
-              :to="{ name: 'epic2' }"
+              :to="{ name: 'activity' }"
               class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
               role="menuitem"
               @click="close()"

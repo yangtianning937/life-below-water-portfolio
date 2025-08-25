@@ -1,7 +1,7 @@
 <template>
   <div id="app" class="min-h-screen bg-gradient-to-b from-blue-50 to-cyan-50">
     <!-- Top Bar -->
-    <Hearder :currentLabel="currentLabel"/>
+    <AppHeader :currentLabel="currentLabel"/>
 
     <!-- Route Outlet -->
     <main class="max-w-6xl mx-auto px-5 py-6">
@@ -11,7 +11,7 @@
 </template>
 
 <script setup>
-import Hearder from '@/components/Header.vue'
+import AppHeader from '@/components/AppHeader.vue'
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { useRoute } from 'vue-router'
 
@@ -20,7 +20,7 @@ const menuRef = ref(null)
 
 
 const currentLabel = computed(() => {
-  if (route.name === 'epic2' || String(route.name || '').startsWith('epic2')) {
+  if (route.name === 'activity' || String(route.name || '').startsWith('activity')) {
     return 'Volunteer Activity Participation'
   }
   return 'Marine Environment Data Hub'
