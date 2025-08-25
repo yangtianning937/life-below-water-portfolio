@@ -1,9 +1,9 @@
 // src/router/index.js
 import { createRouter, createWebHistory } from 'vue-router'
 
-import Epic1Page from '@/components/Epic1Page.vue'
-import Epic2List from '@/components/Epic2List.vue'
-import Epic2Register from '@/components/Epic2Register.vue'
+import Epic1Page from '@/pages/Epic1Page.vue'
+import Epic2List from '@/pages/Epic2List.vue'
+import Epic2Register from '@/pages/Epic2Register.vue'
 
 const routes = [
   { path: '/', redirect: { name: 'epic1' } },
