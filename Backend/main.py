@@ -15,18 +15,20 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+#
+site_metadata = csv_utils.csv_to_json("data/Site Metadata.csv")
+water_quality = csv_utils.csv_to_json("data/water_quality_data.csv")
 
 
 @app.get("/sites")
 async def site():
-    return csv_utils.csv_to_json("data/Site Metadata.csv")
+    return site_metadata
 
 
 @app.get("/water_quality/{site_id}")
 async def water_quality(site_id: str):
     site_data = []
-    data = csv_utils.csv_to_json("data/water_quality_data.csv")
-    for row in data:
+    for row in water_quality:
         if row["site_id"] == site_id:
             site_data.append(row)
     return site_data
@@ -34,8 +36,7 @@ async def water_quality(site_id: str):
 @app.get("/water_quality/{site_id}/date/{date}")
 async def water_quality(site_id: str, date: str):
     site_data = []
-    data = csv_utils.csv_to_json("data/water_quality_data.csv")
-    for row in data:
+    for row in water_quality:
         if row["site_id"] == site_id and row["date"] == date:
             site_data.append(row)
     return site_data

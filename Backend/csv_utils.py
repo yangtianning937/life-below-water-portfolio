@@ -7,6 +7,14 @@ def read_csv(filename):
         data = list(csv.DictReader(csvfile))
         return data
 
+def init_csv(filename, header):
+    with open(filename, 'w', newline='') as csvfile:
+        writer = csv.DictWriter(csvfile, fieldnames=header)
+
+def write_csv(filename, data):
+    with open(filename, 'w', encoding='utf-8') as csvfile:
+        writer = csv.DictWriter(csvfile, fieldnames=data)
+        writer.writeheader()
 
 def csv_to_json(filename):
     data = read_csv(filename)
