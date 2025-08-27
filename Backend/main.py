@@ -39,12 +39,12 @@ class PostActivity(BaseModel):
 # APIs for Epic 1
 ##################
 @app.get("/sites")
-async def site():
+async def get_sites():
     return site_metadata
 
 
 @app.get("/water_quality/{site_id}")
-async def water_quality(site_id: str):
+async def get_water_quality(site_id: str):
     site_data = []
     for row in water_quality:
         if row["site_id"] == site_id:
@@ -52,7 +52,7 @@ async def water_quality(site_id: str):
     return site_data
 
 @app.get("/water_quality/{site_id}/date/{date}")
-async def water_quality(site_id: str, date: str):
+async def get_water_quality(site_id: str, date: str):
     site_data = []
     for row in water_quality:
         if row["site_id"] == site_id and row["date"] == date:
@@ -84,4 +84,19 @@ async def post_activity(activity: PostActivity):
         return JSONResponse(content={"msg": "success"}, status_code=200)
     except Exception as e:
         return JSONResponse(content={"msg": str(e)}, status_code=500)
+
+
+@app.get("/activity")
+async def get_activity():
+    return csv_utils.csv_to_json("data/activity_data.csv")
+
+@app.get("/activity/{id}")
+async def get_activity(id: str):
+    activity_data = []
+    activity = csv_utils.csv_to_json("data/activity_data.csv")
+    for row in activity:
+        if row["id"] == id:
+            activity_data.append(row)
+
+    return activity_data
 

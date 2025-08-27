@@ -4,13 +4,14 @@ import os
 
 
 def read_csv(filename):
-    with open(filename, 'r', encoding='utf-8') as csvfile:
-        data = list(csv.DictReader(csvfile))
-        return data
+    file_exists = os.path.isfile(filename)
 
-def init_csv(filename, header):
-    with open(filename, 'w', newline='') as csvfile:
-        writer = csv.DictWriter(csvfile, fieldnames=header)
+    if file_exists:
+        with open(filename, 'r', encoding='utf-8') as csvfile:
+            data = list(csv.DictReader(csvfile))
+            return data
+    else:
+        return []
 
 def write_csv(filename, data: list[dict]):
     # Collect all keys
@@ -42,6 +43,6 @@ def json_to_csv(filename, data):
 #         {"age": 30, "city": "Melbourne"}
 #     ]
 #
-#     write_csv("data/form.csv", data)
+#     print(read_csv("data/form.csv"))
 #
 # test()
