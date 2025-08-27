@@ -4,7 +4,7 @@ import {api_prefix} from "./api_perfix";
 /**
  * @method fetch_water_quality
  * @param site_id The site ID
- * @param date (optional) the date of the water quality
+ * @param date (Optional) the date of the water quality
  * @return Returns the Promise of Data as shown below or return null if request failed.
  */
 export async function fetch_water_quality(site_id: number | string, date?: Date): Promise<any> {

@@ -1,5 +1,6 @@
 import csv
 import json
+import os
 
 
 def read_csv(filename):
@@ -11,17 +12,36 @@ def init_csv(filename, header):
     with open(filename, 'w', newline='') as csvfile:
         writer = csv.DictWriter(csvfile, fieldnames=header)
 
-def write_csv(filename, data):
-    with open(filename, 'w', encoding='utf-8') as csvfile:
-        writer = csv.DictWriter(csvfile, fieldnames=data)
-        writer.writeheader()
+def write_csv(filename, data: list[dict]):
+    # Collect all keys
+    fieldnames = set()
+    for row in data:
+        fieldnames.update(row.keys())
+    fieldnames = list(fieldnames)
+
+    file_exists = os.path.isfile(filename)
+
+    with open(filename, "a", encoding='utf-8') as csvfile:
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        if not file_exists:
+            writer.writeheader()
+        writer.writerows(data)
 
 def csv_to_json(filename):
     data = read_csv(filename)
     return json.loads(json.dumps(data))
 
+def json_to_csv(filename, data):
+    write_csv(filename, data)
+
 
 # def test():
-#     print(csv_to_json("data/Site Metadata.csv"))
+#     data = [
+#         {"name": "Alice", "age": 25},
+#         {"name": "Bob", "city": "Sydney"},
+#         {"age": 30, "city": "Melbourne"}
+#     ]
+#
+#     write_csv("data/form.csv", data)
 #
 # test()
