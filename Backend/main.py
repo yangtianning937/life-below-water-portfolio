@@ -20,7 +20,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
 site_metadata = csv_utils.csv_to_json("data/Site Metadata.csv")
 water_quality = csv_utils.csv_to_json("data/water_quality_data.csv")
 
@@ -50,6 +49,7 @@ async def get_water_quality(site_id: str):
         if row["site_id"] == site_id:
             site_data.append(row)
     return site_data
+
 
 @app.get("/water_quality/{site_id}/date/{date}")
 async def get_water_quality(site_id: str, date: str):
@@ -90,13 +90,17 @@ async def post_activity(activity: PostActivity):
 async def get_activity():
     return csv_utils.csv_to_json("data/activity_data.csv")
 
-@app.get("/activity/{id}")
-async def get_activity(id: str):
+
+@app.get("/activity/{activity_id}")
+async def get_activity(activity_id: str):
     activity_data = []
     activity = csv_utils.csv_to_json("data/activity_data.csv")
     for row in activity:
-        if row["id"] == id:
+        if row["id"] == activity_id:
             activity_data.append(row)
 
     return activity_data
 
+@app.post("/activity/form")
+async def post_activity_form():
+    # TODO
