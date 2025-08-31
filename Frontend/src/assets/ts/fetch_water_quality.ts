@@ -12,7 +12,7 @@ export async function fetch_water_quality(site_id: number | string, date?: Date)
         let formatted_date = format_date(date, "yyyy-MM-dd");
         console.log(formatted_date);
         return await fetch(`${api_prefix()}/water_quality/${site_id}/date/${formatted_date}`,
-            {mode: "no-cors"})
+            {mode: "cors"})
             .then(async r => {
                 switch (r.status) {
                     case 200:

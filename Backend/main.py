@@ -1,37 +1,25 @@
 import uuid
-from datetime import datetime
+from pathlib import Path
 
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
-from starlette.responses import JSONResponse
+from starlette.responses import JSONResponse, FileResponse
 
 import csv_utils
+from Backend.dynamic_CORS_middleware import DynamicCORSMiddleware
+from Backend.request_model import Activity, Form
 
 # python -m uvicorn Backend.main:app --reload
 
 app = FastAPI()
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+app.add_middleware(DynamicCORSMiddleware)
 
 site_metadata = csv_utils.csv_to_json("data/Site Metadata.csv")
 water_quality = csv_utils.csv_to_json("data/water_quality_data.csv")
 
 
-class PostActivity(BaseModel):
-    name: str
-    description: str
-    location: str
-    date: datetime
-    start: datetime
-    end: datetime
-    tags: list[str]
+# @app.exception_handler(RequestValidationError)
+# async def validation_exception_handler(request: Request, exc: RequestValidationError):
+#     return JSONResponse(status_code=422, content={"detail": exc.errors()})
 
 
 ##################
@@ -64,7 +52,7 @@ async def get_water_quality(site_id: str, date: str):
 # APIs for Epic 2
 ##################
 @app.post("/activity")
-async def post_activity(activity: PostActivity):
+async def post_activity(activity: Activity):
     try:
         activity_data = [
             {
@@ -79,9 +67,25 @@ async def post_activity(activity: PostActivity):
             }
         ]
 
-        csv_utils.json_to_csv("data/activity_data.csv", activity_data)
+        is_exists = False
 
-        return JSONResponse(content={"msg": "success"}, status_code=200)
+        exists_activity = csv_utils.csv_to_json("data/activity_data.csv")
+        for row in exists_activity:
+            if row.get("name") == activity.name \
+                    and row.get("description") == activity.description \
+                    and row.get("location") == activity.location \
+                    and row.get("date") == str(activity.date) \
+                    and row.get("start") == str(activity.start) \
+                    and row.get("end") == str(activity.end) \
+                    and row.get("tags") == str(activity.tags):
+                is_exists = True
+                break
+        if not is_exists:
+            csv_utils.json_to_csv("data/activity_data.csv", activity_data)
+
+            return JSONResponse(content={"msg": "success"}, status_code=200)
+        else:
+            return JSONResponse(content={"msg": "already exists"}, status_code=400)
     except Exception as e:
         return JSONResponse(content={"msg": str(e)}, status_code=500)
 
@@ -101,6 +105,45 @@ async def get_activity(activity_id: str):
 
     return activity_data
 
+
 @app.post("/activity/form")
-async def post_activity_form():
-    # TODO
+async def post_activity_form(form: Form):
+    try:
+        form_data = [{
+            "id": uuid.uuid4().hex,
+            "name": form.name,
+            "activity_id": form.activity_id,
+            "email": form.email,
+            "parent": form.parents,
+        }]
+
+        is_exists = False
+
+        exists_form = csv_utils.csv_to_json("data/form_data.csv")
+        for row in exists_form:
+            if row["name"] == form.name \
+                    and row["activity_id"] == form.activity_id \
+                    and row["email"] == form.email \
+                    and row["parent"] == form.parents:
+                is_exists = True
+                break
+
+        if not is_exists:
+            csv_utils.json_to_csv("data/form_data.csv", form_data)
+
+            return JSONResponse(content={"msg": "success"}, status_code=200)
+        else:
+            return JSONResponse(content={"msg": "already exists"}, status_code=400)
+    except Exception as e:
+        return JSONResponse(content={"msg": str(e)}, status_code=500)
+
+##################
+# Other APIs
+##################
+@app.get("/image/{name}")
+async def get_image(name: str):
+    image_path = Path(f"img/{name}")
+    if not image_path.is_file():
+        return JSONResponse(content={"msg": "not found"}, status_code=404)
+    else:
+        return FileResponse(image_path)

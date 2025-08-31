@@ -1,0 +1,3 @@
+date,name,id,description,start,end,location,tags,image
+2025-09-19 14:00:00+00:00,Beach Clean-up,6e31457f67c54a3a81519e204b2aa211,Join the community to remove plastics and keep Port Phillip Bay clean.,2025-09-19 23:30:00+00:00,2025-09-20 01:30:00+00:00,Port Melbourne,"['community', 'plastics', 'kids']","beach.jpg"
+2025-09-26 14:00:00+00:00,Water Quality Workshop,dc61f3c3d7844eed83fc72c9291af9b4,"Hands-on session to learn pH, turbidity and dissolved oxygen sampling.",2025-09-27 03:30:00+00:00,2025-09-27 06:00:00+00:00,St Kilda,"['education', 'water-quality']","water.jpg"
