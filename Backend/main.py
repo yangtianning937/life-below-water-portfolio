@@ -111,20 +111,21 @@ async def post_activity_form(form: Form):
     try:
         form_data = [{
             "id": uuid.uuid4().hex,
-            "name": form.name,
             "activity_id": form.activity_id,
+            "full_name": form.full_name,
+            "parents": form.parents,
             "email": form.email,
-            "parent": form.parents,
+            "requirements": form.requirements,
         }]
 
         is_exists = False
 
         exists_form = csv_utils.csv_to_json("data/form_data.csv")
         for row in exists_form:
-            if row["name"] == form.name \
-                    and row["activity_id"] == form.activity_id \
-                    and row["email"] == form.email \
-                    and row["parent"] == form.parents:
+            if row["activity_id"] == form.activity_id \
+                    and row["full_name"] == form.full_name \
+                    and row["parents"] == str(form.parents) \
+                    and row["email"] == form.email:
                 is_exists = True
                 break
 
@@ -136,6 +137,7 @@ async def post_activity_form(form: Form):
             return JSONResponse(content={"msg": "already exists"}, status_code=400)
     except Exception as e:
         return JSONResponse(content={"msg": str(e)}, status_code=500)
+
 
 ##################
 # Other APIs

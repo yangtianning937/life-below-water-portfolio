@@ -24,8 +24,8 @@ class Activity(BaseModel):
 
 
 class Form(BaseModel):
-    name: str
     activity_id: str
+    full_name: str
+    parents: list[str]
     email: str
     requirements: Optional[str] = None
-    parents: list[str]
