@@ -15,31 +15,31 @@ const routes = [
     path: '/',
     name: 'home',
     component: HomePage,
-    meta: { title: 'OceanLens | Home' }
+    meta: { title: 'LifeBelowWater | Home' }
   },
   {
     path: '/epic1',
     name: 'data_hub', // 与导航栏 AppHeader.vue 的命名一致
     component: Epic1Page,
-    meta: { title: 'OceanLens | Marine Environment Data Hub' }
+    meta: { title: 'LifeBelowWater | Marine Environment Data Hub' }
   },
   {
     path: '/epic2',
     name: 'activity', // 与导航栏命名一致
     component: Epic2List,
-    meta: { title: 'OceanLens | Volunteer Activity' }
+    meta: { title: 'LifeBelowWater | Volunteer Activity' }
   },
   {
     path: '/epic2/register',
     name: 'activity_register',
     component: Epic2Register,
-    meta: { title: 'OceanLens | Register Activity' }
+    meta: { title: 'LifeBelowWater | Register Activity' }
   },
   {
     path: '/explore',
     name: 'explore',
     component: ExplorePage,
-    meta: { title: 'OceanLens | Explore Data' }
+    meta: { title: 'LifeBelowWater | Explore Data' }
   },
   // 404
   {
@@ -56,7 +56,7 @@ const routes = [
         </section>
       `
     },
-    meta: { title: 'OceanLens | 404' }
+    meta: { title: 'LifeBelowWater | 404' }
   }
 ]
 
@@ -73,7 +73,7 @@ const router = createRouter({
 
 // 动态设置页面标题
 router.afterEach((to) => {
-  document.title = to.meta?.title || 'OceanLens'
+  document.title = to.meta?.title || 'LifeBelowWater'
 })
 
 export default router
