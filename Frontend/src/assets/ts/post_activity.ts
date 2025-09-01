@@ -43,6 +43,8 @@ export async function post_activity(
             switch (r.status) {
                 case 200:
                     return await r.json()
+                case 400:
+                    return await r.json()
                 default:
                     return null
             }

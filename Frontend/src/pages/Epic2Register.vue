@@ -23,7 +23,7 @@
         <div>
           <label class="block font-semibold mb-1 text-slate-700">Full Name</label>
           <input
-              v-model="form.name"
+              v-model="form.full_name"
               required
               class="w-full border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
               placeholder="Enter your name"
@@ -37,6 +37,17 @@
           <input
               v-model="form.parent"
               required
+              class="w-full border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              placeholder="Enter parent's name"
+          />
+        </div>
+
+        <div>
+          <label class="block font-semibold mb-1 text-slate-700">
+            Parent's Name (optional)
+          </label>
+          <input
+              v-model="form.optional_parent"
               class="w-full border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
               placeholder="Enter parent's name"
           />
@@ -81,6 +92,7 @@
 
         <div class="flex items-center gap-3">
           <button
+              :disabled="submitting"
               type="submit"
               class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-5 py-2 rounded-lg"
           >
@@ -96,8 +108,18 @@
       <!-- Success banner -->
       <div v-if="submitted" class="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
         <p class="text-green-700 font-medium">
-          Thanks, {{ form.name }}! Your registration for
+          Thanks, {{ form.full_name }}! Your registration for
           <strong>{{ activity.name }}</strong> has been recorded.
+        </p>
+      </div>
+      <!-- Fail banner -->
+      <div v-else class="mt-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+        <p class="text-red-700 font-medium">
+          Sorry, {{ form.full_name }}! Your registration for
+          <strong>{{ activity.name }}</strong> failed.
+        </p>
+        <p v-if="errors" class="text-red-700 font-medium">
+          Message: {{errors}}.
         </p>
       </div>
     </div>
@@ -108,6 +130,8 @@
 import {reactive, ref} from 'vue'
 import {useRoute} from 'vue-router'
 import {fetch_activity} from "@/assets/ts/fetch_activity";
+import {post_form} from "@/assets/ts/post_form";
+import router from "@/router";
 
 const route = useRoute()
 const currentId = route.params.id // string
@@ -121,12 +145,37 @@ fetch_activity(currentId)
       activity.value = r[0]
     })
 
-const form = reactive({name: '', email: '', parent: '', notes: ''})
-const submitted = ref(false)
+const form = reactive({full_name: '', email: '', parent: '', optional_parent: '', notes: ''})
+const submitting = ref(false)
+const submitted = ref(null)
+const errors = ref(null)
 
 function handleSubmit() {
-  submitted.value = true
-
-  console.log('Registration payload:', {activityId: currentId, ...form})
+  submitting.value = true;
+  post_form(
+      currentId,
+      form.full_name,
+      [form.parent, form.optional_parent],
+      form.email,
+      form.notes
+  ).then(r => {
+    if (r != null) {
+      if (r.msg === "success") {
+        submitted.value = true
+        console.log('Registration payload:', {activityId: currentId, ...form})
+        setTimeout(() => {
+          router.push({ name: 'activity'})
+        }, 1000)
+      } else {
+        submitted.value = false
+        submitting.value = false
+        errors.value = r.msg
+      }
+    } else {
+      submitted.value = false
+      submitting.value = false
+      errors.value = "Error"
+    }
+  });
 }
 </script>
