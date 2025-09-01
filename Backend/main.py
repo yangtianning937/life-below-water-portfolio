@@ -100,7 +100,7 @@ async def post_activity(activity: Activity):
         return JSONResponse(content={"msg": str(e)}, status_code=500)
 
 
-@api.get("activity")
+@api.get("/activity")
 async def get_activity():
     return csv_utils.csv_to_json("data/activity_data.csv")
 
