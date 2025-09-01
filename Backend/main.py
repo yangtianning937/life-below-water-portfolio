@@ -7,6 +7,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.responses import JSONResponse, FileResponse
 from starlette.staticfiles import StaticFiles
+from uvicorn.middleware.proxy_headers import ProxyHeadersMiddleware
 
 import csv_utils
 from Backend.db.db import get_db
@@ -18,6 +19,7 @@ from Backend.request_model import Activity, Form
 
 app = FastAPI()
 app.add_middleware(DynamicCORSMiddleware)
+app.add_middleware(ProxyHeadersMiddleware, trusted_hosts="*")
 
 api = APIRouter(prefix="/api", tags=["api"])
 
