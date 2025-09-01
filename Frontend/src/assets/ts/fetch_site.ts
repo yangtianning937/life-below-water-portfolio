@@ -6,7 +6,7 @@ import {api_prefix} from "./api_perfix";
  */
 export async function fetch_sites(): Promise<any> {
     return await fetch(`${api_prefix()}/sites`,
-        {mode: 'no-cors'})
+        {mode: 'cors'})
         .then(async r => {
             switch (r.status) {
                 case 200:

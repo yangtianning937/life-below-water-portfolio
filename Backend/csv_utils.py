@@ -7,7 +7,7 @@ def read_csv(filename):
     file_exists = os.path.isfile(filename)
 
     if file_exists:
-        with open(filename, 'r', encoding='utf-8') as csvfile:
+        with open(filename, 'r', newline="", encoding='utf-8') as csvfile:
             data = list(csv.DictReader(csvfile))
             return data
     else:
@@ -21,8 +21,12 @@ def write_csv(filename, data: list[dict]):
     fieldnames = list(fieldnames)
 
     file_exists = os.path.isfile(filename)
+    if file_exists:
+        with open(filename, "r", newline="", encoding="utf-8") as f:
+            reader = csv.DictReader(f)
+            fieldnames = reader.fieldnames or []
 
-    with open(filename, "a", encoding='utf-8') as csvfile:
+    with open(filename, "a", newline="", encoding='utf-8') as csvfile:
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         if not file_exists:
             writer.writeheader()
@@ -30,7 +34,7 @@ def write_csv(filename, data: list[dict]):
 
 def csv_to_json(filename):
     data = read_csv(filename)
-    return json.loads(json.dumps(data))
+    return json.loads(json.dumps(data, ensure_ascii=False))
 
 def json_to_csv(filename, data):
     write_csv(filename, data)
