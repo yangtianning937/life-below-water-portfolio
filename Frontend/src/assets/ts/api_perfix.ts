@@ -9,5 +9,5 @@ export function api_prefix() {
     if (port === null || port === undefined || port === "")
         port = null;
 
-    return `${protocol}//${hostname}${port != null ? `:${8000}` : ""}`;
+    return `${protocol}//${hostname}${port != null ? `:${8000}` : ""}/api`;
 }
