@@ -7,8 +7,7 @@ import Epic1Page from '@/pages/Epic1Page.vue'
 import Epic2List from '@/pages/Epic2List.vue'
 import Epic2Register from '@/pages/Epic2Register.vue'
 
-// 可选：保留 Explore 页（若后续要嵌入地图/Tableau）
-const ExplorePage = () => import('@/pages/ExplorePage.vue')
+
 
 const routes = [
   {
@@ -35,12 +34,7 @@ const routes = [
     component: Epic2Register,
     meta: { title: 'LifeBelowWater | Register Activity' }
   },
-  {
-    path: '/explore',
-    name: 'explore',
-    component: ExplorePage,
-    meta: { title: 'LifeBelowWater | Explore Data' }
-  },
+  
   // 404
   {
     path: '/:pathMatch(.*)*',
