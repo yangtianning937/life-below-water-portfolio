@@ -12,7 +12,7 @@ export async function fetch_water_quality(site_id: number | string, date?: Date)
         let formatted_date = format_date(date, "yyyy-MM-dd");
         console.log(formatted_date);
         return await fetch(`${api_prefix()}/water_quality/${site_id}/date/${formatted_date}`,
-            {mode: "no-cors"})
+            {mode: "cors"})
             .then(async r => {
                 switch (r.status) {
                     case 200:
@@ -38,18 +38,19 @@ export async function fetch_water_quality(site_id: number | string, date?: Date)
 }
 /*
 [
-    {
-        "site_id": "369",
-        "site_name_short": "Long Reef",
-        "water_body": "Port Phillip  Bay",
-        "date": "1990-04-11",
-        "Type": "surface",
-        "DO_mg": "9.0",
-        "Sal": "35.0",
-        "TSS": "5.4",
-        "N_TOTAL": "460.0",
-        "P_PO4": "160.0",
-        "P_TOTAL": "260.0"
-    }
+  {
+    "water_body": "Port Phillip  Bay",
+    "record_id": 214,
+    "type": "surface",
+    "sal": 35,
+    "n_total": 430,
+    "p_total": 340,
+    "site_id": "369",
+    "site_name_short": "Long Reef",
+    "date": "1991-03-08",
+    "do_mg": 5.4,
+    "tss": 5.8,
+    "p_po4": 290
+  }
 ]
  */

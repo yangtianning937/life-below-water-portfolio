@@ -30,11 +30,11 @@ export async function post_activity(
         "tags": tags,
     }
 
-    return fetch(`${api_prefix()}/activity`, {
+    return await fetch(`${api_prefix()}/activity`, {
         method: "POST",
-        mode: "no-cors",
+        mode: "cors",
         headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json"
         },
         body: JSON.stringify(json),
         credentials: "include"
@@ -43,9 +43,21 @@ export async function post_activity(
             switch (r.status) {
                 case 200:
                     return await r.json()
-                        .then(json => json.found != undefined ? json.found : json.id)
+                case 400:
+                    return await r.json()
                 default:
                     return null
             }
         })
 }
+/*
+{
+    "msg": "success"
+}
+
+Or
+
+{
+    "msg": Some Error Message
+}
+ */

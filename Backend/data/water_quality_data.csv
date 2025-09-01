@@ -1,4 +1,4 @@
-site_id,site_name_short,water_body,date,Type,DO_mg,Sal,TSS,N_TOTAL,P_PO4,P_TOTAL
+site_id,site_name_short,water_body,date,type,do_mg,sal,tss,n_total,p_po4,p_total
 1229,Central,Port Phillip  Bay,1984-07-19,surface,8.3,40.0,4.3,200.0,60.0,76.0
 1911,Corio,Port Phillip  Bay,1984-07-19,surface,7.9,39.0,3.4,200.0,77.0,91.0
 1991,Hobsons Bay,Port Phillip  Bay,1984-07-19,surface,7.9,40.0,5.1,380.0,62.0,78.0
