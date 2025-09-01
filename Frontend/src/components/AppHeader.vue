@@ -1,19 +1,17 @@
-<!-- src/components/AppHeader.vue -->
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
 const isOpen = ref(false)
+const brand = 'Life Below Water'
 
-// 需要时可让桌面端默认展开（>=1024px）
+// 桌面端是否默认展开侧边栏
 const openOnDesktop = false
 let mq: MediaQueryList | null = null
-function syncDrawer() {
+const syncDrawer = () => {
   if (!mq) return
-  if (openOnDesktop && mq.matches) {
-    isOpen.value = true
-  }
+  if (openOnDesktop && mq.matches) isOpen.value = true
 }
 onMounted(() => {
   mq = window.matchMedia('(min-width: 1024px)')
@@ -33,26 +31,28 @@ const close = () => (isOpen.value = openOnDesktop && (mq?.matches ?? false) ? tr
 </script>
 
 <template>
-  <!-- 顶部条：品牌 + 汉堡按钮（所有分辨率都显示） -->
+  <!-- 顶部条：全宽 + 左对齐（先汉堡，再标题） -->
   <header class="sticky top-0 z-50 bg-white/90 backdrop-blur border-b border-slate-200">
-    <nav class="max-w-6xl mx-auto px-4 h-[56px] flex items-center justify-between">
-      <RouterLink to="/" class="font-extrabold text-lg text-slate-900">Life Below Water</RouterLink>
+    <nav class="w-full h-[56px] pl-2 pr-2 flex items-center gap-3">  <!-- 关键：w-full + 去掉 max-w + 去掉 mx-auto -->
       <button
         class="p-2 rounded hover:bg-slate-100"
         :aria-expanded="isOpen"
         aria-label="Toggle menu"
         @click="isOpen = !isOpen"
       >☰</button>
+
+      <RouterLink to="/" class="font-extrabold text-base md:text-lg text-slate-900">
+        {{ brand }}
+      </RouterLink>
+
+      <!-- 占位空白，让左侧元素紧贴左边 -->
+      <div class="flex-1"></div>
     </nav>
   </header>
 
-  <!-- 抽屉式侧边栏：桌面端也使用同样样式 -->
+  <!-- 抽屉式侧边栏（桌面端也同样样式） -->
   <div class="drawer-root" :class="{ open: isOpen }">
-    <!-- 背景遮罩：仅在非桌面或未默认展开时显示 -->
-    <div
-      class="backdrop"
-      @click="isOpen = openOnDesktop && (mq?.matches ?? false) ? true : false"
-    ></div>
+    <div class="backdrop" @click="isOpen = openOnDesktop && (mq?.matches ?? false) ? true : false"></div>
 
     <aside class="sidenav">
       <div class="sidenav-head">
@@ -69,7 +69,6 @@ const close = () => (isOpen.value = openOnDesktop && (mq?.matches ?? false) ? tr
           :class="{ active: route.name === it.key }"
           @click="close()"
         >
-          <!-- 简洁图标 -->
           <svg v-if="it.icon==='home'" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <path d="M3 11l9-8 9 8" stroke-width="2"/><path d="M9 22V12h6v10" stroke-width="2"/>
           </svg>
@@ -89,16 +88,10 @@ const close = () => (isOpen.value = openOnDesktop && (mq?.matches ?? false) ? tr
 </template>
 
 <style scoped>
-/* 抽屉容器 */
 .drawer-root { position: fixed; inset: 0; pointer-events: none; z-index: 60; }
 .drawer-root.open { pointer-events: auto; }
-/* 背景遮罩：默认隐藏；当不是桌面持久展开时显示 */
-.backdrop {
-  position: absolute; inset: 0; background: rgba(0,0,0,.4);
-  opacity: 0; transition: opacity .2s;
-}
+.backdrop { position: absolute; inset: 0; background: rgba(0,0,0,.4); opacity: 0; transition: opacity .2s; }
 .drawer-root.open .backdrop { opacity: 1; }
-/* 侧边栏本体 */
 .sidenav {
   position: absolute; top: 0; left: 0; height: 100%; width: 272px;
   background: #0d1117; color: #fff; box-shadow: 0 10px 30px rgba(0,0,0,.3);
@@ -106,7 +99,6 @@ const close = () => (isOpen.value = openOnDesktop && (mq?.matches ?? false) ? tr
   display: flex; flex-direction: column;
 }
 .drawer-root.open .sidenav { transform: translateX(0); }
-
 .sidenav-head {
   height: 56px; display: flex; align-items: center; justify-content: space-between;
   padding: 0 16px; border-bottom: 1px solid rgba(255,255,255,.08);
