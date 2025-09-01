@@ -1,7 +1,7 @@
 // FRONTEND/src/router/index.js
 import { createRouter, createWebHistory } from 'vue-router'
 
-// Pages（与你的 src/pages 目录一致）
+// Pages
 import HomePage from '@/pages/HomePage.vue'
 import Epic1Page from '@/pages/Epic1Page.vue'
 import Epic2List from '@/pages/Epic2List.vue'
