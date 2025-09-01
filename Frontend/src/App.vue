@@ -1,53 +1,39 @@
+<!-- FRONTEND/src/App.vue -->
 <template>
-  <div id="app" class="min-h-screen bg-gradient-to-b from-blue-50 to-cyan-50">
-    <!-- Top Bar -->
-    <AppHeader :currentLabel="currentLabel"/>
+  <!-- 无障碍：键盘用户可直接跳到主内容 -->
+  <a class="skip-link" href="#main-content">Skip to content</a>
 
-    <!-- Route Outlet -->
-    <main class="max-w-6xl mx-auto px-5 py-6">
-      <RouterView />
+  <!-- 吸底布局：内容区占满高度，Footer 贴底 -->
+  <div class="min-h-screen flex flex-col bg-white text-slate-900">
+    <AppHeader />
+
+    <main id="main-content" class="flex-1">
+      <RouterView v-slot="{ Component }">
+        <transition name="fade" mode="out-in">
+          <component :is="Component" />
+        </transition>
+      </RouterView>
     </main>
+
+    <AppFooter />
   </div>
 </template>
 
 <script setup>
+import { RouterView } from 'vue-router'
 import AppHeader from '@/components/AppHeader.vue'
-import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
-import { useRoute } from 'vue-router'
-
-const route = useRoute()
-const menuRef = ref(null)
-
-
-const currentLabel = computed(() => {
-  if (route.name === 'activity' || String(route.name || '').startsWith('activity')) {
-    return 'Volunteer Activity Participation'
-  }
-  return 'Marine Environment Data Hub'
-})
-
-function onClickOutside(e) {
-  if (!menuRef.value) return
-  if (!menuRef.value.contains(e.target)) close()
-}
-
-onMounted(() => document.addEventListener('click', onClickOutside))
-onBeforeUnmount(() => document.removeEventListener('click', onClickOutside))
+import AppFooter from '@/components/AppFooter.vue'
 </script>
 
 <style>
-/* Global styles */
-* { margin: 0; padding: 0; box-sizing: border-box; }
+/* 页面淡入淡出过渡 */
+.fade-enter-active, .fade-leave-active { transition: opacity .18s ease; }
+.fade-enter-from, .fade-leave-to { opacity: 0; }
 
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* Skip link：聚焦时可见 */
+.skip-link {
+  position: absolute; left: -9999px; top: 8px; z-index: 1000;
+  background: #0d9488; color: #fff; padding: 8px 12px; border-radius: 8px;
 }
-
-/* Custom scrollbar */
-::-webkit-scrollbar { width: 10px; height: 10px; }
-::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
-::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 10px; }
-::-webkit-scrollbar-thumb:hover { background: #2563eb; }
+.skip-link:focus { left: 8px; }
 </style>
