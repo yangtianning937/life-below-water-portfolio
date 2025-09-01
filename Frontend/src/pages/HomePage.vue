@@ -15,6 +15,7 @@ import c3 from '@/assets/images/collage3.jpg'
           <span class="block text-4xl md:text-5xl text-slate-900">Help Us <span class="text-blue-600">Save Them.</span></span>
         </h1>
         <p class="mt-3 text-slate-600">Oceans are the lifeblood of our planet. Become a Water Detective and help protect Port Phillip Bay.</p>
+        <p class="mt-3 text-slate-600"></p>
 
       </div>
 
