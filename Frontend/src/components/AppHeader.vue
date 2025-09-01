@@ -36,7 +36,7 @@ const close = () => (isOpen.value = openOnDesktop && (mq?.matches ?? false) ? tr
   <!-- 顶部条：品牌 + 汉堡按钮（所有分辨率都显示） -->
   <header class="sticky top-0 z-50 bg-white/90 backdrop-blur border-b border-slate-200">
     <nav class="max-w-6xl mx-auto px-4 h-[56px] flex items-center justify-between">
-      <RouterLink to="/" class="font-extrabold text-lg text-slate-900">OceanLens</RouterLink>
+      <RouterLink to="/" class="font-extrabold text-lg text-slate-900">Life Below Water</RouterLink>
       <button
         class="p-2 rounded hover:bg-slate-100"
         :aria-expanded="isOpen"
