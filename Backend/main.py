@@ -1,10 +1,15 @@
 import uuid
+from datetime import datetime
 from pathlib import Path
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.responses import JSONResponse, FileResponse
 
 import csv_utils
+from Backend.db.db import get_db
+from Backend.db.models import SiteMetadata, WaterQualityData
 from Backend.dynamic_CORS_middleware import DynamicCORSMiddleware
 from Backend.request_model import Activity, Form
 
@@ -12,9 +17,6 @@ from Backend.request_model import Activity, Form
 
 app = FastAPI()
 app.add_middleware(DynamicCORSMiddleware)
-
-site_metadata = csv_utils.csv_to_json("data/Site Metadata.csv")
-water_quality = csv_utils.csv_to_json("data/water_quality_data.csv")
 
 
 # @app.exception_handler(RequestValidationError)
@@ -26,26 +28,33 @@ water_quality = csv_utils.csv_to_json("data/water_quality_data.csv")
 # APIs for Epic 1
 ##################
 @app.get("/sites")
-async def get_sites():
-    return site_metadata
+async def get_sites(db: AsyncSession = Depends(get_db)):
+    res = await db.execute(select(SiteMetadata).order_by(SiteMetadata.site_id))
+    return res.scalars().all()
 
 
 @app.get("/water_quality/{site_id}")
-async def get_water_quality(site_id: str):
-    site_data = []
-    for row in water_quality:
-        if row["site_id"] == site_id:
-            site_data.append(row)
-    return site_data
+async def get_water_quality(site_id: str, db: AsyncSession = Depends(get_db)):
+    stmt = select(WaterQualityData).where(WaterQualityData.site_id == site_id)
+    result = await db.execute(stmt)
+    rows = result.scalars().all()
+    return rows
 
 
 @app.get("/water_quality/{site_id}/date/{date}")
-async def get_water_quality(site_id: str, date: str):
-    site_data = []
-    for row in water_quality:
-        if row["site_id"] == site_id and row["date"] == date:
-            site_data.append(row)
-    return site_data
+async def get_water_quality(site_id: str, date: str, db: AsyncSession = Depends(get_db)):
+    try:
+        parsed_date = datetime.strptime(date, "%Y-%m-%d").date()
+    except ValueError:
+        return {"error": "Invalid date format, must be YYYY-MM-DD"}
+
+    stmt = select(WaterQualityData).where(
+        WaterQualityData.site_id == site_id,
+        WaterQualityData.date == parsed_date
+    )
+    result = await db.execute(stmt)
+    rows = result.scalars().all()
+    return rows
 
 
 ##################
