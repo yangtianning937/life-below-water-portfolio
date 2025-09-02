@@ -11,6 +11,7 @@ fetch_activity()
     .then(r => {
       if (r != null) {
         r.forEach(r => {
+          console.log(r.id);
           r.date = new Date(r.date).toLocaleDateString()
           r.start = new Date(r.start).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})
           r.end = new Date(r.end).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})
