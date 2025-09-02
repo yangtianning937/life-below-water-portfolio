@@ -1,11 +1,16 @@
 <script setup>
 import {RouterLink} from 'vue-router'
-import c1 from '@/assets/images/collage1.jpg'
-import c2 from '@/assets/images/collage2.jpg'
-import c3 from '@/assets/images/collage3.jpg'
 import {ref} from "vue";
 import {fetch_activity} from "@/assets/ts/fetch_activity";
 import {fetch_image} from "@/assets/ts/fetch_image";
+
+const fact = [
+    "Port Phillip was named after Captain Arthur Phillip, the first (1788–92) governor of New South Wales.",
+    "The large metropolitan area of Melbourne is located at the head of the bay.",
+    "Rivers emptying into the bay include the Little, Werribee, and Yarra.",
+    "It’s status as Australia's densest catchment area!",
+    "One of the largest enclosed spaces of saltwater in the Southern Hemisphere."
+]
 
 const activities = ref([]);
 const covers = ref([]);
@@ -72,11 +77,12 @@ const get_cover = async (name) => {
 
     <!-- Interesting Fact -->
     <section class="bg-orange-50 py-10">
-      <div class="max-w-6xl mx-auto px-5 grid md:grid-rows-2 gap-7 items-center">
-        <h3 class="text-3xl font-bold my-5">Interesting Fact</h3>
+      <div class="max-w-6xl mx-auto px-5 grid items-center">
+        <h3 class="text-3xl font-bold mt-5 mb-2">✨ Interesting Facts</h3>
         <div class="grid md:grid-cols-3 gap-4 mt-2">
-          <div v-for="a in new Array(5).fill(0)">
-            a
+          <div v-for="f in fact">
+            <div class="bg-white border rounded-xl p-4 shadow min-h-[120px]">
+            <p class="text-slate-600">{{f}}</p></div>
           </div>
         </div>
       </div>
@@ -108,14 +114,14 @@ const get_cover = async (name) => {
           >
             <img
                 :src="covers[index]"
-                :alt="a.title"
+                :alt="a.name"
                 class="h-44 w-full object-cover"
                 loading="lazy"
                 referrerpolicy="no-referrer"
             />
 
             <div class="p-5 flex-1 flex flex-col">
-              <h3 class="text-lg font-semibold text-slate-800 mb-1">{{ a.title }}</h3>
+              <h3 class="text-lg font-semibold text-slate-800 mb-1">{{ a.name }}</h3>
               <p class="text-slate-600 text-sm line-clamp-3">
                 {{ a.description }}
               </p>
@@ -142,7 +148,7 @@ const get_cover = async (name) => {
                     class="block w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-lg transition"
                     :to="{ name: 'activity_register', params: { id: a.id } }"
                 >
-                  Register
+                  Join
                 </RouterLink>
               </div>
             </div>
