@@ -113,7 +113,7 @@
         </p>
       </div>
       <!-- Fail banner -->
-      <div v-else class="mt-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+      <div v-if="submitted === false" class="mt-6 p-4 bg-red-50 border border-red-200 rounded-lg">
         <p class="text-red-700 font-medium">
           Sorry, {{ form.full_name }}! Your registration for
           <strong>{{ activity.name }}</strong> failed.

@@ -2,38 +2,41 @@ import uuid
 from datetime import datetime
 from pathlib import Path
 
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI, Depends, APIRouter
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.responses import JSONResponse, FileResponse
+from starlette.staticfiles import StaticFiles
+from uvicorn.middleware.proxy_headers import ProxyHeadersMiddleware
 
 import csv_utils
-from Backend.db.db import get_db
-from Backend.db.models import SiteMetadata, WaterQualityData
-from Backend.dynamic_CORS_middleware import DynamicCORSMiddleware
-from Backend.request_model import Activity, Form
+from db.db import get_db
+from db.models import SiteMetadata, WaterQualityData
+from dynamic_CORS_middleware import DynamicCORSMiddleware
+from request_model import Activity, Form
 
 # python -m uvicorn Backend.main:app --reload
 
 app = FastAPI()
 app.add_middleware(DynamicCORSMiddleware)
+app.add_middleware(ProxyHeadersMiddleware, trusted_hosts="*")
 
+api = APIRouter(prefix="/api", tags=["api"])
 
 # @app.exception_handler(RequestValidationError)
 # async def validation_exception_handler(request: Request, exc: RequestValidationError):
 #     return JSONResponse(status_code=422, content={"detail": exc.errors()})
 
-
 ##################
 # APIs for Epic 1
 ##################
-@app.get("/sites")
+@api.get("/sites")
 async def get_sites(db: AsyncSession = Depends(get_db)):
     res = await db.execute(select(SiteMetadata).order_by(SiteMetadata.site_id))
     return res.scalars().all()
 
 
-@app.get("/water_quality/{site_id}")
+@api.get("/water_quality/{site_id}")
 async def get_water_quality(site_id: str, db: AsyncSession = Depends(get_db)):
     stmt = select(WaterQualityData).where(WaterQualityData.site_id == site_id)
     result = await db.execute(stmt)
@@ -41,7 +44,7 @@ async def get_water_quality(site_id: str, db: AsyncSession = Depends(get_db)):
     return rows
 
 
-@app.get("/water_quality/{site_id}/date/{date}")
+@api.get("/water_quality/{site_id}/date/{date}")
 async def get_water_quality(site_id: str, date: str, db: AsyncSession = Depends(get_db)):
     try:
         parsed_date = datetime.strptime(date, "%Y-%m-%d").date()
@@ -60,7 +63,7 @@ async def get_water_quality(site_id: str, date: str, db: AsyncSession = Depends(
 ##################
 # APIs for Epic 2
 ##################
-@app.post("/activity")
+@api.post("/activity")
 async def post_activity(activity: Activity):
     try:
         activity_data = [
@@ -99,12 +102,12 @@ async def post_activity(activity: Activity):
         return JSONResponse(content={"msg": str(e)}, status_code=500)
 
 
-@app.get("/activity")
+@api.get("/activity")
 async def get_activity():
     return csv_utils.csv_to_json("data/activity_data.csv")
 
 
-@app.get("/activity/{activity_id}")
+@api.get("/activity/{activity_id}")
 async def get_activity(activity_id: str):
     activity_data = []
     activity = csv_utils.csv_to_json("data/activity_data.csv")
@@ -115,7 +118,7 @@ async def get_activity(activity_id: str):
     return activity_data
 
 
-@app.post("/activity/form")
+@api.post("/activity/form")
 async def post_activity_form(form: Form):
     try:
         form_data = [{
@@ -151,10 +154,14 @@ async def post_activity_form(form: Form):
 ##################
 # Other APIs
 ##################
-@app.get("/image/{name}")
+@api.get("/image/{name}")
 async def get_image(name: str):
     image_path = Path(f"img/{name}")
     if not image_path.is_file():
         return JSONResponse(content={"msg": "not found"}, status_code=404)
     else:
         return FileResponse(image_path)
+
+app.include_router(api)
+
+app.mount("/", StaticFiles(directory="dist", html=True), name="static")
