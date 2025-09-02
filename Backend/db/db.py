@@ -2,10 +2,10 @@ from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker, declarative_base
 
 USER = "postgres"
-PASSWORD = "123456"
-HOST = "localhost"
+PASSWORD = "Lakers123"
+HOST = "waterqdb.cpmwumooifyh.ap-southeast-2.rds.amazonaws.com"
 PORT = "5432"
-DATABASE = "postgres"
+DATABASE = "waterqdb"
 DATABASE_URL = f"postgresql+asyncpg://{USER}:{PASSWORD}@{HOST}:{PORT}/{DATABASE}"
 
 engine = create_async_engine(DATABASE_URL, echo=True)
