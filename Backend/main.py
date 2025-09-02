@@ -10,10 +10,10 @@ from starlette.staticfiles import StaticFiles
 from uvicorn.middleware.proxy_headers import ProxyHeadersMiddleware
 
 import csv_utils
-from Backend.db.db import get_db
-from Backend.db.models import SiteMetadata, WaterQualityData
-from Backend.dynamic_CORS_middleware import DynamicCORSMiddleware
-from Backend.request_model import Activity, Form
+from db.db import get_db
+from db.models import SiteMetadata, WaterQualityData
+from dynamic_CORS_middleware import DynamicCORSMiddleware
+from request_model import Activity, Form
 
 # python -m uvicorn Backend.main:app --reload
 
