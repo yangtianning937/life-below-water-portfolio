@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useRoute } from 'vue-router'
+import logo from '@/assets/images/logo.jpg';
 
 const route = useRoute()
 const isOpen = ref(false)
-const brand = 'Life Below Water'
+const brand = 'Port Philip Protectors'
 
 // 桌面端是否默认展开侧边栏
 const openOnDesktop = false
@@ -41,8 +42,11 @@ const close = () => (isOpen.value = openOnDesktop && (mq?.matches ?? false) ? tr
         @click="isOpen = !isOpen"
       >☰</button>
 
-      <RouterLink to="/" class="font-extrabold text-base md:text-lg text-slate-900">
-        {{ brand }}
+      <RouterLink to="/" class="font-extrabold text-base md:text-lg text-slate-900 flex justify-center items-center gap-2">
+        <div class="w-12">
+          <img :src="logo" class="object-fill" alt="">
+        </div>
+        <span>{{ brand }}</span>
       </RouterLink>
 
       <!-- 占位空白，让左侧元素紧贴左边 -->
