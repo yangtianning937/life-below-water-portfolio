@@ -1,8 +1,7 @@
-from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import String, Float, Date, ForeignKey, BigInteger
-from sqlalchemy.orm import declarative_base
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from Backend.db.db import Base
+from db.db import Base
 
 
 class SiteMetadata(Base):

@@ -31,19 +31,13 @@ import c3 from '@/assets/images/collage3.jpg'
     <!-- Problem / Challenge -->
     <section id="problem" class="bg-gradient-to-b from-blue-900 to-indigo-700 text-white py-12">
       <div class="max-w-6xl mx-auto px-5">
-        <h2 class="text-3xl font-bold mb-2">What’s the problem?</h2>
+        <h2 class="text-3xl font-bold mb-2">Welcome, Water Detectives!</h2>
         <p class="text-blue-100">
-          Marine education is often missing in school curricula. Kids (8–12) and beachgoers in Melbourne
-          lack engaging ways to learn about water quality, local fish species, and real-world conservation.
+          Get ready to explore Port Phillip Bay with real data collected since 1984 — it’s your turn to investigate!
+          Check water quality, spot changes over time, learn about fish models, and complete real cleanups.
+          Then test your knowledge with fun quizzes and unlock fish facts.
         </p>
-        <p class="text-blue-100 mt-2">
-          How might we make marine education engaging and accessible so people understand Port Phillip Bay
-          and are willing to protect it?
-        </p>
-        <ul class="list-disc pl-6 mt-3 space-y-1 text-blue-100">
-          <li><strong>Awareness gap</strong>: Hard to connect textbooks with real bay data.</li>
-          <li><strong>Action gap</strong>: Few easy entries to participate (e.g., cleanups, citizen science).</li>
-        </ul>
+
       </div>
     </section>
 
@@ -68,12 +62,7 @@ import c3 from '@/assets/images/collage3.jpg'
     <!-- Welcome, Water Detectives! + Nutrients -->
     <section class="bg-orange-50 py-10" id="detectives">
       <div class="max-w-5xl mx-auto px-5">
-        <h2 class="text-2xl font-extrabold">Welcome, Water Detectives!</h2>
-        <p class="text-slate-700 mt-1">
-          Get ready to explore Port Phillip Bay with real data collected since 1984 — it’s your turn to investigate!
-          Check water quality, spot changes over time, learn about fish models, and complete real cleanups.
-          Then test your knowledge with fun quizzes and unlock fish facts.
-        </p>
+
 
         <h3 class="text-xl font-bold mt-5">🧪 Nutrients Explained</h3>
         <div class="grid md:grid-cols-3 gap-4 mt-2">
