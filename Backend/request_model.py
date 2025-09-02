@@ -12,7 +12,6 @@ class Activity(BaseModel):
     start: datetime
     end: datetime
     tags: list[str]
-    image: str
     model_config = ConfigDict(extra="ignore")
 
     @field_validator("date", "start", "end", mode="before")
