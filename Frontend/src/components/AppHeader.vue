@@ -43,8 +43,8 @@ const close = () => (isOpen.value = openOnDesktop && (mq?.matches ?? false) ? tr
       >☰</button>
 
       <RouterLink to="/" class="font-extrabold text-base md:text-lg text-slate-900 flex justify-center items-center gap-2">
-        <div class="w-12">
-          <img :src="logo" class="object-fill" alt="">
+        <div class="w-12 rounded-lg overflow-hidden">
+          <img :src="logo" class="object-fill rounded-lg" alt="">
         </div>
         <span>{{ brand }}</span>
       </RouterLink>
