@@ -20,7 +20,7 @@ let map, heatLayer, markersLayer;
 
 function initMap() {
   if (map) return;
-  map = L.map("map", { zoomControl: true, preferCanvas: true }).setView([-37.81, 144.96], 10);
+  map = L.map("map", { zoomControl: false, preferCanvas: true }).setView([-37.81, 144.96], 10);
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { attribution: "© OpenStreetMap" }).addTo(map);
   heatLayer = L.heatLayer([], { radius: 22, blur: 18, maxZoom: 14 }).addTo(map);
   markersLayer = L.layerGroup().addTo(map);

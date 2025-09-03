@@ -78,11 +78,23 @@ const trendsFull = ref(false);
 
 /* 工具函数（保持原有配色逻辑） */
 function colorForClass(k) {
-  const palette = ["#2563EB","#16A34A","#9333EA","#0891B2","#EA580C","#DC2626","#6B7280","#059669","#1D4ED8","#7C3AED"];
-  if (!k) return "#6B7280";
-  let hash = 0, s = String(k);
-  for (let i = 0; i < s.length; i++) hash = (hash * 31 + s.charCodeAt(i)) & 0xffffffff;
-  return palette[Math.abs(hash) % palette.length];
+  const KEY = String(k || "").trim().toLowerCase();
+
+  // 如果数据本身给了十六进制颜色，直接用（可选）
+  if (/^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(KEY)) return KEY;
+
+  // 精确映射（你可以换成自己想要的色值）
+  const MAP = {
+    darkred: "#b91c1c", // 深红（Tailwind red-700）
+    orange:  "#f97316", // 橙色（orange-500）
+    green:   "#22c55e", // 绿色（green-500）
+    yellow:  "#facc15", // 黄色（yellow-400）
+  };
+
+  if (MAP[KEY]) return MAP[KEY];
+
+  // 兜底色：没匹配到时给个中性灰，避免颜色乱跳
+  return "#6b7280";
 }
 function toDate(x){ const d = new Date(x); return isNaN(+d) ? null : d; }
 function iso(d){ return d ? d.toISOString().slice(0,10) : ""; }
