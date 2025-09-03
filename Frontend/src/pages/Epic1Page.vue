@@ -1,12 +1,10 @@
 <template>
   <div class="epic1-container">
-    <!-- 左侧 Sidebar：KPI + 图层 + Class 过滤 + Trends（含日期与全屏） -->
+    <!-- 左侧：KPI + Class 过滤 + Trends -->
     <aside class="sidebar">
       <h2 class="title">Water Quality Dashboard</h2>
 
       <E1KPI :kpis="kpis" />
-
-      <E1Layers v-model:show-heat="showHeat" v-model:show-markers="showMarkers" />
 
       <E1ClassFilter
         :options="classOptions"
@@ -23,31 +21,30 @@
       />
     </aside>
 
-    <!-- 右侧地图 -->
+    <!-- 右侧：Tableau（替代原地图） -->
     <section class="map-wrap">
-      <E1Map
-        :rows="filteredRows"
-        :cols="COLS"
-        :show-heat="showHeat"
-        :show-markers="showMarkers"
-        :color-for-class="colorForClass"
+      <E1Tableau
+        workbook="NewWorkbook_17569007097240"
+        sheet="Sheet1"
+        staticImage="https://public.tableau.com/static/images/Ne/NewWorkbook_17569007097240/Sheet1/1.png"
+        :tabs="false"
+        :toolbar="true"
       />
     </section>
   </div>
 </template>
 
 <script setup>
-import { onMounted, onUnmounted, ref, computed, watch } from "vue";
+import { onMounted, ref, computed, watch } from "vue";
 import Papa from "papaparse";
 
-/** 子组件 */
+/** 子组件（已移除 E1Map、E1Layers） */
 import E1KPI from "@/components/epic1/E1KPI.vue";
-import E1Layers from "@/components/epic1/E1Layers.vue";
 import E1ClassFilter from "@/components/epic1/E1ClassFilter.vue";
 import E1Trends from "@/components/epic1/E1Trends.vue";
-import E1Map from "@/components/epic1/E1Map.vue";
+import E1Tableau from "@/components/epic1/E1Tableau.vue";
 
-/** 列名映射（保持与原文件一致） */
+/** 列名映射（与原 CSV 保持一致） */
 const COLS = {
   lat:   "latitude",
   lon:   "longitude",
@@ -63,60 +60,45 @@ const error = ref("");
 const rawRows = ref([]);
 const filteredRows = ref([]);
 
-/** Layers 开关 */
-const showHeat = ref(true);
-const showMarkers = ref(true);
-
 /** Class 过滤 */
-const classOptions = ref([]);              // 所有可选 class（字符串数组）
-const selectedClassesArr = ref([]);        // v-model（数组）内部会转 Set 参与过滤
+const classOptions = ref([]);
+const selectedClassesArr = ref([]);
 
 /** 日期与趋势 */
 const dateRange = ref({ min: null, max: null, from: null, to: null });
 const trendTab = ref("hist");
 const trendsFull = ref(false);
 
-/* 工具函数（保持原有配色逻辑） */
+/** 颜色映射（仍供 Class 过滤面板使用） */
 function colorForClass(k) {
   const KEY = String(k || "").trim().toLowerCase();
-
-  // 如果数据本身给了十六进制颜色，直接用（可选）
-  if (/^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(KEY)) return KEY;
-
-  // 精确映射（你可以换成自己想要的色值）
   const MAP = {
-    darkred: "#b91c1c", // 深红（Tailwind red-700）
-    orange:  "#f97316", // 橙色（orange-500）
-    green:   "#22c55e", // 绿色（green-500）
-    yellow:  "#facc15", // 黄色（yellow-400）
+    darkred: "#b91c1c",
+    orange:  "#f97316",
+    green:   "#22c55e",
+    yellow:  "#facc15",
   };
-
-  if (MAP[KEY]) return MAP[KEY];
-
-  // 兜底色：没匹配到时给个中性灰，避免颜色乱跳
-  return "#6b7280";
+  return MAP[KEY] || "#6b7280";
 }
-function toDate(x){ const d = new Date(x); return isNaN(+d) ? null : d; }
-function iso(d){ return d ? d.toISOString().slice(0,10) : ""; }
+const toDate = (x) => { const d = new Date(x); return isNaN(+d) ? null : d; };
+const iso = (d) => (d ? d.toISOString().slice(0,10) : "");
 
-/** 基于已选 class + 日期进行过滤 */
+/** 应用过滤：按 Class + 日期 */
 function applyFilter() {
   const sel = new Set(selectedClassesArr.value.map(String));
   let rows = rawRows.value;
 
   if (sel.size) rows = rows.filter(r => sel.has(String(r[COLS.klass])));
-
   if (dateRange.value.from && dateRange.value.to) {
     rows = rows.filter(r => {
       const d = toDate(r[COLS.date]);
       return d && d >= dateRange.value.from && d <= dateRange.value.to;
     });
   }
-
   filteredRows.value = rows;
 }
 
-/** KPI 计算（保持与原逻辑一致） */
+/** KPI */
 const kpis = computed(() => {
   const n = filteredRows.value.length;
   if (!n) return { count: 0, meanWQI: "-", dateSpan: "-" };
@@ -127,18 +109,14 @@ const kpis = computed(() => {
 
   const meanWQI = wqis.length ? (wqis.reduce((a,b)=>a+b,0)/wqis.length).toFixed(1) : "-";
   const dates = filteredRows.value.map(r => toDate(r[COLS.date])).filter(Boolean).sort((a,b)=>a-b);
-
-  let dateSpan = "-";
-  if (dates.length) dateSpan = `${iso(dates[0])} ~ ${iso(dates.at(-1))}`;
-
+  const dateSpan = dates.length ? `${iso(dates[0])} ~ ${iso(dates.at(-1))}` : "-";
   return { count: n, meanWQI, dateSpan };
 });
 
-/** 监听 filter 更改 */
 watch(selectedClassesArr, applyFilter, { deep: true });
 watch(dateRange, applyFilter, { deep: true });
 
-/** 初始数据加载（与原文件一致：从本地 CSV 读） */
+/** 加载 CSV（仅供 KPI/Trends 与 Class 过滤使用） */
 onMounted(async () => {
   try {
     loading.value = true;
@@ -150,7 +128,7 @@ onMounted(async () => {
       });
     });
 
-    // 清洗、映射
+    // 基础清洗（WQI 转数字；经纬度即使清洗，也只用于统计，不再渲染地图）
     rawRows.value = data.map(r => ({
       ...r,
       [COLS.lat]:  +r[COLS.lat],
@@ -160,7 +138,8 @@ onMounted(async () => {
     }));
 
     // Class 选项
-    const uniq = Array.from(new Set(rawRows.value.map(r => String(r[COLS.klass]).trim()))).filter(Boolean).sort();
+    const uniq = Array.from(new Set(rawRows.value.map(r => String(r[COLS.klass]).trim())))
+      .filter(Boolean).sort();
     classOptions.value = uniq;
     selectedClassesArr.value = []; // 默认不过滤
 
@@ -181,16 +160,12 @@ onMounted(async () => {
     loading.value = false;
   }
 });
-
-onUnmounted(() => {
-  // 无全屏滚动锁定逻辑放在 Trends 子组件里处理
-});
 </script>
 
 <style>
-/* 保留你原文件中的样式（不改 class 名，确保子组件继续生效） */
 .epic1-container { display: grid; grid-template-columns: 320px 1fr; gap: 12px; height: calc(100vh - 80px); padding: 12px; }
 @media (max-width: 900px) { .epic1-container { grid-template-columns: 1fr; grid-auto-rows: auto; height: auto; } .map-wrap { height: 70vh; } }
+
 .sidebar { background: #fff; border: 1px solid #e5e7eb; border-radius: 14px; padding: 14px; overflow: auto; }
 .title { font-size: 18px; font-weight: 700; margin: 0 0 10px; }
 
@@ -204,31 +179,7 @@ onUnmounted(() => {
 .panel-title { font-size: 14px; font-weight: 700; margin-bottom: 8px; }
 .panel-title-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 
-.checkbox { display: flex; align-items: center; gap: 8px; margin: 6px 0; font-size: 14px; }
-.btn-row { display: flex; gap: 8px; margin: 6px 0 8px; }
-.btn { border: 1px solid #e5e7eb; background: #fff; padding: 4px 8px; border-radius: 8px; font-size: 12px; cursor: pointer; }
-.btn:hover { background: #f3f4f6; }
-
 .class-list { display: grid; grid-template-columns: 1fr; gap: 4px; max-height: 240px; overflow: auto; }
-.color-dot { width: 10px; height: 10px; border-radius: 999px; display: inline-block; }
 
-.tab-row { display: flex; gap: 8px; margin-bottom: 6px; }
-.tab { padding: 4px 8px; border: 1px solid #e5e7eb; background: #fff; border-radius: 8px; cursor: pointer; font-size: 12px; }
-.tab.active, .tab:hover { background: #f3f4f6; }
-
-.icon-btn { border: 1px solid #e5e7eb; background: #fff; border-radius: 8px; padding: 4px; cursor: pointer; }
-.icon-btn:hover { background: #f3f4f6; }
-
-.hint { font-size: 12px; color: #64748b; margin: 6px 0; }
-
-.map-wrap { background: #fff; border: 1px solid #e5e7eb; border-radius: 14px; overflow: hidden; position: relative; }
-#map { width: 100%; height: 100%; min-height: 420px; }
-
-.hist-svg, .klass-svg, .ts-svg { width: 100%; height: auto; display: block; }
-
-.trends-fullscreen {
-  position: fixed; inset: 0; background: #fff; padding: 16px;
-  z-index: 1000; overflow: auto; display: grid; grid-template-columns: 1fr; gap: 10px;
-}
-.trends-fullscreen .panel { margin: 0; }
+.map-wrap { background: #fff; border: 1px solid #e5e7eb; border-radius: 14px; overflow: hidden; position: relative; min-height: 520px; }
 </style>

@@ -7,6 +7,7 @@ import 'leaflet/dist/leaflet.css'
 
 
 import './style.css'
+import './assets/global.css'
 
 
 
