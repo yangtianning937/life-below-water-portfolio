@@ -2,9 +2,9 @@ from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker, declarative_base
 
 USER = "postgres"
-PASSWORD = "123456"
+PASSWORD = "123456" # "Lakers123"
 HOST = "localhost"
-PORT = "5432"
+PORT = "5432" # "6543"
 DATABASE = "postgres"
 DATABASE_URL = f"postgresql+asyncpg://{USER}:{PASSWORD}@{HOST}:{PORT}/{DATABASE}"
 
@@ -14,10 +14,10 @@ AsyncSessionLocal = sessionmaker(engine, class_=AsyncSession, expire_on_commit=F
 
 Base = declarative_base()
 
+
 async def get_db():
     async with AsyncSessionLocal() as session:
         yield session
-
 
 ''' SQL FOR CREATE TABLE
 

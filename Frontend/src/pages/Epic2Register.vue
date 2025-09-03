@@ -152,6 +152,7 @@ const errors = ref(null)
 
 function handleSubmit() {
   submitting.value = true;
+  console.log(currentId)
   post_form(
       currentId,
       form.full_name,

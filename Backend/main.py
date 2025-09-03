@@ -16,6 +16,7 @@ from dynamic_CORS_middleware import DynamicCORSMiddleware
 from request_model import Activity, Form
 
 # python -m uvicorn Backend.main:app --reload
+# ssh -i path/to/Group26.pem -N -L 6543:waterqdb.cpmwumooifyh.ap-southeast-2.rds.amazonaws.com:5432 ubuntu@<PUBLIC_IP>
 
 app = FastAPI()
 app.add_middleware(DynamicCORSMiddleware)

@@ -2,6 +2,7 @@
 import {fetch_activity} from "@/assets/ts/fetch_activity";
 import {ref} from "vue";
 import {fetch_image} from "@/assets/ts/fetch_image";
+import {post_activity} from "@/assets/ts/post_activity";
 
 const activities = ref([]);
 const covers = ref([]);
@@ -10,6 +11,7 @@ fetch_activity()
     .then(r => {
       if (r != null) {
         r.forEach(r => {
+          console.log(r.id);
           r.date = new Date(r.date).toLocaleDateString()
           r.start = new Date(r.start).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})
           r.end = new Date(r.end).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})
@@ -48,14 +50,14 @@ const get_cover = async (name) => {
         >
           <img
               :src="covers[index]"
-              :alt="a.title"
+              :alt="a.name"
               class="h-44 w-full object-cover"
               loading="lazy"
               referrerpolicy="no-referrer"
           />
 
           <div class="p-5 flex-1 flex flex-col">
-            <h3 class="text-lg font-semibold text-slate-800 mb-1">{{ a.title }}</h3>
+            <h3 class="text-lg font-semibold text-slate-800 mb-1">{{ a.name }}</h3>
             <p class="text-slate-600 text-sm line-clamp-3">
               {{ a.description }}
             </p>
@@ -82,7 +84,7 @@ const get_cover = async (name) => {
                   class="block w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-lg transition"
                   :to="{ name: 'activity_register', params: { id: a.id } }"
               >
-                Register
+                Join
               </RouterLink>
             </div>
           </div>
