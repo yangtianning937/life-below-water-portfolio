@@ -5,11 +5,11 @@ import {fetch_activity} from "@/assets/ts/fetch_activity";
 import {fetch_image} from "@/assets/ts/fetch_image";
 
 const fact = [
-    "Port Phillip was named after Captain Arthur Phillip, the first (1788–92) governor of New South Wales.",
-    "The large metropolitan area of Melbourne is located at the head of the bay.",
-    "Rivers emptying into the bay include the Little, Werribee, and Yarra.",
-    "It’s status as Australia's densest catchment area!",
-    "One of the largest enclosed spaces of saltwater in the Southern Hemisphere."
+  "Port Phillip was named after Captain Arthur Phillip, the first (1788–92) governor of New South Wales.",
+  "The large metropolitan area of Melbourne is located at the head of the bay.",
+  "Rivers emptying into the bay include the Little, Werribee, and Yarra.",
+  "It’s status as Australia's densest catchment area!",
+  "One of the largest enclosed spaces of saltwater in the Southern Hemisphere."
 ]
 
 const activities = ref([]);
@@ -43,12 +43,12 @@ const get_cover = async (name) => {
     <section class="relative bg-gradient-to-b from-blue-50 to-cyan-50 pt-16 pb-10 text-center">
       <div class="max-w-4xl mx-auto px-5">
         <h1 class="font-extrabold leading-tight">
-          <span class="block text-3xl md:text-4xl text-slate-800">Our Oceans Need You.</span>
-          <span class="block text-4xl md:text-5xl text-slate-900">Help Us <span class="text-blue-600">Save Them.</span></span>
+          <span class="block text-3xl md:text-4xl text-slate-800">Be a Hero for the Ocean!</span>
+          <span class="block text-3xl md:text-4xl text-blue-600">Join Us <span class="text-slate-900">to Protect Port Phillip Bay.</span></span>
         </h1>
-        <p class="mt-3 text-slate-600">Oceans are the lifeblood of our planet. Become a Water Detective and help protect
-          Port Phillip Bay.</p>
-        <p class="mt-3 text-slate-600"></p>
+        <!--        <p class="mt-3 text-slate-600">Oceans are the lifeblood of our planet. Become a Water Detective and help protect-->
+        <!--          Port Phillip Bay.</p>-->
+        <p class="mt-4 text-slate-600"></p>
 
       </div>
 
@@ -65,11 +65,10 @@ const get_cover = async (name) => {
     <!-- Problem / Challenge -->
     <section id="problem" class="bg-gradient-to-b from-blue-900 to-indigo-700 text-white py-12">
       <div class="max-w-6xl mx-auto px-5">
-        <h2 class="text-3xl font-bold mb-2">Welcome, Water Detectives!</h2>
+        <h2 class="text-3xl font-bold mb-2">Explore Port Phillip Bay</h2>
         <p class="text-blue-100">
-          Get ready to explore Port Phillip Bay with real data collected since 1984 — it’s your turn to investigate!
-          Check water quality, spot changes over time, learn about fish models, and complete real cleanups.
-          Then test your knowledge with fun quizzes and unlock fish facts.
+          with real ocean clues! Test the water, spot changes, meet cool fish, and join
+          clean-ups. Play fun quizzes and unlock ocean secrets.
         </p>
 
       </div>
@@ -82,7 +81,7 @@ const get_cover = async (name) => {
         <div class="grid md:grid-cols-3 gap-4 mt-2">
           <div v-for="f in fact">
             <div class="bg-white border rounded-xl p-4 shadow min-h-[120px]">
-            <p class="text-slate-600">{{f}}</p></div>
+              <p class="text-slate-600">{{ f }}</p></div>
           </div>
         </div>
       </div>
