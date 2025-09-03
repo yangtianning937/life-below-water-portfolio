@@ -105,23 +105,15 @@
         </div>
       </form>
 
-      <!-- Success banner -->
-      <div v-if="submitted" class="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-        <p class="text-green-700 font-medium">
-          Thanks, {{ form.full_name }}! Your registration for
-          <strong>{{ activity.name }}</strong> has been recorded.
-        </p>
-      </div>
-      <!-- Fail banner -->
-      <div v-if="submitted === false" class="mt-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-        <p class="text-red-700 font-medium">
-          Sorry, {{ form.full_name }}! Your registration for
-          <strong>{{ activity.name }}</strong> failed.
-        </p>
-        <p v-if="errors" class="text-red-700 font-medium">
-          Message: {{errors}}.
-        </p>
-      </div>
+      <FullscreenMessage
+          v-model="open"
+          title="Message"
+          :message="submitted ?
+          'Thanks, ' +  form.full_name +  '! Your registration for ' +  activity.name  + ' has been recorded.' :
+           'Sorry, ' + form.full_name + '! Your registration for ' + activity.name + ' failed.'"
+          confirmText="OK"
+          @confirm="router.push({name: 'activity'})"
+      />
     </div>
   </div>
 </template>
@@ -132,6 +124,7 @@ import {useRoute} from 'vue-router'
 import {fetch_activity} from "@/assets/ts/fetch_activity";
 import {post_form} from "@/assets/ts/post_form";
 import router from "@/router";
+import FullscreenMessage from "@/components/FullscreenMessage.vue";
 
 const route = useRoute()
 const currentId = route.params.id // string
@@ -148,11 +141,11 @@ fetch_activity(currentId)
 const form = reactive({full_name: '', email: '', parent: '', optional_parent: '', notes: ''})
 const submitting = ref(false)
 const submitted = ref(null)
+const open = ref(false)
 const errors = ref(null)
 
 function handleSubmit() {
   submitting.value = true;
-  console.log(currentId)
   post_form(
       currentId,
       form.full_name,
@@ -164,9 +157,6 @@ function handleSubmit() {
       if (r.msg === "success") {
         submitted.value = true
         console.log('Registration payload:', {activityId: currentId, ...form})
-        setTimeout(() => {
-          router.push({ name: 'activity'})
-        }, 1000)
       } else {
         submitted.value = false
         submitting.value = false
@@ -177,6 +167,7 @@ function handleSubmit() {
       submitting.value = false
       errors.value = "Error"
     }
+    open.value = true
   });
 }
 </script>
