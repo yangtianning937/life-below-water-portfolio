@@ -24,11 +24,10 @@
     <!-- 右侧：Tableau（替代原地图） -->
     <section class="map-wrap">
       <E1Tableau
-        workbook="NewWorkbook_17569007097240"
-        sheet="Sheet1"
-        staticImage="https://public.tableau.com/static/images/Ne/NewWorkbook_17569007097240/Sheet1/1.png"
-        :tabs="false"
-        :toolbar="true"
+        :url="tableauUrl"
+        :height="740"
+        :maxWidth="1600"
+        decalsDensity="high"
       />
     </section>
   </div>
@@ -43,6 +42,10 @@ import E1KPI from "@/components/epic1/E1KPI.vue";
 import E1ClassFilter from "@/components/epic1/E1ClassFilter.vue";
 import E1Trends from "@/components/epic1/E1Trends.vue";
 import E1Tableau from "@/components/epic1/E1Tableau.vue";
+
+// Epic1Page.vue 的 <script setup> 里（在 import E1Tableau 后面加上）：
+const tableauUrl =
+  "https://public.tableau.com/views/NewWorkbook_17569007097240/Sheet1?:showVizHome=no&:embed=y&:toolbar=yes&:tabs=no";
 
 /** 列名映射（与原 CSV 保持一致） */
 const COLS = {
