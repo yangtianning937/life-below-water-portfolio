@@ -1,8 +1,5 @@
-<!-- src/components/epic1/E1Tableau.vue
-     使用全局插件 OceanDecals.vue（teleport 到 body），本组件只负责“海洋边框 + Tableau iframe”。
-     通过 props 开关与配置贴图密度/透明度/层级。 -->
 <template>
-  <!-- 全局海洋贴图（可关闭），会被 Teleport 到 <body>，对所有页面可见 -->
+
   <OceanDecals
     v-if="showDecals"
     :density="decalsDensity"
@@ -65,7 +62,7 @@ const embedUrl = computed(() => {
   }
 })
 
-/* 海洋边框（内联 SVG） */
+/* 海洋边框 */
 const oceanFrameDataUrl = `url("data:image/svg+xml;utf8,${encodeURIComponent(`
   <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'>
     <rect x='0' y='0' width='100' height='100' fill='#006994'/>

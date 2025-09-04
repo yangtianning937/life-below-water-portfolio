@@ -32,29 +32,36 @@ const close = () => (isOpen.value = openOnDesktop && (mq?.matches ?? false) ? tr
 </script>
 
 <template>
-  <!-- 顶部条：全宽 + 左对齐（先汉堡，再标题） -->
-  <header class="sticky top-0 z-50 bg-white/90 backdrop-blur border-b border-slate-200">
-    <nav class="w-full h-[56px] pl-2 pr-2 flex items-center gap-3">  <!-- 关键：w-full + 去掉 max-w + 去掉 mx-auto -->
+  <header class="o-header sticky top-0 z-50">
+    <div class="ocean-ornaments" aria-hidden="true"></div>
+
+    <nav class="w-full h-[56px] pl-2 pr-2 flex items-center gap-3">
       <button
-        class="p-2 rounded hover:bg-slate-100"
+        class="p-2 rounded text-white hover:bg-white/10"
         :aria-expanded="isOpen"
         aria-label="Toggle menu"
         @click="isOpen = !isOpen"
-      >☰</button>
+      >
+        ☰
+      </button>
 
-      <RouterLink to="/" class="font-extrabold text-base md:text-lg text-slate-900 flex justify-center items-center gap-2">
-        <div class="w-12 rounded-lg overflow-hidden">
+      <RouterLink to="/" class="font-extrabold text-base md:text-lg text-white flex justify-center items-center gap-2">
+        <div class="w-12 rounded-lg overflow-hidden ring-1 ring-white/15">
           <img :src="logo" class="object-fill rounded-lg" alt="">
         </div>
         <span>{{ brand }}</span>
       </RouterLink>
 
-      <!-- 占位空白，让左侧元素紧贴左边 -->
       <div class="flex-1"></div>
     </nav>
+
+    <svg class="waves" viewBox="0 0 1200 100" preserveAspectRatio="none" aria-hidden="true">
+      <path class="wave wave-1" d="M0,40 C200,80 400,0 600,40 C800,80 1000,0 1200,40 L1200,100 L0,100 Z"/>
+      <path class="wave wave-2" d="M0,60 C200,100 400,20 600,60 C800,100 1000,20 1200,60 L1200,100 L0,100 Z"/>
+    </svg>
   </header>
 
-  <!-- 抽屉式侧边栏（桌面端也同样样式） -->
+
   <div class="drawer-root" :class="{ open: isOpen }">
     <div class="backdrop" @click="isOpen = openOnDesktop && (mq?.matches ?? false) ? true : false"></div>
 
@@ -92,6 +99,40 @@ const close = () => (isOpen.value = openOnDesktop && (mq?.matches ?? false) ? tr
 </template>
 
 <style scoped>
+/* 海洋渐变 */
+.o-header{
+  color:#fff;
+  background: linear-gradient(
+    180deg,
+    #1f3b82 0%,
+    #1e40af 40%,
+    #4338ca 75%,
+    #4f46e5 100%
+  );
+  border-bottom: 1px solid rgba(255,255,255,0.12);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+  overflow:hidden;
+}
+.ocean-ornaments{
+  pointer-events:none;
+  position:absolute; inset:0;
+  background:
+    radial-gradient(130px 70px at 18% 0%, rgba(255,255,255,.18), transparent 60%),
+    radial-gradient(150px 80px at 46% -10%, rgba(255,255,255,.15), transparent 70%),
+    radial-gradient(170px 90px at 80% 0%, rgba(255,255,255,.12), transparent 70%),
+    repeating-linear-gradient(125deg, rgba(255,255,255,.05) 0 14px, rgba(255,255,255,.025) 14px 28px);
+  mask-image: linear-gradient(to bottom, rgba(0,0,0,.95), rgba(0,0,0,.2));
+  opacity:.75;
+}
+
+/* 海浪 */
+.waves{ position:absolute; left:0; right:0; bottom:-1px; width:100%; height:28px; }
+.wave{ fill:rgba(255,255,255,.10); }
+.wave-1{ animation: drift 12s linear infinite; }
+.wave-2{ animation: drift 9s linear infinite reverse; opacity:.7; }
+@keyframes drift{ 0%{ transform: translateX(0) } 100%{ transform: translateX(-50%) } }
+
+/* 抽屉保持原样式 */
 .drawer-root { position: fixed; inset: 0; pointer-events: none; z-index: 60; }
 .drawer-root.open { pointer-events: auto; }
 .backdrop { position: absolute; inset: 0; background: rgba(0,0,0,.4); opacity: 0; transition: opacity .2s; }

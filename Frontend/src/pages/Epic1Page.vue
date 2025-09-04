@@ -21,7 +21,7 @@
       />
     </aside>
 
-    <!-- 右侧：Tableau（替代原地图） -->
+    <!-- 右侧：Tableau -->
     <section class="map-wrap">
       <E1Tableau
         :url="tableauUrl"
@@ -37,17 +37,17 @@
 import { onMounted, ref, computed, watch } from "vue";
 import Papa from "papaparse";
 
-/** 子组件（已移除 E1Map、E1Layers） */
+/** 子组件 */
 import E1KPI from "@/components/epic1/E1KPI.vue";
 import E1ClassFilter from "@/components/epic1/E1ClassFilter.vue";
 import E1Trends from "@/components/epic1/E1Trends.vue";
 import E1Tableau from "@/components/epic1/E1Tableau.vue";
 
-// Epic1Page.vue 的 <script setup> 里（在 import E1Tableau 后面加上）：
+
 const tableauUrl =
   "https://public.tableau.com/views/NewWorkbook_17569007097240/Sheet1?:showVizHome=no&:embed=y&:toolbar=yes&:tabs=no";
 
-/** 列名映射（与原 CSV 保持一致） */
+/** 列名映射 */
 const COLS = {
   lat:   "latitude",
   lon:   "longitude",
@@ -72,7 +72,7 @@ const dateRange = ref({ min: null, max: null, from: null, to: null });
 const trendTab = ref("hist");
 const trendsFull = ref(false);
 
-/** 颜色映射（仍供 Class 过滤面板使用） */
+/** 颜色映射 */
 function colorForClass(k) {
   const KEY = String(k || "").trim().toLowerCase();
   const MAP = {
@@ -119,7 +119,7 @@ const kpis = computed(() => {
 watch(selectedClassesArr, applyFilter, { deep: true });
 watch(dateRange, applyFilter, { deep: true });
 
-/** 加载 CSV（仅供 KPI/Trends 与 Class 过滤使用） */
+/** 加载 CSV */
 onMounted(async () => {
   try {
     loading.value = true;

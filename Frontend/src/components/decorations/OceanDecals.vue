@@ -1,5 +1,5 @@
 <template>
-  <!-- 动态 teleport 目标：body / 全屏元素 / 你传入的选择器 -->
+  <!-- 动态 teleport 目标：body / 全屏元素 -->
   <teleport :to="mountTo">
     <div
       v-if="enabled"
@@ -8,8 +8,7 @@
       aria-hidden="true"
     >
       <template v-for="(d, i) in decals" :key="i">
-        <!-- 贴图们（略）——与之前相同，可保留你已有的鱼/水母/海龟等 -->
-        <!-- 下面只展示一个示例，其他保持不变 -->
+        <!-- 鱼 -->
         <svg v-if="d.type==='fish'" class="decal anim-swim-slow" :style="decalStyle(d)" viewBox="0 0 60 30">
           <ellipse cx="28" cy="15" rx="16" ry="10" fill="#ffd54f"/>
           <polygon points="0,15 14,6 14,24" fill="#ffb300"/>
@@ -64,22 +63,20 @@
           </g>
         </svg>
 
-        <!-- 海豚 -->
-        <svg v-else-if="d.type==='dolphin'" class="decal" :class="d.anim" :style="decalStyle(d)" viewBox="0 0 100 40">
-          <path d="M4 24 C24 6, 66 4, 92 18 C72 18,52 22,38 30 C30 28,18 26,4 24 Z" :fill="d.color || '#64b5f6'"/>
-          <path d="M58 14 l10 8 -12 -2 z" :fill="d.color || '#64b5f6'"/>
-          <circle cx="74" cy="16" r="1.8" fill="#0d47a1"/>
-        </svg>
 
 
 
       </template>
 
-      <!-- 气泡（保留原有） -->
+      <!-- 气泡 -->
       <div class="bubbles">
-        <span class="b b1"></span><span class="b b2"></span><span class="b b3"></span>
-        <span class="b b4"></span><span class="b b5"></span>
+        <span class="b b1"></span>
+        <span class="b b2"></span>
+        <span class="b b3"></span>
+        <span class="b b4"></span>
+        <span class="b b5"></span>
       </div>
+
     </div>
   </teleport>
 </template>
@@ -89,24 +86,24 @@ import { computed, ref, onMounted, onBeforeUnmount } from 'vue'
 
 const props = defineProps({
   enabled: { type: Boolean, default: true },
-  density: { type: String, default: 'medium' },       // 'low' | 'medium' | 'high'
+  density: { type: String, default: 'high' },       // 'low' | 'medium' | 'high'
   opacity: { type: Number, default: 0.9 },            // 0~1
   zIndex:  { type: [Number, String], default: 5 },
 
-  /** 选择器或元素：用于“伪全屏”容器（可选）。例如 '#trends-fs-root' 或一个 DOM 元素 */
+  /** 选择器或元素：用于“伪全屏”容器（可选）。 */
   to: { type: [String, Object], default: 'body' },
 
   /** 自动跟随“真全屏”。开启后在 fullscreenchange 时把 teleport 目标切到 document.fullscreenElement */
   followFullscreen: { type: Boolean, default: true }
 })
 
-/* 计算贴图（和你之前的一样，可复用） */
+/* 计算贴图 */
 const decals = computed(() => {
   const base = [
-    { type:'fish', top: 14, left: 28,  w: 82, r:0 },
+    { type:'fish', top: 16, left: 300,  w: 82, r:0 },
     { type:'jelly', top: 16, right: 32, w: 74, r:0 },
     { type:'weed', bottom: 24, left: 34, w: 74, r:0 },
-    { type:'crab', bottom: 24, right: 40, w: 74, r:0 },
+    { type:'crab', bottom: 24, right: 500, w: 74, r:0 },
     // ……按需继续补……
   ]
   if (props.density === 'low') return base.slice(0, 4)
@@ -127,7 +124,7 @@ function decalStyle(d) {
   return s
 }
 
-/* ⭐ 关键：动态 teleport 目标 */
+/* 动态 teleport 目标 */
 const mountTo = ref(props.to)
 
 function handleFsChange() {
