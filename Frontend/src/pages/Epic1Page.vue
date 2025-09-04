@@ -25,7 +25,7 @@
     <section class="map-wrap">
       <E1Tableau
         :url="tableauUrl"
-        :height="740"
+        :height="630"
         :maxWidth="1600"
         decalsDensity="high"
       />
