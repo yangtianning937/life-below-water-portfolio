@@ -5,6 +5,7 @@ import router from './router'
 
 import 'leaflet/dist/leaflet.css'
 
+import OceanDecals from '@/components/decorations/OceanDecals.vue'
 
 import './style.css'
 import './assets/global.css'
@@ -28,5 +29,6 @@ if (import.meta.env.DEV) {
   console.log('✅ App running in DEV mode')
 }
 
+app.component('OceanDecals', OceanDecals)
 
 app.mount('#app')

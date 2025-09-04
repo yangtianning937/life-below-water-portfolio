@@ -7,6 +7,9 @@
   <div class="min-h-screen flex flex-col bg-white text-slate-900">
     <AppHeader />
 
+    <!-- 全局海洋贴图 -->
+     <OceanDecals density="high" :opacity="0.9" :zIndex="99999" :followFullscreen="true" />
+
     <main id="main-content" class="flex-1">
       <RouterView v-slot="{ Component }">
         <transition name="fade" mode="out-in">
@@ -23,6 +26,8 @@
 import { RouterView } from 'vue-router'
 import AppHeader from '@/components/AppHeader.vue'
 import AppFooter from '@/components/AppFooter.vue'
+
+import OceanDecals from '@/components/decorations/OceanDecals.vue'
 </script>
 
 <style>
