@@ -6,6 +6,7 @@ import HomePage from '@/pages/HomePage.vue'
 import Epic1Page from '@/pages/Epic1Page.vue'
 import Epic2List from '@/pages/Epic2List.vue'
 import Epic2Register from '@/pages/Epic2Register.vue'
+import LearningModule from "@/pages/LearningModule.vue";
 
 const routes = [
     {
@@ -13,6 +14,12 @@ const routes = [
         name: 'home',
         component: HomePage,
         meta: {title: 'LifeBelowWater | Home'}
+    },
+    {
+        path: '/learningModule',
+        name: 'learningModule',
+        component: LearningModule,
+        meta: {title: 'LifeBelowWater | LearningModule'}
     },
     {
         path: '/epic1',
