@@ -85,7 +85,7 @@ function go(n:number){ page.value = n }
 .m2__h2{ margin:0 0 12px; font-weight:800; font-size:1.6rem; line-height:1.25; color: var(--lm-heading); }
 .m2__p{ margin:0; line-height:1.7; font-size:1.05rem; }
 
-/* Page 2 带卡片风格列表，靠近 PDF 手绘边角感 */
+/* Page 2 带卡片风格列表 */
 .beach-list{ margin: 8px 0 0; padding-left: 22px; line-height:1.7; }
 .beach-list li{ margin: 6px 0; }
 

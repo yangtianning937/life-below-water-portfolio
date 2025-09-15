@@ -29,7 +29,7 @@
       <ModuleIntro    v-if="cur.key==='m1'" />
       <ModuleBeaches  v-else-if="cur.key==='m2'" />
       <ModuleProtect  v-else-if="cur.key==='m3'" />
-      <QuizBlock      v-else-if="cur.key==='m4'" :bank="quizBank" :pick="5" />
+      <QuizBlock v-else-if="cur.key==='m4'" :bank-by-module="learningQuiz" />
     </main>
 
     <!-- Footer -->
@@ -47,6 +47,7 @@ import ModuleIntro from '../components/learning/ModuleIntro.vue';
 import ModuleBeaches from '../components/learning/ModuleBeaches.vue'
 import ModuleProtect from '../components/learning/ModuleProtect.vue'
 import QuizBlock     from '../components/learning/QuizBlock.vue'
+import learningQuiz  from '../data/learningQuiz'
 
 
 type ModuleKey = 'm1'|'m2'|'m3'|'m4'
@@ -80,10 +81,10 @@ onUnmounted(() => document.body.classList.remove('bg-learning'))
 /* 让视口高度撑满，保证背景可见 */
 :global(html, body, #app) { height: 100%; }
 
-/* 仅当进入本页时（body 有类名）启用学习页主题变量 */
+
 :global(body.bg-learning) {
-  background-color: #DFF3F7;        /* PDF 的淡蓝背景 */
-  color-scheme: light;              /* 强制浅色方案，避免暗色模式把子组件变黑 */
+  background-color: #DFF3F7;
+  color-scheme: light;
 
   /* === 统一的颜色变量 === */
   --lm-text:        #0f172a;        /* 默认文字 */
