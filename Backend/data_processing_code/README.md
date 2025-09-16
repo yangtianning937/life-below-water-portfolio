@@ -21,5 +21,8 @@ Default Weights (from model)
 * P_PO4: 0.15
 * P_Total: 0.15
 If a value is missing, weights for the non-missing indicators are renormalized. Each available indicator’s score is multiplied by its weight, summed, and divided only by the sum of the available weights.
-Most Recent Year per Monitoring Site
+
+
+*Most Recent Year per Monitoring Site*
 For each site, the latest date in the dataset is identified. A 365-day window prior to that date is then used as the “most recent year” for that site. The mean value within this window is calculated, ensuring consistency even when sites have different data coverage periods.
+
