@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount } from 'vue'
-import { useRoute } from 'vue-router'
+import {ref, onMounted, onBeforeUnmount} from 'vue'
+import {useRoute} from 'vue-router'
 import logo from '@/assets/images/logo.jpg';
 
 const route = useRoute()
@@ -24,9 +24,10 @@ onBeforeUnmount(() => {
 })
 
 const navItems = [
-  { name: 'Home', to: { name: 'home' }, key: 'home', icon: 'home' },
-  { name: 'Marine Environment Data Hub', to: { name: 'data_hub' }, key: 'data_hub', icon: 'db' },
-  { name: 'Volunteer Activity', to: { name: 'activity' }, key: 'activity', icon: 'vol' }
+  {name: 'Home', to: {name: 'home'}, key: 'home', icon: 'home'},
+  {name: 'Marine Environment Data Hub', to: {name: 'data_hub'}, key: 'data_hub', icon: 'db'},
+  {name: 'Nearby Beach', to: {name: 'nearby'}, key: 'nearby', icon: 'beach'},
+  {name: 'Volunteer Activity', to: {name: 'activity'}, key: 'activity', icon: 'vol'}
 ]
 const close = () => (isOpen.value = openOnDesktop && (mq?.matches ?? false) ? true : false)
 </script>
@@ -37,10 +38,10 @@ const close = () => (isOpen.value = openOnDesktop && (mq?.matches ?? false) ? tr
 
     <nav class="w-full h-[56px] pl-2 pr-2 flex items-center gap-3">
       <button
-        class="p-2 rounded text-white hover:bg-white/10"
-        :aria-expanded="isOpen"
-        aria-label="Toggle menu"
-        @click="isOpen = !isOpen"
+          class="p-2 rounded text-white hover:bg-white/10"
+          :aria-expanded="isOpen"
+          aria-label="Toggle menu"
+          @click="isOpen = !isOpen"
       >
         ☰
       </button>
@@ -73,15 +74,16 @@ const close = () => (isOpen.value = openOnDesktop && (mq?.matches ?? false) ? tr
 
       <nav class="sidenav-nav">
         <RouterLink
-          v-for="it in navItems"
-          :key="it.key"
-          :to="it.to"
-          class="nav-item"
-          :class="{ active: route.name === it.key }"
-          @click="close()"
+            v-for="it in navItems"
+            :key="it.key"
+            :to="it.to"
+            class="nav-item"
+            :class="{ active: route.name === it.key }"
+            @click="close()"
         >
           <svg v-if="it.icon==='home'" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path d="M3 11l9-8 9 8" stroke-width="2"/><path d="M9 22V12h6v10" stroke-width="2"/>
+            <path d="M3 11l9-8 9 8" stroke-width="2"/>
+            <path d="M9 22V12h6v10" stroke-width="2"/>
           </svg>
           <svg v-else-if="it.icon==='db'" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <ellipse cx="12" cy="5" rx="9" ry="3" stroke-width="2"/>
@@ -100,60 +102,137 @@ const close = () => (isOpen.value = openOnDesktop && (mq?.matches ?? false) ? tr
 
 <style scoped>
 /* 海洋渐变 */
-.o-header{
-  color:#fff;
+.o-header {
+  color: #fff;
   background: linear-gradient(
-    180deg,
-    #1f3b82 0%,
-    #1e40af 40%,
-    #4338ca 75%,
-    #4f46e5 100%
+      180deg,
+      #1f3b82 0%,
+      #1e40af 40%,
+      #4338ca 75%,
+      #4f46e5 100%
   );
-  border-bottom: 1px solid rgba(255,255,255,0.12);
-  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
-  overflow:hidden;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+  overflow: hidden;
 }
-.ocean-ornaments{
-  pointer-events:none;
-  position:absolute; inset:0;
-  background:
-    radial-gradient(130px 70px at 18% 0%, rgba(255,255,255,.18), transparent 60%),
-    radial-gradient(150px 80px at 46% -10%, rgba(255,255,255,.15), transparent 70%),
-    radial-gradient(170px 90px at 80% 0%, rgba(255,255,255,.12), transparent 70%),
-    repeating-linear-gradient(125deg, rgba(255,255,255,.05) 0 14px, rgba(255,255,255,.025) 14px 28px);
-  mask-image: linear-gradient(to bottom, rgba(0,0,0,.95), rgba(0,0,0,.2));
-  opacity:.75;
+
+.ocean-ornaments {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(130px 70px at 18% 0%, rgba(255, 255, 255, .18), transparent 60%),
+  radial-gradient(150px 80px at 46% -10%, rgba(255, 255, 255, .15), transparent 70%),
+  radial-gradient(170px 90px at 80% 0%, rgba(255, 255, 255, .12), transparent 70%),
+  repeating-linear-gradient(125deg, rgba(255, 255, 255, .05) 0 14px, rgba(255, 255, 255, .025) 14px 28px);
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, .95), rgba(0, 0, 0, .2));
+  opacity: .75;
 }
 
 /* 海浪 */
-.waves{ position:absolute; left:0; right:0; bottom:-1px; width:100%; height:28px; }
-.wave{ fill:rgba(255,255,255,.10); }
-.wave-1{ animation: drift 12s linear infinite; }
-.wave-2{ animation: drift 9s linear infinite reverse; opacity:.7; }
-@keyframes drift{ 0%{ transform: translateX(0) } 100%{ transform: translateX(-50%) } }
+.waves {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  width: 100%;
+  height: 28px;
+}
+
+.wave {
+  fill: rgba(255, 255, 255, .10);
+}
+
+.wave-1 {
+  animation: drift 12s linear infinite;
+}
+
+.wave-2 {
+  animation: drift 9s linear infinite reverse;
+  opacity: .7;
+}
+
+@keyframes drift {
+  0% {
+    transform: translateX(0)
+  }
+  100% {
+    transform: translateX(-50%)
+  }
+}
 
 /* 抽屉保持原样式 */
-.drawer-root { position: fixed; inset: 0; pointer-events: none; z-index: 60; }
-.drawer-root.open { pointer-events: auto; }
-.backdrop { position: absolute; inset: 0; background: rgba(0,0,0,.4); opacity: 0; transition: opacity .2s; }
-.drawer-root.open .backdrop { opacity: 1; }
+.drawer-root {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 60;
+}
+
+.drawer-root.open {
+  pointer-events: auto;
+}
+
+.backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, .4);
+  opacity: 0;
+  transition: opacity .2s;
+}
+
+.drawer-root.open .backdrop {
+  opacity: 1;
+}
+
 .sidenav {
-  position: absolute; top: 0; left: 0; height: 100%; width: 272px;
-  background: #0d1117; color: #fff; box-shadow: 0 10px 30px rgba(0,0,0,.3);
-  transform: translateX(-100%); transition: transform .22s ease;
-  display: flex; flex-direction: column;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 272px;
+  background: #0d1117;
+  color: #fff;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .3);
+  transform: translateX(-100%);
+  transition: transform .22s ease;
+  display: flex;
+  flex-direction: column;
 }
-.drawer-root.open .sidenav { transform: translateX(0); }
+
+.drawer-root.open .sidenav {
+  transform: translateX(0);
+}
+
 .sidenav-head {
-  height: 56px; display: flex; align-items: center; justify-content: space-between;
-  padding: 0 16px; border-bottom: 1px solid rgba(255,255,255,.08);
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, .08);
 }
-.sidenav-nav { padding: 8px; }
+
+.sidenav-nav {
+  padding: 8px;
+}
+
 .nav-item {
-  display: flex; align-items: center; gap: 10px;
-  padding: 10px 12px; margin: 4px 0; border-radius: 10px;
-  color: #e6edf3; text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  margin: 4px 0;
+  border-radius: 10px;
+  color: #e6edf3;
+  text-decoration: none;
 }
-.nav-item:hover { background: rgba(255,255,255,.08); }
-.nav-item.active { background: rgba(56,139,253,.2); color: #58a6ff; }
+
+.nav-item:hover {
+  background: rgba(255, 255, 255, .08);
+}
+
+.nav-item.active {
+  background: rgba(56, 139, 253, .2);
+  color: #58a6ff;
+}
 </style>
