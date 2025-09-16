@@ -1,38 +1,50 @@
 <!-- src/pages/NearbyBeach.vue -->
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount, computed } from 'vue'
+import {ref, onMounted, onBeforeUnmount, computed} from 'vue'
+import {fetch_image} from "@/assets/ts/fetch_image";
 
 type Beach = { name: string; lat: number; lng: number }
 type Activity = { img: string; name: string; reason: string }
 
 // Common Port Phillip Bay beaches (adjust or extend as needed)
 const beaches: Beach[] = [
-  { name: 'St Kilda Beach',        lat: -37.8676, lng: 144.9730 },
-  { name: 'Brighton Beach',        lat: -37.9179, lng: 144.9869 },
-  { name: 'Port Melbourne Beach',  lat: -37.8393, lng: 144.9423 },
-  { name: 'Mordialloc Beach',      lat: -38.0067, lng: 145.0884 },
-  { name: 'Dromana Beach',         lat: -38.3347, lng: 144.9644 },
-  { name: 'Capel Sound Beach',     lat: -38.3696, lng: 144.8845 },
-  { name: 'Mornington Beach',      lat: -38.2158, lng: 145.0399 },
-  { name: 'Altona Foreshore',      lat: -37.8670, lng: 144.8260 },
-  { name: 'Frankston Foreshore',   lat: -38.1448, lng: 145.1263 },
-  { name: 'Newport Coastal Reserve', lat: -37.8596, lng: 144.8857 },
+  {name: 'St Kilda Beach', lat: -37.8676, lng: 144.9730},
+  {name: 'Brighton Beach', lat: -37.9179, lng: 144.9869},
+  {name: 'Port Melbourne Beach', lat: -37.8393, lng: 144.9423},
+  {name: 'Mordialloc Beach', lat: -38.0067, lng: 145.0884},
+  {name: 'Dromana Beach', lat: -38.3347, lng: 144.9644},
+  {name: 'Capel Sound Beach', lat: -38.3696, lng: 144.8845},
+  {name: 'Mornington Beach', lat: -38.2158, lng: 145.0399},
+  {name: 'Altona Foreshore', lat: -37.8670, lng: 144.8260},
+  {name: 'Frankston Foreshore', lat: -38.1448, lng: 145.1263},
+  {name: 'Newport Coastal Reserve', lat: -37.8596, lng: 144.8857},
 ]
+
+const coverNames = [
+    "swimming.png",
+    "diving.png",
+    "fishing.png"
+]
+const covers = ref([]);
+
+for (const i in coverNames) {
+  fetch_image(coverNames[i]).then(img => covers.value.push(img));
+}
 
 // Example activities (replace with API data if available)
 const activities = ref<Activity[]>([
   {
-    img: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1200&auto=format&fit=crop',
+    img: 'swimming.png',
     name: 'Beach Safety Patrol – Port Melbourne',
     reason: 'Learn lifeguard safety tips and why clean water matters.',
   },
   {
-    img: 'https://images.unsplash.com/photo-1544552865-8a4f66f9b631?q=80&w=1200&auto=format&fit=crop',
+    img: 'diving.png',
     name: 'Seagrass Discovery Snorkel – Mordialloc',
     reason: 'See seagrass meadows and small fish with beginner-friendly snorkeling.',
   },
   {
-    img: 'https://images.unsplash.com/photo-1510130387422-82bed34b37e0?q=80&w=1200&auto=format&fit=crop',
+    img: 'fishing.png',
     name: 'Rock Pool Explorer – Dromana',
     reason: 'Find starfish and tiny crabs—perfect for family learning.',
   },
@@ -45,20 +57,20 @@ const gallery = ref<string[]>([
   'https://images.unsplash.com/photo-1501959915551-4e8a04a3a1b7?q=80&w=1200&auto=format&fit=crop',
 ])
 
-const userLat = ref<number|null>(null)
-const userLng = ref<number|null>(null)
-const errorMsg = ref<string| null>(null)
+const userLat = ref<number | null>(null)
+const userLng = ref<number | null>(null)
+const errorMsg = ref<string | null>(null)
 const nearest = ref<Beach | null>(null)
 const loading = ref(true)
 
 // Haversine distance (km)
-function haversine(lat1:number, lon1:number, lat2:number, lon2:number) {
-  const toRad = (d:number)=> d * Math.PI/180
+function haversine(lat1: number, lon1: number, lat2: number, lon2: number) {
+  const toRad = (d: number) => d * Math.PI / 180
   const R = 6371
-  const dLat = toRad(lat2-lat1)
-  const dLon = toRad(lon2-lon1)
-  const a = Math.sin(dLat/2)**2 + Math.cos(toRad(lat1))*Math.cos(toRad(lat2))*Math.sin(dLon/2)**2
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))
+  const dLat = toRad(lat2 - lat1)
+  const dLon = toRad(lon2 - lon1)
+  const a = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
   return R * c
 }
 
@@ -75,30 +87,31 @@ onMounted(() => {
     return
   }
   navigator.geolocation.getCurrentPosition(
-    (pos) => {
-      userLat.value = pos.coords.latitude
-      userLng.value = pos.coords.longitude
-      // Find the nearest beach
-      let best: Beach | null = null
-      let bestDist = Number.POSITIVE_INFINITY
-      for (const b of beaches) {
-        const d = haversine(userLat.value!, userLng.value!, b.lat, b.lng)
-        if (d < bestDist) { bestDist = d; best = b }
-      }
-      nearest.value = best
-      loading.value = false
-    },
-    (err) => {
-      errorMsg.value = err.message || 'Unable to access location.'
-      loading.value = false
-    },
-    { enableHighAccuracy: true, timeout: 8000, maximumAge: 60000 }
+      (pos) => {
+        userLat.value = pos.coords.latitude
+        userLng.value = pos.coords.longitude
+        // Find the nearest beach
+        let best: Beach | null = null
+        let bestDist = Number.POSITIVE_INFINITY
+        for (const b of beaches) {
+          const d = haversine(userLat.value!, userLng.value!, b.lat, b.lng)
+          if (d < bestDist) {
+            bestDist = d;
+            best = b
+          }
+        }
+        nearest.value = best
+        loading.value = false
+      },
+      (err) => {
+        errorMsg.value = err.message || 'Unable to access location.'
+        loading.value = false
+      },
+      {enableHighAccuracy: true, timeout: 8000, maximumAge: 60000}
   )
 })
 
-/* =========================
- * Simple Lightbox (Gallery)
- * ========================= */
+
 const isLightboxOpen = ref(false)
 const currentIndex = ref<number>(0)
 
@@ -108,18 +121,22 @@ function openImageAt(i: number) {
   // prevent body scroll
   document.documentElement.style.overflow = 'hidden'
 }
+
 function closeLightbox() {
   isLightboxOpen.value = false
   document.documentElement.style.overflow = ''
 }
+
 function nextImage() {
   if (!gallery.value.length) return
   currentIndex.value = (currentIndex.value + 1) % gallery.value.length
 }
+
 function prevImage() {
   if (!gallery.value.length) return
   currentIndex.value = (currentIndex.value - 1 + gallery.value.length) % gallery.value.length
 }
+
 function onKey(e: KeyboardEvent) {
   if (!isLightboxOpen.value) return
   if (e.key === 'Escape') closeLightbox()
@@ -156,14 +173,14 @@ onBeforeUnmount(() => {
     <!-- Three-image gallery: 50vh height, full-bleed cover -->
     <section aria-label="nearby gallery" class="grid grid-cols-1 sm:grid-cols-3 gap-3">
       <button
-        v-for="(src, i) in gallery"
-        :key="i"
-        type="button"
-        class="rounded-xl overflow-hidden border focus:outline-none focus:ring-2 focus:ring-marine-400 cursor-zoom-in"
-        @click="openImageAt(i)"
-        :aria-label="`Open image ${i+1} of ${gallery.length}`"
+          v-for="(src, i) in gallery"
+          :key="i"
+          type="button"
+          class="rounded-xl overflow-hidden border focus:outline-none focus:ring-2 focus:ring-marine-400 cursor-zoom-in"
+          @click="openImageAt(i)"
+          :aria-label="`Open image ${i+1} of ${gallery.length}`"
       >
-        <img :src="src" alt="" class="w-full h-[50vh] object-cover" />
+        <img :src="src" alt="" class="w-full h-[50vh] object-cover"/>
       </button>
     </section>
 
@@ -171,7 +188,7 @@ onBeforeUnmount(() => {
     <section id="content" class="grid md:grid-cols-3 gap-4">
       <article v-for="(a, i) in activities" :key="i"
                class="bg-white border rounded-xl overflow-hidden shadow-sm flex flex-col">
-        <img :src="a.img" :alt="a.name" class="w-full h-44 object-cover">
+        <img :src="covers[i]" :alt="a.name" class="w-full h-44 object-cover">
         <div class="p-4 flex-1 flex flex-col">
           <h3 class="font-semibold text-lg mb-1 line-clamp-2">{{ a.name }}</h3>
           <p class="text-slate-600 text-sm flex-1">{{ a.reason }}</p>
@@ -187,37 +204,39 @@ onBeforeUnmount(() => {
 
   <!-- Lightbox Modal -->
   <div
-    v-if="isLightboxOpen"
-    class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4"
-    role="dialog" aria-modal="true" aria-label="Image preview"
-    @click.self="closeLightbox"
+      v-if="isLightboxOpen"
+      class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4"
+      role="dialog" aria-modal="true" aria-label="Image preview"
+      @click.self="closeLightbox"
   >
     <div class="relative max-w-6xl w-full">
       <!-- Close -->
       <button
-        class="absolute -top-3 -right-3 bg-white rounded-full shadow px-3 py-2 text-sm font-semibold hover:bg-slate-100"
-        @click="closeLightbox"
-        aria-label="Close"
+          class="absolute -top-3 -right-3 bg-white rounded-full shadow px-3 py-2 text-sm font-semibold hover:bg-slate-100"
+          @click="closeLightbox"
+          aria-label="Close"
       >
         ✕
       </button>
 
       <!-- Prev / Next -->
       <button
-        class="absolute left-0 top-1/2 -translate-y-1/2 p-3 bg-white/80 hover:bg-white rounded-l focus:outline-none"
-        @click.stop="prevImage" aria-label="Previous image"
-      >←</button>
+          class="absolute left-0 top-1/2 -translate-y-1/2 p-3 bg-white/80 hover:bg-white rounded-l focus:outline-none"
+          @click.stop="prevImage" aria-label="Previous image"
+      >←
+      </button>
       <button
-        class="absolute right-0 top-1/2 -translate-y-1/2 p-3 bg-white/80 hover:bg-white rounded-r focus:outline-none"
-        @click.stop="nextImage" aria-label="Next image"
-      >→</button>
+          class="absolute right-0 top-1/2 -translate-y-1/2 p-3 bg-white/80 hover:bg-white rounded-r focus:outline-none"
+          @click.stop="nextImage" aria-label="Next image"
+      >→
+      </button>
 
       <!-- Image -->
       <img
-        :src="gallery[currentIndex]"
-        alt=""
-        class="mx-auto max-h-[85vh] w-auto object-contain rounded shadow-2xl"
-        @click.stop
+          :src="gallery[currentIndex]"
+          alt=""
+          class="mx-auto max-h-[85vh] w-auto object-contain rounded shadow-2xl"
+          @click.stop
       />
       <div class="mt-3 text-center text-white/90 text-sm">
         Image {{ currentIndex + 1 }} / {{ gallery.length }} — Press Esc to close
@@ -229,8 +248,17 @@ onBeforeUnmount(() => {
 <style scoped>
 /* Accessible “skip to content” link (if you already have a global version, you can remove this) */
 .skip-link {
-  position: absolute; left: -9999px; top: 8px; z-index: 1000;
-  background: #0d9488; color: #fff; padding: 8px 12px; border-radius: 8px;
+  position: absolute;
+  left: -9999px;
+  top: 8px;
+  z-index: 1000;
+  background: #0d9488;
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 8px;
 }
-.skip-link:focus { left: 8px; }
+
+.skip-link:focus {
+  left: 8px;
+}
 </style>
