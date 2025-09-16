@@ -90,6 +90,14 @@ const close = () => (isOpen.value = openOnDesktop && (mq?.matches ?? false) ? tr
             <path d="M3 5v6c0 1.7 4 3 9 3s9-1.3 9-3V5" stroke-width="2"/>
             <path d="M3 11v6c0 1.7 4 3 9 3s9-1.3 9-3v-6" stroke-width="2"/>
           </svg>
+          <svg v-else-if="it.icon==='beach'" width="18" height="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               fill="currentColor" aria-hidden="true">
+            <path d="M12 6c-3.5 0-5.6 2.2-6.6 4.6h13.2C17.6 8.2 15.5 6 12 6Z"/>
+            <path d="M10.4 6.2c.5.1.9.5.8 1.1l-1.5 10.9a1 1 0 1 1-2-.3l1.5-10.9c.1-.6.7-1 .1.0Z"/>
+            <path
+                d="M3 17.25c2.2 1.6 4.4 1.6 6.6 0 2.2 1.6 4.4 1.6 6.6 0 2.2 1.6 4.4 1.6 6.6 0v1.2c-2.2 1.6-4.4 1.6-6.6 0-2.2 1.6-4.4 1.6-6.6 0-2.2 1.6-4.4 1.6-6.6 0v-1.2Z"/>
+          </svg>
+
           <svg v-else width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <path d="M20 21v-7M4 21v-7M4 10a4 4 0 1 1 6 3.46A5 5 0 0 0 20 18" stroke-width="2"/>
           </svg>
