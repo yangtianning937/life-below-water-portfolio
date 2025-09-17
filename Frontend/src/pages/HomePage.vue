@@ -74,6 +74,17 @@ const get_cover = async (name) => {
       </div>
     </section>
 
+    <!-- jump to learning module-->
+    <section class="py-12 bg-gradient-to-b from-blue-50 to-white">
+      <div class="max-w-6xl mx-auto px-5 text-center">
+        <h3 class="text-2xl font-bold">Ready to start your investigation?</h3>
+        <RouterLink :to="{ name: 'learningModule' }"
+                    class="inline-block mt-3 px-6 py-3 rounded-xl bg-blue-900 text-white font-semibold shadow">
+          Become a Water Detective
+        </RouterLink>
+      </div>
+    </section>
+
     <!-- Interesting Fact -->
     <section class="bg-orange-50 py-10">
       <div class="max-w-6xl mx-auto px-5 grid items-center">
@@ -177,16 +188,8 @@ const get_cover = async (name) => {
       </div>
     </section>
 
-    <!-- Footer CTA -->
-    <section class="py-12 bg-gradient-to-b from-blue-50 to-white">
-      <div class="max-w-6xl mx-auto px-5 text-center">
-        <h3 class="text-2xl font-bold">Ready to start your investigation?</h3>
-        <RouterLink :to="{ name: 'learningModule' }"
-                    class="inline-block mt-3 px-6 py-3 rounded-xl bg-blue-900 text-white font-semibold shadow">
-          Become a Water Detective
-        </RouterLink>
-      </div>
-    </section>
+
+
   </main>
 </template>
 

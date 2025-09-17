@@ -3,7 +3,7 @@ import {createRouter, createWebHashHistory} from 'vue-router'
 
 // Pages
 import HomePage from '@/pages/HomePage.vue'
-import Epic1Page from '@/pages/Epic1Page.vue'
+import WaterQuality from '@/pages/Epic1Page.vue'
 import Epic2List from '@/pages/Epic2List.vue'
 import Epic2Register from '@/pages/Epic2Register.vue'
 import LearningModule from "@/pages/LearningModule.vue";
@@ -24,7 +24,7 @@ const routes = [
     {
         path: '/epic1',
         name: 'data_hub', // 与导航栏 AppHeader.vue 的命名一致
-        component: Epic1Page,
+        component: WaterQuality,
         meta: {title: 'LifeBelowWater | Marine Environment Data Hub'}
     },
     {
