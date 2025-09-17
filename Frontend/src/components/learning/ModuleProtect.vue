@@ -41,9 +41,7 @@
 
       <div class="m3__pager">
         <button class="arrow arrow--left" @click="prevPage"><span>Previous</span></button>
-        <button class="arrow arrow--right" :disabled="page===total" @click="nextPage">
-          <span>Complete Module</span>
-        </button>
+
       </div>
     </div>
 
