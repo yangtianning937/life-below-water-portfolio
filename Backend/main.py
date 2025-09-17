@@ -153,6 +153,20 @@ async def post_activity_form(form: Form):
 
 
 ##################
+# APIs for Epic 3
+##################
+@api.get("nearby/{latitude}/{longitude}")
+async def get_nearby_beach(latitude: str, longitude: str):
+    try:
+        latitude = float(latitude)
+        longitude = float(longitude)
+
+        
+    except ValueError:
+        return JSONResponse(content={"msg": "Invalid latitude or longitude"}, status_code=400)
+
+
+##################
 # Other APIs
 ##################
 @api.get("/image/{name}")

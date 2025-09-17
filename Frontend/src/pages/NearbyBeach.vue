@@ -20,17 +20,6 @@ const beaches: Beach[] = [
   {name: 'Newport Coastal Reserve', lat: -37.8596, lng: 144.8857},
 ]
 
-const coverNames = [
-    "swimming.png",
-    "diving.png",
-    "fishing.png"
-]
-const covers = ref([]);
-
-for (const i in coverNames) {
-  fetch_image(coverNames[i]).then(img => covers.value.push(img));
-}
-
 // Example activities (replace with API data if available)
 const activities = ref<Activity[]>([
   {
@@ -50,12 +39,24 @@ const activities = ref<Activity[]>([
   },
 ])
 
-// Top gallery images (fill half the viewport height)
+// Top gallery images
 const gallery = ref<string[]>([
-  'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1200&auto=format&fit=crop',
-  'https://images.unsplash.com/photo-1455762279210-ae6b56c7ad7a?q=80&w=1200&auto=format&fit=crop',
-  'https://images.unsplash.com/photo-1501959915551-4e8a04a3a1b7?q=80&w=1200&auto=format&fit=crop',
+  "https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photoreference=AciIO2c22pTwKoRBmAk-3V8q_5l7RhFMq4j8XbVtki1JoRRMB6WO0diKvRLairozYXzVs-swtVOoCCy3sSFQViCU__cuVnrLmpK_Yvd2Hhnco9eWlgO4lFH3ezKJpuFa8WvxNBw1oBe6fOX8ZvxjZ5BZIU72EgOZxw1svXhlZVwo9SMPg400n1ecPGzWiVeJ-BVDIrbMV_y0ZKmo9lZzlKel94Ai3x4hedJf7KAxM497dSQt0H70inFuDYS6Z9MReDL-98lsYIJ06aictBmz0PY-sgaFSYyJ-WSU0Kb6fhsuhFDaUy8Z4jLWGbs4Qil3zl62CGXw4t3q7987rZ7Wn2xjw1bU3_NpAdermQppkwutWkofjyw1nnFZ6_V9jwO0ERT6nYfzBZETzBX6s_MjwgLv1OBYU7NaDhb57u1_G-pZ1tUQ5OJE&key=AIzaSyBlOgil_jAHzwKulAXTeTSxW_WtpQjCicg",
+  "https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photoreference=AciIO2fcMfAzDZgCD-JsCVYY7PLfSdZXg1u7YYNF8fayn4Xb5zes7qlqFAlXJ3t67MYhac2wXfZMC4XxzGGo1eIx3KZJPAISye3r__wgb6gjUIfJA7Sie8PzvyRyDE2BuKhsViv9iIJXwMjJxEiJQGdjxQyitns6tcGT-8nOpA2-tMFnE08tbFdUuV95Kkbby68pHRHfZSNxJL8y88w6GR5D17N7vMZ7FoS1JIqNhGmHe7uDmXew3EPsks0euPtBF9RjGsZEeyEkFYykUSbyV1EmYuqFAzakpnQDy1JHMfFNXxEMbJJfAb8ioGgOlF9PS8Yga6VV5Azxd6rJYa6gbeuST4qA4GIqkRG0vKS2kXhKgH4YnnxJ2JatniVwC6igli-58OAKjFH3UUeYS4yajZPbmClpE4pdYSm8d4vqUTlwWeGghQ&key=AIzaSyBlOgil_jAHzwKulAXTeTSxW_WtpQjCicg",
+  "https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photoreference=AciIO2eUM27kZ5N6Pt4JHI4OWJJfLJPuwy_KHbjrzPd42nYc6aVuMK3iNw92sA-vZFhQupCElCYrKsR8JAqBdSOyNNT-FfMQv2FJIkWuddKt7Oo9ypmrGjKcSFhqEvMPkVJZ6q8Fi-6JWZmcPfHtnkuCMf9iELT7ydI1n0eCymFVmLCHoyCzRB_YKMW9mHxEZ7sjXa0Y7WP82c_Ome6jxMtvYstpL67-uAFfsWo-crGk5xV1WmaO7dISYJ3DXDMXSm4L0xhSM3cm9O9l7TeICAGGbFIJpW3Nt0-1LBIPrrQLHPHWsQRkOUiBtJnZjCO7LXJWXNo_wWtekN4CJq_fWDZ7j7F17vK4pRgdjBv5mB1MEcXntEIINfnofND3vAQZpBK24r3y1Dwvi1265qV5Kgc5Mp1nAl_h7v0HuFIXqJi1zKn5vQ&key=AIzaSyBlOgil_jAHzwKulAXTeTSxW_WtpQjCicg"
 ])
+
+// Activity covers
+const coverNames = [
+  "swimming.png",
+  "diving.png",
+  "fishing.png"
+]
+const covers = ref([]);
+
+for (const i in coverNames) {
+  fetch_image(coverNames[i]).then(img => covers.value.push(img));
+}
 
 const userLat = ref<number | null>(null)
 const userLng = ref<number | null>(null)
