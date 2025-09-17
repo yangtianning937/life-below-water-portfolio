@@ -7,10 +7,13 @@ import Epic1Page from '@/pages/Epic1Page.vue'
 import Epic2List from '@/pages/Epic2List.vue'
 import Epic2Register from '@/pages/Epic2Register.vue'
 import LearningModule from "@/pages/LearningModule.vue";
+import LockPage from "@/pages/LockPage.vue";
+import {useAuth} from "@/assets/security/auth";
 
 const routes = [
+    {path: '/', name: 'lock', component: LockPage, meta: {public: true, title: 'LifeBelowWater | Unlock'}},
     {
-        path: '/',
+        path: '/home',
         name: 'home',
         component: HomePage,
         meta: {title: 'LifeBelowWater | Home'}
@@ -75,6 +78,16 @@ const router = createRouter({
         return {left: 0, top: 0, behavior: 'smooth'}
     }
 })
+
+// 访问控制：未登录 → 锁页
+router.beforeEach((to) => {
+  const { isAuthed } = useAuth()
+  if (to.meta?.public) return true
+  if (isAuthed()) return true
+  sessionStorage.setItem('redirect_after_login', to.fullPath || '/home')
+  return { name: 'lock' }
+})
+
 
 // 动态设置页面标题
 router.afterEach((to) => {
