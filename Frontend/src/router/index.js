@@ -40,6 +40,12 @@ const routes = [
         props: true,
         meta: {title: 'LifeBelowWater | Register Activity'}
     },
+    {
+        path: '/nearby',
+        name: 'nearby',
+        component: () => import('@/pages/NearbyBeach.vue'),
+        meta: {title: 'LifeBelowWater | Nearby Beach'}
+    },
     // 404
     {
         path: '/:pathMatch(.*)*',
