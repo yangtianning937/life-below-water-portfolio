@@ -123,6 +123,7 @@
       icon="🎉"
       confirmText="OK"
       :persistent="false"
+      @confirm="goHome"
     />
   </section>
 </template>
@@ -131,6 +132,7 @@
 import { ref, computed, onMounted } from 'vue'
 import bank from '@/data/marineQuiz'
 import FullscreenMessage from '@/components/FullscreenMessage.vue'
+import { useRouter } from 'vue-router'
 
 /** 弹窗状态 */
 const bankErrorOpen = ref(false)
@@ -138,6 +140,13 @@ const bankErrorText = ref('')
 const submitOpen = ref(false)
 const submitText = ref('')
 const submitTitle = ref('Congratulations')
+
+const router = useRouter()
+
+function goHome() {
+  submitOpen.value = false
+  router.push('/home')
+}
 
 /** 组卷：5题；四类至少各1，+1个随机补位 */
 const total = 5
