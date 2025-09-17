@@ -8,6 +8,7 @@ import Epic2List from '@/pages/Epic2List.vue'
 import Epic2Register from '@/pages/Epic2Register.vue'
 import LearningModule from "@/pages/LearningModule.vue";
 import LockPage from "@/pages/LockPage.vue";
+import MarineQuiz from "@/pages/MarineQuiz.vue";
 import {useAuth} from "@/assets/security/auth";
 
 const routes = [
@@ -42,6 +43,11 @@ const routes = [
         component: Epic2Register,
         props: true,
         meta: {title: 'LifeBelowWater | Register Activity'}
+    },
+    {
+        path: '/marine_quiz',
+        name: 'marine_quiz',
+        component: MarineQuiz
     },
     {
         path: '/nearby',

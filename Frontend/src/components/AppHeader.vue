@@ -25,9 +25,10 @@ onBeforeUnmount(() => {
 
 const navItems = [
   {name: 'Home', to: {name: 'home'}, key: 'home', icon: 'home'},
-  {name: 'Marine Environment Data Hub', to: {name: 'data_hub'}, key: 'data_hub', icon: 'db'},
+  {name: 'LearningModule', to: {name: 'learningModule'}, key: 'data_hub', icon: 'db'},
   {name: 'Nearby Beach', to: {name: 'nearby'}, key: 'nearby', icon: 'beach'},
-  {name: 'Volunteer Activity', to: {name: 'activity'}, key: 'activity', icon: 'vol'}
+  {name: 'Volunteer Activity', to: {name: 'activity'}, key: 'activity', icon: 'vol'},
+  {name: 'Quiz', to: { name: 'marine_quiz' }, key: 'quiz', icon: 'quiz' },
 ]
 const close = () => (isOpen.value = openOnDesktop && (mq?.matches ?? false) ? true : false)
 </script>
