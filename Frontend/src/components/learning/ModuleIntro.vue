@@ -144,7 +144,7 @@ const Dots = {
   padding: 18px;
   box-shadow: 0 10px 28px rgba(15,23,42,.08);
 }
-.m1__page{ position: relative; min-height: 480px; }
+.m1__page{ position: relative; min-height: 100%; width: 100%; }
 .m1__title{ margin:0 0 10px; font-size:1.6rem; font-weight:900; color: var(--lm-heading); }
 .m1__lead{ margin: 0 0 10px; }
 .m1__bullets{ margin: 6px 0 16px; padding-left: 22px; line-height: 1.7; }

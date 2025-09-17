@@ -31,13 +31,6 @@
       <ModuleProtect  v-else-if="cur.key==='m3'" />
       <QuizBlock v-else-if="cur.key==='m4'" :bank-by-module="learningQuiz" />
     </main>
-
-    <!-- Footer -->
-    <footer class="lm__footer">
-      <button class="btn btn--ghost" @click="prev" :disabled="idx.module===0">Previous</button>
-      <button v-if="cur.key!=='m4'" class="btn" @click="next">Next</button>
-      <button v-else class="btn" @click="complete">Complete Module</button>
-    </footer>
   </div>
 </template>
 
