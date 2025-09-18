@@ -100,7 +100,7 @@ const props = defineProps({
 /* 计算贴图 */
 const decals = computed(() => {
   const base = [
-    { type:'fish', top: 16, left: 300,  w: 82, r:0 },
+    { type:'crab', top: 16, left: 300,  w: 82, r:0 },
     { type:'jelly', top: 16, right: 32, w: 74, r:0 },
     { type:'weed', bottom: 24, left: 34, w: 74, r:0 },
     { type:'crab', bottom: 24, right: 500, w: 74, r:0 },
