@@ -2,81 +2,47 @@
 <script setup lang="ts">
 import {ref, onMounted, onBeforeUnmount, computed} from 'vue'
 import {fetch_image} from "@/assets/ts/fetch_image";
+import {fetch_nearby_beach} from "@/assets/ts/fetch_nearby_beach";
 
-type Beach = { name: string; lat: number; lng: number }
 type Activity = { img: string; name: string; reason: string }
+type Attraction = { name: string; rating: number }
+type Restaurant = { name: string; rating: number, address: string }
 
-// Common Port Phillip Bay beaches (adjust or extend as needed)
-const beaches: Beach[] = [
-  {name: 'St Kilda Beach', lat: -37.8676, lng: 144.9730},
-  {name: 'Brighton Beach', lat: -37.9179, lng: 144.9869},
-  {name: 'Port Melbourne Beach', lat: -37.8393, lng: 144.9423},
-  {name: 'Mordialloc Beach', lat: -38.0067, lng: 145.0884},
-  {name: 'Dromana Beach', lat: -38.3347, lng: 144.9644},
-  {name: 'Capel Sound Beach', lat: -38.3696, lng: 144.8845},
-  {name: 'Mornington Beach', lat: -38.2158, lng: 145.0399},
-  {name: 'Altona Foreshore', lat: -37.8670, lng: 144.8260},
-  {name: 'Frankston Foreshore', lat: -38.1448, lng: 145.1263},
-  {name: 'Newport Coastal Reserve', lat: -37.8596, lng: 144.8857},
-]
 
 // Example activities (replace with API data if available)
 const activities = ref<Activity[]>([
   {
-    img: 'swimming.png',
-    name: 'Beach Safety Patrol – Port Melbourne',
-    reason: 'Learn lifeguard safety tips and why clean water matters.',
+    img: 'diving.png',
+    name: 'Diving',
+    reason: '',
   },
   {
-    img: 'diving.png',
-    name: 'Seagrass Discovery Snorkel – Mordialloc',
-    reason: 'See seagrass meadows and small fish with beginner-friendly snorkeling.',
+    img: 'swimming.png',
+    name: 'Swimming',
+    reason: '',
   },
   {
     img: 'fishing.png',
-    name: 'Rock Pool Explorer – Dromana',
-    reason: 'Find starfish and tiny crabs—perfect for family learning.',
+    name: 'Fishing',
+    reason: '',
   },
 ])
 
+const attractions = ref<Attraction[]>([])
+
+const restaurants = ref<Restaurant[]>([])
+
 // Top gallery images
-const gallery = ref<string[]>([
-  "https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photoreference=AciIO2c22pTwKoRBmAk-3V8q_5l7RhFMq4j8XbVtki1JoRRMB6WO0diKvRLairozYXzVs-swtVOoCCy3sSFQViCU__cuVnrLmpK_Yvd2Hhnco9eWlgO4lFH3ezKJpuFa8WvxNBw1oBe6fOX8ZvxjZ5BZIU72EgOZxw1svXhlZVwo9SMPg400n1ecPGzWiVeJ-BVDIrbMV_y0ZKmo9lZzlKel94Ai3x4hedJf7KAxM497dSQt0H70inFuDYS6Z9MReDL-98lsYIJ06aictBmz0PY-sgaFSYyJ-WSU0Kb6fhsuhFDaUy8Z4jLWGbs4Qil3zl62CGXw4t3q7987rZ7Wn2xjw1bU3_NpAdermQppkwutWkofjyw1nnFZ6_V9jwO0ERT6nYfzBZETzBX6s_MjwgLv1OBYU7NaDhb57u1_G-pZ1tUQ5OJE&key=AIzaSyBlOgil_jAHzwKulAXTeTSxW_WtpQjCicg",
-  "https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photoreference=AciIO2fcMfAzDZgCD-JsCVYY7PLfSdZXg1u7YYNF8fayn4Xb5zes7qlqFAlXJ3t67MYhac2wXfZMC4XxzGGo1eIx3KZJPAISye3r__wgb6gjUIfJA7Sie8PzvyRyDE2BuKhsViv9iIJXwMjJxEiJQGdjxQyitns6tcGT-8nOpA2-tMFnE08tbFdUuV95Kkbby68pHRHfZSNxJL8y88w6GR5D17N7vMZ7FoS1JIqNhGmHe7uDmXew3EPsks0euPtBF9RjGsZEeyEkFYykUSbyV1EmYuqFAzakpnQDy1JHMfFNXxEMbJJfAb8ioGgOlF9PS8Yga6VV5Azxd6rJYa6gbeuST4qA4GIqkRG0vKS2kXhKgH4YnnxJ2JatniVwC6igli-58OAKjFH3UUeYS4yajZPbmClpE4pdYSm8d4vqUTlwWeGghQ&key=AIzaSyBlOgil_jAHzwKulAXTeTSxW_WtpQjCicg",
-  "https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photoreference=AciIO2eUM27kZ5N6Pt4JHI4OWJJfLJPuwy_KHbjrzPd42nYc6aVuMK3iNw92sA-vZFhQupCElCYrKsR8JAqBdSOyNNT-FfMQv2FJIkWuddKt7Oo9ypmrGjKcSFhqEvMPkVJZ6q8Fi-6JWZmcPfHtnkuCMf9iELT7ydI1n0eCymFVmLCHoyCzRB_YKMW9mHxEZ7sjXa0Y7WP82c_Ome6jxMtvYstpL67-uAFfsWo-crGk5xV1WmaO7dISYJ3DXDMXSm4L0xhSM3cm9O9l7TeICAGGbFIJpW3Nt0-1LBIPrrQLHPHWsQRkOUiBtJnZjCO7LXJWXNo_wWtekN4CJq_fWDZ7j7F17vK4pRgdjBv5mB1MEcXntEIINfnofND3vAQZpBK24r3y1Dwvi1265qV5Kgc5Mp1nAl_h7v0HuFIXqJi1zKn5vQ&key=AIzaSyBlOgil_jAHzwKulAXTeTSxW_WtpQjCicg"
-])
-
-// Activity covers
-const coverNames = [
-  "swimming.png",
-  "diving.png",
-  "fishing.png"
-]
-const covers = ref([]);
-
-for (const i in coverNames) {
-  fetch_image(coverNames[i]).then(img => covers.value.push(img));
-}
+const gallery = ref<string[]>(new Array(3))
 
 const userLat = ref<number | null>(null)
 const userLng = ref<number | null>(null)
 const errorMsg = ref<string | null>(null)
-const nearest = ref<Beach | null>(null)
+const nearest = ref<string | null>(null)
 const loading = ref(true)
 
-// Haversine distance (km)
-function haversine(lat1: number, lon1: number, lat2: number, lon2: number) {
-  const toRad = (d: number) => d * Math.PI / 180
-  const R = 6371
-  const dLat = toRad(lat2 - lat1)
-  const dLon = toRad(lon2 - lon1)
-  const a = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
-  return R * c
-}
-
 const nearestName = computed(() => {
-  if (nearest.value) return nearest.value.name
+  if (nearest.value) return nearest.value
   if (loading.value) return 'Finding your nearest beach…'
   return errorMsg.value ? 'Location not available' : 'Nearby Beach'
 })
@@ -91,18 +57,36 @@ onMounted(() => {
       (pos) => {
         userLat.value = pos.coords.latitude
         userLng.value = pos.coords.longitude
-        // Find the nearest beach
-        let best: Beach | null = null
-        let bestDist = Number.POSITIVE_INFINITY
-        for (const b of beaches) {
-          const d = haversine(userLat.value!, userLng.value!, b.lat, b.lng)
-          if (d < bestDist) {
-            bestDist = d;
-            best = b
-          }
-        }
-        nearest.value = best
-        loading.value = false
+        fetch_nearby_beach(pos.coords.latitude, pos.coords.longitude)
+            .then(async r => {
+              nearest.value = r.name
+              for (const i in r.photos) {
+                gallery.value[i] = r.photos[i]
+              }
+
+              for (const i in activities.value) {
+                activities.value[i].img = await fetch_image(activities.value[i].img)
+                activities.value[i].reason = r.assessment.recommendations[i]
+              }
+
+              for (const i in r.recommendations.attractions) {
+                let attraction: Attraction = {
+                  name: r.recommendations.attractions[i].name,
+                  rating: r.recommendations.attractions[i].rating,
+                }
+                attractions.value.push(attraction)
+              }
+
+              for (const i in r.recommendations.restaurants) {
+                let restaurant: Restaurant = {
+                  name: r.recommendations.restaurants[i].name,
+                  rating: r.recommendations.restaurants[i].rating,
+                  address: r.recommendations.restaurants[i].address,
+                }
+                restaurants.value.push(restaurant)
+              }
+              loading.value = false
+            });
       },
       (err) => {
         errorMsg.value = err.message || 'Unable to access location.'
@@ -181,23 +165,62 @@ onBeforeUnmount(() => {
           @click="openImageAt(i)"
           :aria-label="`Open image ${i+1} of ${gallery.length}`"
       >
-        <img :src="src" alt="" class="w-full h-[50vh] object-cover"/>
+        <div v-if="loading" class="w-full h-[50vh] object-cover animate-pulse">
+          <div class="w-full h-full bg-gray-200"></div>
+        </div>
+        <img v-else :src="src" alt="" class="w-full h-[50vh] object-cover"/>
       </button>
     </section>
+
+    <section class="flex items-center gap-3 border-b-2"></section>
 
     <!-- Activity cards -->
     <section id="content" class="grid md:grid-cols-3 gap-4">
       <article v-for="(a, i) in activities" :key="i"
                class="bg-white border rounded-xl overflow-hidden shadow-sm flex flex-col">
-        <img :src="covers[i]" :alt="a.name" class="w-full h-44 object-cover">
+        <div v-if="loading" class="w-full h-44 object-cover overflow-hidden">
+          <div class="w-full h-full animate-pulse bg-gray-200"></div>
+        </div>
+        <img v-else :src="a.img" :alt="a.name" class="w-full h-44 object-cover">
+        <div class="p-4 flex-1 flex flex-col">
+          <div v-if="loading" class="font-semibold text-lg mb-1 line-clamp-2">
+            <div class="w-full h-6 animate-pulse bg-gray-200"></div>
+          </div>
+          <h3 v-else class="font-semibold text-lg mb-1 line-clamp-2">{{ a.name }}</h3>
+          <p class="text-slate-600 text-sm flex-1">{{ a.reason }}</p>
+        </div>
+      </article>
+    </section>
+
+    <section v-if="attractions.length > 0" class="flex items-center gap-3 border-b-2"></section>
+
+    <!-- Attraction -->
+    <h2 v-if="attractions.length > 0" class="font-semibold text-2xl mb-1 line-clamp-2">🖼️ Attractions</h2>
+    <section id="content" class="grid md:grid-cols-3 gap-4">
+      <article v-for="(a, i) in attractions" :key="i"
+               class="bg-white border rounded-xl overflow-hidden shadow-sm flex flex-col">
         <div class="p-4 flex-1 flex flex-col">
           <h3 class="font-semibold text-lg mb-1 line-clamp-2">{{ a.name }}</h3>
-          <p class="text-slate-600 text-sm flex-1">{{ a.reason }}</p>
-          <div class="mt-3">
-            <button class="px-3 py-2 rounded-lg bg-marine-500 text-white hover:bg-marine-600">
-              View Details
-            </button>
-          </div>
+          <p class="text-slate-600 text-sm flex-1">
+            <span class="font-semibold">Rating:</span>
+            {{ a.rating }}</p>
+        </div>
+      </article>
+    </section>
+
+    <section v-if="restaurants.length > 0" class="flex items-center gap-3 border-b-2"></section>
+
+    <!-- Restaurant -->
+    <h2 v-if="restaurants.length > 0" class="font-semibold text-2xl mb-1 line-clamp-2">🍽️ Restaurants</h2>
+    <section id="content" class="grid md:grid-cols-3 gap-4">
+      <article v-for="(r, i) in restaurants" :key="i"
+               class="bg-white border rounded-xl overflow-hidden shadow-sm flex flex-col">
+        <div class="p-4 flex-1 flex flex-col">
+          <h3 class="font-semibold text-lg mb-1 line-clamp-2">{{ r.name }}</h3>
+          <h4 class="text-sm mb-1"><span class="font-semibold">Address: </span>{{ r.address }}</h4>
+          <p class="text-slate-600 text-sm flex-1">
+            <span class="font-semibold">Rating: </span>
+            {{ r.rating }}</p>
         </div>
       </article>
     </section>

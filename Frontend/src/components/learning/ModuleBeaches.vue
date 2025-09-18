@@ -93,7 +93,7 @@ function go(n:number){ page.value = n }
 
 /* 插图占位（按需替换图片路径） */
 .m2__art{ position:absolute; background-repeat:no-repeat; background-size:contain; background-position:center; opacity:.9; pointer-events:none; }
-.m2__art--bay{ width:260px; height:140px; right:6%; bottom:110px; background-image:url('@/assets/bay.png'); }
+.m2__art--bay{ width:260px; height:140px; right:6%; bottom:110px; /* background-image:url('@/assets/bay.png'); */ }
 
 /* 翻页箭头（与 Module 1 一致） */
 .m2__pager{ position:absolute; left:0; right:0; bottom:18px; display:flex; justify-content:space-between; align-items:center; padding:0 16px; }
