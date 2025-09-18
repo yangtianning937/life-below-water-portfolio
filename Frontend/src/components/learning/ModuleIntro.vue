@@ -34,7 +34,13 @@
       <div class="m1__bar">
         <h2 class="m1__title">Nutrients in the Ocean</h2>
         <!-- 右侧 CTA：跳到水质页 -->
-        <RouterLink class="m1__cta" :to="{ name:'water_quality' }">Explore Water Quality</RouterLink>
+        <router-link
+          class="m1__cta"
+          :to="{ name:'data_hub' }"
+          aria-label="Go to Water Quality"
+        >
+          Explore Water Quality
+        </router-link>
       </div>
 
       <p class="m1__lead">Nutrients are like vitamins for the sea. They help plants grow and fish to survive.</p>
