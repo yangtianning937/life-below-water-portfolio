@@ -1,7 +1,9 @@
+import json
 import uuid
 from datetime import datetime
 from pathlib import Path
 
+import requests
 from fastapi import FastAPI, Depends, APIRouter
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -10,6 +12,7 @@ from starlette.staticfiles import StaticFiles
 from uvicorn.middleware.proxy_headers import ProxyHeadersMiddleware
 
 import csv_utils
+from recommend.process import analyze_nearby_beaches
 from db.db import get_db
 from db.models import SiteMetadata, WaterQualityData
 from dynamic_CORS_middleware import DynamicCORSMiddleware
@@ -155,13 +158,20 @@ async def post_activity_form(form: Form):
 ##################
 # APIs for Epic 3
 ##################
-@api.get("nearby/{latitude}/{longitude}")
-async def get_nearby_beach(latitude: str, longitude: str):
+@api.get("/nearby/{latitude}/{longitude}")
+async def get_nearby_beach(latitude: str | float, longitude: str | float):
     try:
         latitude = float(latitude)
         longitude = float(longitude)
 
-        
+        try:
+            res = analyze_nearby_beaches(latitude, longitude)
+            return res[0]
+        except requests.exceptions.HTTPError as e:
+            print(f"API request failed: {e}")
+            print("Please check if your GOOGLE_API_KEY is correct, or if API quota is exhausted.")
+        except Exception as e:
+            print(f"An error occurred: {e}")
     except ValueError:
         return JSONResponse(content={"msg": "Invalid latitude or longitude"}, status_code=400)
 

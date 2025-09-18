@@ -311,7 +311,7 @@ function buildPaper() {
 
 /** 分数对应消息（8–12 岁友好） */
 function messageForScore(s, t) {
-  if (s === t) return "Perfect score! You’re an Ocean Expert! 🐳"
+  if (s === t) return "Perfect score! You’recommend an Ocean Expert! 🐳"
   if (s === t - 1) return "Great work! Almost perfect—try again for 5/5! 💪"
   if (s >= Math.ceil(t * 0.6)) return "Nice try! Review a bit and play again! 📚"
   return "Don’t give up! Every try helps you learn! 🌈"
