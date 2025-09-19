@@ -16,7 +16,7 @@ GOOGLE_API_KEY = "AIzaSyBlOgil_jAHzwKulAXTeTSxW_WtpQjCicg"
 
 # paprika.py is the model weight path
 # Make sure paprika.pt file is uploaded to the correct directory
-MODEL_PATH = "./recommend/paprika.pt"
+MODEL_PATH = "./recommend/fav2.pt"
 
 
 # AniGAN model loading and transformation function
