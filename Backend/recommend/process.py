@@ -112,7 +112,7 @@ def get_place_details(place_id, fields):
     return r.json().get("result", {})
 
 
-def search_nearby_places(lat, lon, keyword, radius=5000, min_rating=4.0):
+def search_nearby_places(lat, lon, keyword, radius=50000, min_rating=4.0):
     search_url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json"
     params = {
         "location": f"{lat},{lon}",
@@ -129,7 +129,7 @@ def search_nearby_places(lat, lon, keyword, radius=5000, min_rating=4.0):
     return filtered_results
 
 
-def get_beach_info_and_photos(lat, lon, radius=5000, max_photos=3):
+def get_beach_info_and_photos(lat, lon, radius=500000, max_photos=3):
     search_url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json"
     params = {
         "location": f"{lat},{lon}",
@@ -221,7 +221,7 @@ def get_nearby_recommendations(lat, lon):
 
 
 # Main process
-def analyze_nearby_beaches(lat, lon, radius_m=5000):
+def analyze_nearby_beaches(lat, lon, radius_m=500000):
     beaches = []
     beach_data = get_beach_info_and_photos(lat, lon, radius=radius_m)
 
