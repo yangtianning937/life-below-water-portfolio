@@ -29,7 +29,7 @@ export default {
       key: 'm2-q3',
       text: 'This beach is famous for colorful bathing boxes.',
       // 可选图片：把文件放到 Frontend/public/quiz/brighton_boxes.jpg
-      image: '/quiz/brighton_boxes.jpg',
+      image: '/learning/beaches/brighton_bathing_boxes.jpg',
       options: [
         { key: 'a', label: 'Brighton Beach' },
         { key: 'b', label: 'St Kilda Beach' },

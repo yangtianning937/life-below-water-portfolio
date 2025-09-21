@@ -11,11 +11,11 @@ const mcq = [
     key: 'mcq-turtle-1',
     type: 'mcq',
     text: 'What is this animal?',
-    promptImg: '/quiz/pics/sea_turtle.jpg',           // 题图（可选）
+    promptImg: '/quiz/pics/sea_turtle.jpg',
     options: [
-      { key: 'a', name: 'Dolphin',    img: '/quiz/animals/dolphin.jpg' },
-      { key: 'b', name: 'Sea Turtle', img: '/quiz/animals/sea_turtle.jpg' }, // ✅
-      { key: 'c', name: 'Shark',      img: '/quiz/animals/shark.jpg' },
+      { key: 'a', name: 'Dolphin' },
+      { key: 'b', name: 'Sea Turtle' }, // ✅
+      { key: 'c', name: 'Shark' },
     ],
     answer: 'b',
     correct: '🎉 Yes! That’s a Sea Turtle. They travel far and need clean water.',
