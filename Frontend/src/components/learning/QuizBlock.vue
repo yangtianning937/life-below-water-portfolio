@@ -21,12 +21,11 @@
 
       <div class="quiz__opts">
         <button
-          v-for="opt in cur.options"
-          :key="opt.key"
+          v-for="opt in cur.options" :key="opt.key"
           class="btn btn--outline"
           :class="btnStateClass(cur, opt.key)"
           @click="choose(cur, opt.key)"
-          :disabled="cur._state==='ok' || submitted"
+          :disabled="cur._state==='ok'"
           :aria-pressed="cur.choice === opt.key"
         >
           {{ opt.label }}
@@ -64,25 +63,43 @@
               :disabled="!allCorrect"
               @click="submitQuiz"><span>Submit</span></button>
     </div>
-
-    <div v-if="submitted" class="q__summary">
-      <p class="quiz__score">Score: {{ score }}/{{ total }}</p>
-      <button class="btn btn--ghost" @click="resetQuiz">Reset</button>
-    </div>
+  <!-- Fullscreen prompt is teleported below -->
   </section>
+
+  <!-- 完成弹窗（仅用于 Learning Module 的 3 题小测，避免与 MarineQuiz 的 FullscreenMessage 混淆） -->
+  <teleport to="body">
+    <transition name="fade">
+      <div v-if="showFinish" class="lmfin__backdrop" @click.self="showFinish=false">
+        <div class="lmfin__panel" role="dialog" aria-modal="true">
+          <div class="lmfin__icon">✨</div>
+          <h2 class="lmfin__title">Great job! You completed all modules.</h2>
+          <p class="lmfin__msg">Do you want to take on more challenges?</p>
+          <div class="lmfin__actions">
+            <button class="lmfin__btn lmfin__btn-primary" @click="goToMarineQuiz">Yes</button>
+            <button class="lmfin__btn" @click="showFinish=false">No</button>
+          </div>
+        </div>
+      </div>
+    </transition>
+  </teleport>
 </template>
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 
 /** 分模块题库：{ m1:[], m2:[], m3:[] } */
-const props = defineProps({ bankByModule: { type: Object, required: true } })
+const props = defineProps({
+  bankByModule: { type: Object, required: true }
+})
 
 /* ------- 构建 3 题（各模块抽 1） ------- */
 const quiz = ref([])
 const page = ref(1)
-const submitted = ref(false)
-const score = ref(0)
+const submitted = ref(false)  // 保留但不再使用以避免冲突
+const score = ref(0)          // 保留但不展示
+const showFinish = ref(false)
+const router = useRouter()
 
 const total = computed(() => quiz.value.length || 3)
 const cur   = computed(() => quiz.value[page.value - 1] || null)
@@ -141,8 +158,12 @@ function btnStateClass(q, key){
 }
 
 function submitQuiz(){
-  submitted.value = true
-  score.value = quiz.value.reduce((a, q) => a + (q.choice === q.answer ? 1 : 0), 0)
+  // 不显示分数，直接显示“完成弹窗”
+  showFinish.value = true
+}
+function goToMarineQuiz(){
+  showFinish.value = false
+  router.push({ name: 'marine_quiz' })
 }
 function resetQuiz(){
   submitted.value = false
@@ -162,28 +183,13 @@ onMounted(() => { quiz.value = buildThree(props.bankByModule) })
   border: 1px solid #1f2937;
   border-radius: 16px;
   padding: 18px;
-  box-shadow: 0 10px 28px rgba(15,23,42,.08);
-}
-.card__title{ margin:0 0 10px; font-size:1.25rem; line-height:1.35; font-weight:800; color: var(--lm-heading); }
-
-/* 进度条（按答对数增长） */
-/* 进度条（按已答数量增长） */
-.q__progress{
-  width:100%;
-  height:10px;
-  background:#dbeafe;
-  border-radius:999px;
-  overflow:hidden;
-  border:1px solid #93c5fd;
-  margin-top:6px;
-}
-.q__progress-bar{
-  height:100%;
-  width:0;
-  background:#2563eb;
-  transition: width .25s ease;
+  box-shadow: 0 10px 20px rgba(2,6,23,.12);
 }
 
+/* 头部 */
+.card__title{ margin:0 0 10px; font-size: 20px; font-weight: 800; color: var(--lm-heading); }
+.q__progress{ height: 6px; background:#e6eefb; border-radius:999px; overflow:hidden; border:1px solid #d7e3ff; }
+.q__progress-bar{ height:100%; background:#1e40af; transition:width .25s ease; }
 
 /* 一题布局 */
 .quiz{ margin-top: 12px; }
@@ -202,28 +208,15 @@ onMounted(() => { quiz.value = buildThree(props.bankByModule) })
 .arrow:disabled{ opacity:.5; cursor:not-allowed; }
 .arrow span{ position:relative; z-index:1; }
 .arrow--left{ padding-left:46px; }
-.arrow--left::before{ content:''; position:absolute; left:-28px; top:0; width:0; height:0; border-top:26px solid transparent; border-bottom:26px solid transparent; border-right:28px solid #e8b6ae; }
+.arrow--left::before{ content:''; position:absolute; left:-28px; top:50%; transform:translateY(-50%); border-top:26px solid transparent; border-bottom:26px solid transparent; border-right:28px solid #e8b6ae; }
 .arrow--right{ background:#0ea5b5; color:#fff; padding-right:46px; }
-.arrow--right::after{ content:''; position:absolute; right:-28px; top:0; width:0; height:0; border-top:26px solid transparent; border-bottom:26px solid transparent; border-left:28px solid #0ea5b5; }
+.arrow--right::after{ content:''; position:absolute; right:-28px; top:50%; transform:translateY(-50%); border-top:26px solid transparent; border-bottom:26px solid transparent; border-left:28px solid #0ea5b5; }
 
 /* 圆点 */
 .q__dots{ display:flex; gap:8px; align-items:center; justify-content:center; position:absolute; left:50%; transform:translateX(-50%); }
 .dot{ width:10px; height:10px; border-radius:999px; background:#94a3b8; border:0; cursor:pointer; }
 .dot.active{ background:#0ea5b5; }
 .dot:disabled{ opacity:.5; cursor:not-allowed; }
-
-/* 成绩与重置 */
-.q__summary{ margin-top: 10px; display:flex; gap:12px; align-items:center; }
-.quiz__score{ margin:0; font-weight:900; }
-
-/* 通用按钮 */
-.btn{
-  padding:10px 16px; border-radius:12px; border:1px solid #1f2937;
-  background:#1f2937; color:var(--lm-on-solid); font-weight:800; cursor:pointer;
-  transition:transform .08s ease, box-shadow .08s ease, opacity .15s; box-shadow:0 6px 14px rgba(2,6,23,.15);
-}
-.btn:hover{ transform:translateY(-1px); }
-.btn:disabled{ opacity:.55; cursor:not-allowed; }
 
 /* 选项按钮（锁定时视觉更灰一点） */
 .btn--ghost{ background:transparent; color:var(--lm-text); }
@@ -237,4 +230,17 @@ onMounted(() => { quiz.value = buildThree(props.bankByModule) })
 @media (prefers-color-scheme: dark){
   .card{ background: transparent; color: var(--lm-text); border-color:#1f2937; }
 }
+
+/* ===== 学习模块完成弹窗（仅此文件使用，避免与 MarineQuiz 的 FullscreenMessage 混淆） ===== */
+.lmfin__backdrop{position:fixed;inset:0;background:rgba(0,0,0,.5);display:grid;place-items:center;z-index:9999}
+.lmfin__panel{width:min(620px,92vw);background:#fff;border-radius:20px;padding:28px 24px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.25)}
+.lmfin__icon{font-size:40px;margin-bottom:8px}
+.lmfin__title{font-size:24px;margin:0 0 8px}
+.lmfin__msg{color:#444;margin:0 0 20px}
+.lmfin__actions{display:flex;gap:12px;justify-content:center}
+.lmfin__btn{padding:10px 16px;border-radius:12px;border:1px solid #d0d7de;background:#f6f8fa;cursor:pointer;font-weight:600}
+.lmfin__btn:hover{filter:brightness(0.98)}
+.lmfin__btn-primary{background:#2563eb;color:#fff;border-color:#2563eb}
+.fade-enter-active,.fade-leave-active{transition:opacity .18s ease}
+.fade-enter-from,.fade-leave-to{opacity:0}
 </style>
