@@ -25,16 +25,22 @@ import E1Tableau from '@/components/epic1/E1Tableau.vue'
 
 const router = useRouter()
 
+/**
+ * 只切换到「上一个页面」：
+ * - 优先用 history.state.back（Vue Router 会记录上一个地址）
+ * - 否则若浏览器有历史则 router.back()
+ * - 没有历史时保持当前页（不再强制跳到 learning）
+ *   （如需默认去向，可在注释处改成 router.push({ name: 'home' }) 或 'data_hub'）
+ */
 function goBack() {
+  const state = window.history.state
+  if (state && state.back) {
+    router.push(state.back)
+    return
+  }
   if (window.history.length > 1) {
     router.back()
-  } else {
-    // 没有历史记录时返回学习模块
-    if (router.hasRoute && router.hasRoute('learning')) {
-      router.push({ name: 'learning' })
-    } else {
-      router.push('/learning')
-    }
+    return
   }
 }
 
