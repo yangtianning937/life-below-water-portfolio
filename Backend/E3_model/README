@@ -1,5 +1,4 @@
-
-### 1. Overall Model Architecture
+ 1. Overall Model Architecture
 
 The generator (Generator) adopts an **Encoder–Bottleneck–Decoder** design:
 
@@ -10,9 +9,8 @@ The generator (Generator) adopts an **Encoder–Bottleneck–Decoder** design:
 
 This architecture balances model expressiveness with computational efficiency and training stability.
 
----
 
-### 2. Module Description
+2. Module Description
 
 **Block A (Initial Feature Extraction)**
 
@@ -102,9 +100,8 @@ This architecture balances model expressiveness with computational efficiency an
   * 1×1 convolution maps channels without changing spatial resolution.
   * Normalized output facilitates downstream image processing or metrics calculation (e.g., PSNR, FID).
 
----
 
-### 3. Features & Advantages
+3. Features & Advantages
 
 * **Efficient Residual Design:** Inverted Residual blocks balance performance and efficiency.
 * **Progressive Downsampling & Upsampling:** Reduces computation while gradually recovering image details.
