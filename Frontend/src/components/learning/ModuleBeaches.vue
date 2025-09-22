@@ -13,7 +13,7 @@
         <div class="be-hero__box">
           <img
             class="be-hero__img"
-            src="/learning/beaches/hero_bay_aerial.jpg"
+            :src="BASE_URL + '/learning/beaches/hero_bay_aerial.jpg'"
             alt="Port Phillip Bay aerial view from space"
           />
         </div>
@@ -77,6 +77,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
+const BASE_URL = import.meta.env.BASE_URL
+
 const total = 3
 const page = ref(1)
 
@@ -90,37 +92,37 @@ const beaches = [
     key: 'st_kilda',
     title: 'St Kilda Beach',
     desc: 'Penguins live here!',
-    img: '/learning/beaches/st_kilda_penguin.jpg',
+    img: `${BASE_URL}/learning/beaches/st_kilda_penguin.jpg`,
     alt: 'Penguins at St Kilda pier',
   },
   {
     key: 'brighton',
     title: 'Brighton Beach',
     desc: 'Colorful bathing boxes.',
-    img: '/learning/beaches/brighton_bathing_boxes.jpg',
+    img: `${BASE_URL}/learning/beaches/brighton_bathing_boxes.jpg`,
     alt: 'Brighton colorful bathing boxes on the beach',
   },
   {
     key: 'dromana',
     title: 'Dromana Beach',
     desc: 'Famous for paddle boarding.',
-    img: '/learning/beaches/dromana_paddleboarding.jpg',
+    img: `${BASE_URL}/learning/beaches/dromana_paddleboarding.jpg`,
     alt: 'People paddle boarding at Dromana',
   },
   {
     key: 'sorrento',
     title: 'Sorrento Beach',
     desc: 'Great for exploring rock pools.',
-    img: '/learning/beaches/sorrento_rockpools.jpg',
+    img: `${BASE_URL}/learning/beaches/sorrento_rockpools.jpg`,
     alt: 'Rock pools at Sorrento beach',
   },
 ]
 
 const safety = [
-  { key: 'flags',  icon: '/learning/ui/beach_flags.svg',    text: 'Swim between the red and yellow flags.' },
-  { key: 'sun',    icon: '/learning/ui/sunscreen_hat.svg',  text: 'Wear sunscreen and a hat.' },
-  { key: 'rip',    icon: '/learning/ui/rip_current.svg',    text: 'Watch out for strong currents.' },
-  { key: 'buddy',  icon: '/learning/ui/buddy_swim.svg',     text: 'Never swim alone.' },
+  { key: 'flags',  icon: `${BASE_URL}/learning/ui/beach_flags.svg`,    text: 'Swim between the red and yellow flags.' },
+  { key: 'sun',    icon: `${BASE_URL}/learning/ui/sunscreen_hat.svg`,  text: 'Wear sunscreen and a hat.' },
+  { key: 'rip',    icon: `${BASE_URL}/learning/ui/rip_current.svg`,    text: 'Watch out for strong currents.' },
+  { key: 'buddy',  icon: `${BASE_URL}/learning/ui/buddy_swim.svg`,     text: 'Never swim alone.' },
 ]
 </script>
 

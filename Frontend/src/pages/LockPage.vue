@@ -18,7 +18,7 @@ async function submit(e?: Event) {
     const redirect = sessionStorage.getItem('redirect_after_login') || '/home'
     sessionStorage.removeItem('redirect_after_login')
     // 使用 hash 路由
-    window.location.hash = '#' + redirect
+    window.location.replace('/iter2' + redirect)
   } else {
     error.value = 'Incorrect password'
   }

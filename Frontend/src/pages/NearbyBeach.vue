@@ -144,18 +144,30 @@ function useMyLocation() {
     loading.value = false
     return
   }
-  navigator.geolocation.getCurrentPosition(
-    async (pos) => {
-      userLat.value = pos.coords.latitude
-      userLng.value = pos.coords.longitude
-      await loadByCoords(userLat.value, userLng.value)
-    },
-    (err) => {
-      errorMsg.value = err?.message || 'Unable to access location.'
-      loading.value = false
-    },
-    { enableHighAccuracy: true, timeout: 8000, maximumAge: 60000 }
-  )
+  fetch('https://ipinfo.io/json?token=84a56d52fa604e')
+  .then(res => res.json())
+  .then(async data => {
+    const loc = data.loc.split(',')
+    userLat.value = Number(loc[0])
+    userLng.value = Number(loc[1])
+    await loadByCoords(userLat.value, userLng.value)
+  })
+  .catch(err => {
+    errorMsg.value = err?.message || 'Unable to access location.'
+    loading.value = false
+  })
+  // navigator.geolocation.getCurrentPosition(
+  //   async (pos) => {
+  //     userLat.value = pos.coords.latitude
+  //     userLng.value = pos.coords.longitude
+  //     await loadByCoords(userLat.value, userLng.value)
+  //   },
+  //   (err) => {
+  //     errorMsg.value = err?.message || 'Unable to access location.'
+  //     loading.value = false
+  //   },
+  //   { enableHighAccuracy: true, timeout: 8000, maximumAge: 60000 }
+  // )
 }
 
 onMounted(() => { useMyLocation() })

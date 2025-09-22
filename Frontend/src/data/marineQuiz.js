@@ -11,7 +11,7 @@ const mcq = [
     key: 'mcq-turtle-1',
     type: 'mcq',
     text: 'What is this animal?',
-    promptImg: '/quiz/pics/sea_turtle.jpg',
+    promptImg: `${import.meta.env.BASE_URL}/quiz/pics/sea_turtle.jpg`,
     options: [
       { key: 'a', name: 'Dolphin' },
       { key: 'b', name: 'Sea Turtle' }, // ✅
@@ -26,9 +26,9 @@ const mcq = [
     type: 'mcq',
     text: 'Which animal uses sounds to talk with friends?',
     options: [
-      { key: 'a', name: 'Dolphin', img: '/quiz/animals/dolphin.jpg' }, // ✅
-      { key: 'b', name: 'Octopus', img: '/quiz/animals/octopus.jpg' },
-      { key: 'c', name: 'Crab',    img: '/quiz/animals/crab.jpg' },
+      { key: 'a', name: 'Dolphin', img: `${import.meta.env.BASE_URL}/quiz/animals/dolphin.jpg` }, // ✅
+      { key: 'b', name: 'Octopus', img: `${import.meta.env.BASE_URL}/quiz/animals/octopus.jpg` },
+      { key: 'c', name: 'Crab',    img: `${import.meta.env.BASE_URL}/quiz/animals/crab.jpg` },
     ],
     answer: 'a',
     correct: '✅ Correct! Dolphins use clicks and whistles to communicate.',
@@ -39,9 +39,9 @@ const mcq = [
     type: 'mcq',
     text: 'Which fish lives safely in sea anemones?',
     options: [
-      { key: 'a', name: 'Clownfish', img: '/quiz/animals/clownfish.jpg' }, // ✅
-      { key: 'b', name: 'Seahorse',  img: '/quiz/animals/seahorse.jpg' },
-      { key: 'c', name: 'Tuna',      img: '/quiz/animals/tuna.jpg' },
+      { key: 'a', name: 'Clownfish', img: `${import.meta.env.BASE_URL}/quiz/animals/clownfish.jpg` }, // ✅
+      { key: 'b', name: 'Seahorse',  img: `${import.meta.env.BASE_URL}/quiz/animals/seahorse.jpg` },
+      { key: 'c', name: 'Tuna',      img: `${import.meta.env.BASE_URL}/quiz/animals/tuna.jpg` },
     ],
     answer: 'a',
     correct: '🎉 Great! Clownfish hide in sea anemones.',
@@ -52,9 +52,9 @@ const mcq = [
     type: 'mcq',
     text: 'What grows underwater and makes oxygen for fish?',
     options: [
-      { key: 'a', name: 'Seagrass', img: '/quiz/animals/seagrass.jpg' }, // ✅ 可用示意图
-      { key: 'b', name: 'Cactus',   img: '/quiz/animals/cactus.jpg' },
-      { key: 'c', name: 'Bamboo',   img: '/quiz/animals/bamboo.jpg' },
+      { key: 'a', name: 'Seagrass', img: `${import.meta.env.BASE_URL}/quiz/animals/seagrass.jpg` }, // ✅ 可用示意图
+      { key: 'b', name: 'Cactus',   img: `${import.meta.env.BASE_URL}/quiz/animals/cactus.jpg` },
+      { key: 'c', name: 'Bamboo',   img: `${import.meta.env.BASE_URL}/quiz/animals/bamboo.jpg` },
     ],
     answer: 'a',
     correct: '✅ Yes! Seagrass meadows are the ocean’s lungs.',
@@ -65,9 +65,9 @@ const mcq = [
     type: 'mcq',
     text: 'Which one has 10 legs and walks sideways?',
     options: [
-      { key: 'a', name: 'Crab',     img: '/quiz/animals/crab.jpg' }, // ✅
-      { key: 'b', name: 'Starfish', img: '/quiz/animals/starfish.jpg' },
-      { key: 'c', name: 'Seal',     img: '/quiz/animals/seal.jpg' },
+      { key: 'a', name: 'Crab',     img: `${import.meta.env.BASE_URL}/quiz/animals/crab.jpg` }, // ✅
+      { key: 'b', name: 'Starfish', img: `${import.meta.env.BASE_URL}/quiz/animals/starfish.jpg` },
+      { key: 'c', name: 'Seal',     img: `${import.meta.env.BASE_URL}/quiz/animals/seal.jpg` },
     ],
     answer: 'a',
     correct: '✅ Correct! Crabs scuttle sideways.',
@@ -132,9 +132,9 @@ const match = [
     type: 'match',
     text: 'Match each animal to its trait.',
     left: [
-      { key: 'dolphin',   label: 'Dolphin',   img: '/quiz/animals/dolphin.jpg' },
-      { key: 'jellyfish', label: 'Jellyfish', img: '/quiz/animals/jellyfish.jpg' },
-      { key: 'clownfish', label: 'Clownfish', img: '/quiz/animals/clownfish.jpg' },
+      { key: 'dolphin',   label: 'Dolphin',   img: `${import.meta.env.BASE_URL}/quiz/animals/dolphin.jpg` },
+      { key: 'jellyfish', label: 'Jellyfish', img: `${import.meta.env.BASE_URL}/quiz/animals/jellyfish.jpg` },
+      { key: 'clownfish', label: 'Clownfish', img: `${import.meta.env.BASE_URL}/quiz/animals/clownfish.jpg` },
     ],
     right: [
       { key: 'talk',   label: 'Use sounds to talk' },
@@ -150,9 +150,9 @@ const match = [
     type: 'match',
     text: 'Match each animal to its trait.',
     left: [
-      { key: 'turtle', label: 'Sea Turtle', img: '/quiz/animals/sea_turtle.jpg' },
-      { key: 'crab',   label: 'Crab',       img: '/quiz/animals/crab.jpg' },
-      { key: 'whale',  label: 'Whale',      img: '/quiz/animals/blue_whale.jpg' },
+      { key: 'turtle', label: 'Sea Turtle', img: `${import.meta.env.BASE_URL}/quiz/animals/sea_turtle.jpg` },
+      { key: 'crab',   label: 'Crab',       img: `${import.meta.env.BASE_URL}/quiz/animals/crab.jpg` },
+      { key: 'whale',  label: 'Whale',      img: `${import.meta.env.BASE_URL}/quiz/animals/blue_whale.jpg` },
     ],
     right: [
       { key: 'migrate', label: 'Travels long distances' },
@@ -168,9 +168,9 @@ const match = [
     type: 'match',
     text: 'Match each animal to its trait.',
     left: [
-      { key: 'seahorse', label: 'Seahorse', img: '/quiz/animals/seahorse.jpg' },
-      { key: 'starfish', label: 'Starfish', img: '/quiz/animals/starfish.jpg' },
-      { key: 'shark',    label: 'Shark',    img: '/quiz/animals/shark.jpg' },
+      { key: 'seahorse', label: 'Seahorse', img: `${import.meta.env.BASE_URL}/quiz/animals/seahorse.jpg` },
+      { key: 'starfish', label: 'Starfish', img: `${import.meta.env.BASE_URL}/quiz/animals/starfish.jpg` },
+      { key: 'shark',    label: 'Shark',    img: `${import.meta.env.BASE_URL}/quiz/animals/shark.jpg` },
     ],
     right: [
       { key: 'dad',  label: 'Dads carry the babies' },
@@ -188,7 +188,7 @@ const pic = [
     key: 'pic-clownfish',
     type: 'pic',
     text: 'What is this fish?',
-    image: '/quiz/pics/clownfish.jpg',
+    image: `${import.meta.env.BASE_URL}/quiz/pics/clownfish.jpg`,
     options: [
       { key: 'a', name: 'Clownfish' }, // ✅
       { key: 'b', name: 'Starfish' },
@@ -202,7 +202,7 @@ const pic = [
     key: 'pic-turtle',
     type: 'pic',
     text: 'What is this?',
-    image: '/quiz/pics/sea_turtle.jpg',
+    image: `${import.meta.env.BASE_URL}/quiz/pics/sea_turtle.jpg`,
     options: [
       { key: 'a', name: 'Turtle' }, // ✅
       { key: 'b', name: 'Crab' },
@@ -216,7 +216,7 @@ const pic = [
     key: 'pic-octopus',
     type: 'pic',
     text: 'Which animal is this?',
-    image: '/quiz/pics/octopus.jpg',
+    image: `${import.meta.env.BASE_URL}/quiz/pics/octopus.jpg`,
     options: [
       { key: 'a', name: 'Octopus' }, // ✅
       { key: 'b', name: 'Squid' },
@@ -230,7 +230,7 @@ const pic = [
     key: 'pic-dolphin',
     type: 'pic',
     text: 'Who is this?',
-    image: '/quiz/pics/dolphin.jpg',
+    image: `${import.meta.env.BASE_URL}/quiz/pics/dolphin.jpg`,
     options: [
       { key: 'a', name: 'Dolphin' }, // ✅
       { key: 'b', name: 'Shark' },
@@ -244,7 +244,7 @@ const pic = [
     key: 'pic-starfish',
     type: 'pic',
     text: 'What animal is this?',
-    image: '/quiz/pics/starfish.jpg',
+    image: `${import.meta.env.BASE_URL}/quiz/pics/starfish.jpg`,
     options: [
       { key: 'a', name: 'Starfish' }, // ✅
       { key: 'b', name: 'Crab' },

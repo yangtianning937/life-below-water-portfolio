@@ -1,5 +1,5 @@
 // FRONTEND/src/router/index.js
-import {createRouter, createWebHashHistory} from 'vue-router'
+import {createRouter, createWebHistory} from 'vue-router'
 
 // Pages
 import HomePage from '@/pages/HomePage.vue'
@@ -76,7 +76,7 @@ const routes = [
 
 const router = createRouter({
     // 如果部署在子路径，改为 createWebHistory('/子路径/')
-    history: createWebHashHistory(),
+    history: createWebHistory('/iter2/'),
     routes,
     scrollBehavior(to, from, savedPosition) {
         if (savedPosition) return savedPosition

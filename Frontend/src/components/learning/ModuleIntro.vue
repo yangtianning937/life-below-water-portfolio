@@ -18,7 +18,7 @@
         </div>
 
         <aside class="m1__media" aria-label="Seagrass and reef photos">
-          <img class="media__img" src="/learning/intro/seagrass.png" alt="Seagrass under sunlight" />
+          <img class="media__img" :src="BASE_URL + '/learning/intro/seagrass.png'" alt="Seagrass under sunlight" />
         </aside>
       </div>
 
@@ -87,22 +87,22 @@
 
       <div class="foodchain">
         <div class="fc__item">
-          <img src="/learning/intro/plankton.png" alt="Plankton" />
+          <img :src="BASE_URL + '/learning/intro/plankton.png'" alt="Plankton" />
           <div class="fc__label">Plankton</div>
         </div>
-        <img class="fc__arrow" src="/learning/ui/arrow_right.svg" alt="" />
+        <img class="fc__arrow" :src="BASE_URL + '/learning/ui/arrow_right.svg'" alt="" />
         <div class="fc__item">
-          <img src="/learning/intro/small_fish.png" alt="Small Fish" />
+          <img :src="BASE_URL + '/learning/intro/small_fish.png'" alt="Small Fish" />
           <div class="fc__label">Small Fish</div>
         </div>
-        <img class="fc__arrow" src="/learning/ui/arrow_right.svg" alt="" />
+        <img class="fc__arrow" :src="BASE_URL + '/learning/ui/arrow_right.svg'" alt="" />
         <div class="fc__item">
-          <img src="/learning/intro/big_fish.png" alt="Bigger Fish" />
+          <img :src="BASE_URL + '/learning/intro/big_fish.png'" alt="Bigger Fish" />
           <div class="fc__label">Bigger Fish</div>
         </div>
-        <img class="fc__arrow" src="/learning/ui/arrow_right.svg" alt="" />
+        <img class="fc__arrow" :src="BASE_URL + '/learning/ui/arrow_right.svg'" alt="" />
         <div class="fc__item">
-          <img src="/learning/intro/shark.png" alt="Shark" />
+          <img :src="BASE_URL + '/learning/intro/shark.png'" alt="Shark" />
           <div class="fc__label">Shark</div>
         </div>
       </div>
@@ -120,6 +120,8 @@
 <script setup>
 import { ref } from 'vue'
 import { RouterLink } from 'vue-router'
+
+const BASE_URL = import.meta.env.BASE_URL
 
 const emit = defineEmits(['complete'])
 
