@@ -1,1 +1,117 @@
 
+### 1. Overall Model Architecture
+
+The generator (Generator) adopts an **Encoder–Bottleneck–Decoder** design:
+
+* **Encoder (Block A & B):** Gradually compresses image resolution while extracting multi-level features.
+* **Bottleneck (Block C):** Uses Inverted Residual Blocks for efficient modeling, performing domain/style transformation.
+* **Decoder (Block D & E):** Gradually restores resolution through upsampling, reconstructing image details.
+* **Output Layer (Out Layer):** Maps back to 3-channel RGB and normalizes to image range.
+
+This architecture balances model expressiveness with computational efficiency and training stability.
+
+---
+
+### 2. Module Description
+
+**Block A (Initial Feature Extraction)**
+
+* **Structure:**
+
+  * ConvNormLReLU(3→32, 7×7)
+  * ConvNormLReLU(32→64, stride=2)
+  * ConvNormLReLU(64→64)
+* **Function:** Extracts low-level features such as edges and textures while performing one downsampling.
+* **Rationale:**
+
+  * The 7×7 convolution has a larger receptive field to capture global information.
+  * Stride=2 downsampling reduces computation and forms hierarchical features.
+
+**Block B (Mid-Level Feature Compression)**
+
+* **Structure:**
+
+  * ConvNormLReLU(64→128, stride=2)
+  * ConvNormLReLU(128→128)
+* **Function:** Further downsamples to smaller spatial dimensions while increasing channels for richer feature representation.
+* **Rationale:**
+
+  * “Spatial to channel” trade-off: reducing resolution while increasing channels improves feature expressiveness.
+
+**Block C (Core Bottleneck Layer, Stacked Inverted Residuals)**
+
+* **Structure:**
+
+  * ConvNormLReLU(128→128)
+  * InvertedResBlock(128→256)
+  * InvertedResBlock(256→256) × 3
+  * ConvNormLReLU(256→128)
+* **Function:**
+
+  * Models image semantics deeply with multiple Inverted Residual Blocks.
+  * Residual connections maintain input-output consistency, stabilizing training and mitigating gradient vanishing.
+* **Rationale:**
+
+  * The Inverted Residual structure (from MobileNetV2) performs depthwise convolution after expanding channels, then projects back to low dimension → saves computation while preserving representation.
+  * Stacking multiple residual blocks enhances nonlinear transformation, supporting style transfer or feature-domain mapping.
+
+**Block D (First Upsampling + Feature Fusion)**
+
+* **Structure:**
+
+  * Upsample ×2 (bilinear interpolation)
+  * ConvNormLReLU(128→128) × 2
+* **Function:**
+
+  * Doubles feature map resolution.
+  * Convolution smooths and refines upsampled features for continuity.
+* **Rationale:**
+
+  * Bilinear interpolation + convolution is more stable than transposed convolution, avoiding checkerboard artifacts.
+
+**Block E (Second Upsampling + Output Preparation)**
+
+* **Structure:**
+
+  * Upsample ×2
+  * ConvNormLReLU(128→64)
+  * ConvNormLReLU(64→64)
+  * ConvNormLReLU(64→32, 7×7)
+* **Function:**
+
+  * Restores the resolution to match the input.
+  * Gradually reduces channels to 32 for a compact representation.
+  * Large 7×7 convolution smooths output features and reduces artifacts.
+* **Rationale:**
+
+  * Progressive upsampling better recovers spatial details.
+  * Larger kernels ensure global consistency and visual coherence.
+
+**Out Layer (Output Layer)**
+
+* **Structure:**
+
+  * Conv(32→3, 1×1)
+  * Tanh
+* **Function:**
+
+  * Compresses 32 channels to 3-channel RGB.
+  * Tanh activation limits pixel values to \[-1, 1], following standard image generation practice.
+* **Rationale:**
+
+  * 1×1 convolution maps channels without changing spatial resolution.
+  * Normalized output facilitates downstream image processing or metrics calculation (e.g., PSNR, FID).
+
+---
+
+### 3. Features & Advantages
+
+* **Efficient Residual Design:** Inverted Residual blocks balance performance and efficiency.
+* **Progressive Downsampling & Upsampling:** Reduces computation while gradually recovering image details.
+* **Artifact Resistance:** Interpolation + convolution avoids checkerboard artifacts.
+* **Stability:** GroupNorm + LeakyReLU ensures stable training with small batches.
+* **Global & Local Awareness:** Large 7×7 kernels capture global context; small kernels refine local details.
+
+---
+
+
