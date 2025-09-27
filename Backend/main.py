@@ -1,4 +1,3 @@
-import json
 import uuid
 from datetime import datetime
 from pathlib import Path
@@ -12,10 +11,10 @@ from starlette.staticfiles import StaticFiles
 from uvicorn.middleware.proxy_headers import ProxyHeadersMiddleware
 
 import csv_utils
-from recommend.process import analyze_nearby_beaches
 from db.db import get_db
 from db.models import SiteMetadata, WaterQualityData
-from dynamic_CORS_middleware import DynamicCORSMiddleware
+from dynamic_cors_middleware import DynamicCORSMiddleware
+from recommend.process import analyze_nearby_beaches
 from request_model import Activity, Form
 
 # python -m uvicorn Backend.main:app --reload
