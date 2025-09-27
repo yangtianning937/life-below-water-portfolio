@@ -2,6 +2,8 @@ import {api_prefix} from "./api_perfix";
 
 /**
  * @method fetch_nearby_beach
+ * @param latitude The latitude of the position.
+ * @param longitude The longitude of the position.
  * @return Returns the Promise of Data as shown below or return null if request failed.
  */
 export async function fetch_nearby_beach(latitude: string | number,

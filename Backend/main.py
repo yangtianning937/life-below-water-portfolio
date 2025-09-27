@@ -3,7 +3,7 @@ from datetime import datetime
 from pathlib import Path
 
 import requests
-from fastapi import FastAPI, Depends, APIRouter
+from fastapi import FastAPI, Depends, APIRouter, Query
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.responses import JSONResponse, FileResponse
@@ -11,6 +11,8 @@ from starlette.staticfiles import StaticFiles
 from uvicorn.middleware.proxy_headers import ProxyHeadersMiddleware
 
 import csv_utils
+from geocode.geocode import reverse_geocode_service, places_autocomplete_service, place_details_service, \
+    places_find_service
 from db.db import get_db
 from db.models import SiteMetadata, WaterQualityData
 from dynamic_cors_middleware import DynamicCORSMiddleware
@@ -174,6 +176,38 @@ async def get_nearby_beach(latitude: str | float, longitude: str | float):
     except ValueError:
         return JSONResponse(content={"msg": "Invalid latitude or longitude"}, status_code=400)
 
+@api.get("/reverse_geocode/{latitude}/{longitude}")
+async def reverse_geocode(latitude: str | float, longitude: str | float):
+    try:
+        latitude = float(latitude)
+        longitude = float(longitude)
+        return await reverse_geocode_service(latitude, longitude)
+    except ValueError:
+        return JSONResponse(content={"msg": "Invalid latitude or longitude"}, status_code=400)
+
+@api.get("/places/autocomplete")
+async def places_autocomplete(
+    q: str = Query(..., min_length=2),
+    country: str = Query("AU"),
+    limit: int = Query(8, ge=1, le=10),
+    language: str = Query("en")
+):
+    return JSONResponse(await places_autocomplete_service(q, country, limit, language))
+
+@api.get("/places/details")
+async def place_details(
+    place_id: str = Query(...),
+    language: str = Query("en")
+):
+    return JSONResponse(await place_details_service(place_id, language))
+
+@api.get("/places/find")
+async def places_find(
+    q: str = Query(..., min_length=2),
+    country: str = Query("AU"),
+    language: str = Query("en")
+):
+    return JSONResponse(await places_find_service(q, country, language))
 
 ##################
 # Other APIs
