@@ -152,15 +152,15 @@ const get_cover = async (name) => {
               </span>
               </div>
 
-              <div class="mt-4">
+<!--              <div class="mt-4">-->
 
-                <RouterLink
-                    class="block w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-lg transition"
-                    :to="{ name: 'activity_register', params: { id: a.id } }"
-                >
-                  Join
-                </RouterLink>
-              </div>
+<!--                <RouterLink-->
+<!--                    class="block w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-lg transition"-->
+<!--                    :to="{ name: 'activity_register', params: { id: a.id } }"-->
+<!--                >-->
+<!--                  Join-->
+<!--                </RouterLink>-->
+<!--              </div>-->
             </div>
           </article>
         </div>
