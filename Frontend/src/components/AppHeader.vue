@@ -2,6 +2,7 @@
 import {ref, reactive, computed, onMounted, onBeforeUnmount} from 'vue'
 import {useRoute, RouterLink} from 'vue-router'
 import logo from '@/assets/images/logo.jpg'
+import {useAuth} from "@/assets/security/auth";
 
 const route = useRoute()
 const isOpen = ref(false)
@@ -58,6 +59,7 @@ const close = () =>
 
     <nav class="w-full h-[56px] pl-2 pr-2 flex items-center gap-3">
       <button
+          v-if="route.name != 'lock'"
           class="p-2 rounded text-white hover:bg-white/10"
           :aria-expanded="isOpen"
           aria-label="Toggle menu"
