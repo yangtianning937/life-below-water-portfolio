@@ -55,6 +55,12 @@ const routes = [
         component: () => import('@/pages/NearbyBeach.vue'),
         meta: {title: 'LifeBelowWater | Nearby Beach'}
     },
+    {
+        path: '/fish_identity',
+        name: 'fish_identity',
+        component: () => import('@/pages/FishIdentity.vue'),
+        meta: {title: 'LifeBelowWater | Fish Identity'}
+    },
     // 404
     {
         path: '/:pathMatch(.*)*',
@@ -87,11 +93,11 @@ const router = createRouter({
 
 // 访问控制：未登录 → 锁页
 router.beforeEach((to) => {
-  const { isAuthed } = useAuth()
-  if (to.meta?.public) return true
-  if (isAuthed()) return true
-  sessionStorage.setItem('redirect_after_login', to.fullPath || '/home')
-  return { name: 'lock' }
+    const {isAuthed} = useAuth()
+    if (to.meta?.public) return true
+    if (isAuthed()) return true
+    sessionStorage.setItem('redirect_after_login', to.fullPath || '/home')
+    return {name: 'lock'}
 })
 
 
