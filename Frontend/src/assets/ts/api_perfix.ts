@@ -1,5 +1,5 @@
 const IS_DEV = import.meta.env.MODE === 'development'
-const CURR_ITER = 'iter3'
+const CURR_ITER = import.meta.env.BASE_URL
 
 /**
  * @member api_prefix
@@ -15,5 +15,5 @@ export function api_prefix() {
 
     if (IS_DEV)
         return `${protocol}//${hostname}${port != null ? `:${8000}` : ""}/api`;
-    return `${protocol}//${hostname}${port != null ? `:${8000}` : ""}/${CURR_ITER}/api`;
+    return `${protocol}//${hostname}${port != null ? `:${8000}` : ""}/${CURR_ITER}api`;
 }

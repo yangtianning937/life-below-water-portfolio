@@ -15,10 +15,10 @@ async function submit(e?: Event) {
   const ok = await login(password.value)
   loading.value = false
   if (ok) {
-    const redirect = sessionStorage.getItem('redirect_after_login') || '/home'
+    const redirect = sessionStorage.getItem('redirect_after_login') || 'home'
     sessionStorage.removeItem('redirect_after_login')
     // 使用 hash 路由
-    window.location.replace('/iter2' + redirect)
+    window.location.replace(import.meta.env.BASE_URL + redirect)
   } else {
     error.value = 'Incorrect password'
   }

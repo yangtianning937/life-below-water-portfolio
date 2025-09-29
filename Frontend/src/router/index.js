@@ -82,7 +82,7 @@ const routes = [
 
 const router = createRouter({
     // 如果部署在子路径，改为 createWebHistory('/子路径/')
-    history: createWebHistory('/iter2/'),
+    history: createWebHistory(import.meta.env.BASE_URL),
     routes,
     scrollBehavior(to, from, savedPosition) {
         if (savedPosition) return savedPosition
