@@ -9,6 +9,7 @@ import Epic2Register from '@/pages/Epic2Register.vue'
 import LearningModule from "@/pages/LearningModule.vue";
 import LockPage from "@/pages/LockPage.vue";
 import MarineQuiz from "@/pages/MarineQuiz.vue";
+import BacteriaPatrol from '@/pages/BacteriaPatrol.vue'
 import {useAuth} from "@/assets/security/auth";
 
 const routes = [
@@ -25,6 +26,13 @@ const routes = [
         component: LearningModule,
         meta: {title: 'LifeBelowWater | LearningModule'}
     },
+    {
+        path: '/learningModule/bacteria-patrol',
+        name: 'BacteriaPatrol',
+        component: BacteriaPatrol,
+        meta: { title: 'LifeBelowWater | Bacteria Patrol' },
+    },
+
     {
         path: '/epic1',
         name: 'data_hub', // 与导航栏 AppHeader.vue 的命名一致
