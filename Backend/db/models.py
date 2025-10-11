@@ -46,7 +46,7 @@ class SiteMetadata(Base):
     # children
     records: Mapped[List["WaterQualityData"]] = relationship(
         back_populates="site",
-        passive_deletes=True,  # 依赖数据库的 ON DELETE CASCADE
+        passive_deletes=True,  # Relies on database ON DELETE CASCADE
     )
 
 

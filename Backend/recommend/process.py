@@ -19,8 +19,8 @@ from recommend.model import Generator
 # Replace with actual Google API Key
 GOOGLE_API_KEY = "AIzaSyBlOgil_jAHzwKulAXTeTSxW_WtpQjCicg"
 
-# paprika.py is the model weight path
-# Make sure paprika.pt file is uploaded to the correct directory
+# Model weight path
+# Make sure fav2.pt file is uploaded to the correct directory
 MODEL_PATH = "./recommend/fav2.pt"
 
 # Global model cache to avoid reloading
@@ -169,12 +169,12 @@ def load_and_transform_with_animeganv2(image_urls):
     for idx, url in enumerate(image_urls):
         cache_key = _get_cache_key(url)
         if cache_key in _IMAGE_CACHE:
-            # 检查是否过期（超过7天）
+            # Check if expired (older than 7 days)
             if current_time - _IMAGE_CACHE[cache_key]['timestamp'] <= _IMAGE_CACHE_EXPIRY:
                 cached_results.append((idx, _IMAGE_CACHE[cache_key]['data']))
                 print(f"Cache HIT for image {idx}")
             else:
-                # 过期了，需要重新处理
+                # Expired, need to reprocess
                 del _IMAGE_CACHE[cache_key]
                 urls_to_process.append(url)
                 url_indices.append(idx)
