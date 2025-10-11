@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { ref, reactive, computed, onMounted, onBeforeUnmount } from 'vue'
-import { useRoute, RouterLink } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import logo from '@/assets/images/logo.jpg'
 import { useAuth } from "@/assets/security/auth";
 
 const route = useRoute()
+const router = useRouter()
 const isOpen = ref(false)
 const brand = 'Port Philip Protectors'
 
@@ -51,6 +52,12 @@ const toggleGroup = (k: keyof typeof groups) => {
 }
 const close = () =>
   (isOpen.value = openOnDesktop && (mq?.matches ?? false) ? true : false)
+
+// Navigation functions
+const navigateTo = (routeName: string) => {
+  router.push({ name: routeName })
+  close()
+}
 </script>
 
 <template>
@@ -68,15 +75,15 @@ const close = () =>
         ☰
       </button>
 
-      <RouterLink
-        to="/"
-        class="font-extrabold text-base md:text-lg text-white flex justify-center items-center gap-2"
+      <button
+        @click="router.push('/')"
+        class="font-extrabold text-base md:text-lg text-white flex justify-center items-center gap-2 hover:opacity-80 transition-opacity"
       >
         <div class="w-12 rounded-lg overflow-hidden ring-1 ring-white/15">
           <img :src="logo" class="object-fill rounded-lg" alt="" />
         </div>
         <span>{{ brand }}</span>
-      </RouterLink>
+      </button>
 
       <div class="flex-1"></div>
     </nav>
@@ -130,42 +137,39 @@ const close = () =>
           <ul v-show="groups.learning" id="submenu-learning" class="subnav" aria-label="Learning submenu">
             <!-- Learning Module (keep original name format, can be changed to 'LearningModule' if needed) -->
             <li>
-              <RouterLink
-                :to="{ name: 'learningModule' }"
-                class="subnav-item"
+              <button
+                @click="navigateTo('learningModule')"
+                class="subnav-item w-full text-left"
                 :class="{ active: isRouteActive(['learningModule','LearningModule']) }"
-                @click="close()"
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                   <path d="M4 19.5V5a2 2 0 0 1 2-2h11" stroke-width="2" />
                   <path d="M20 22V4a2 2 0 0 0-2-2H6" stroke-width="2" />
                 </svg>
                 <span>Learning Module</span>
-              </RouterLink>
+              </button>
             </li>
 
             <!-- Water Quality (points to data_hub route) -->
             <li>
-              <RouterLink
-                :to="{ name: 'data_hub' }"
-                class="subnav-item"
+              <button
+                @click="navigateTo('data_hub')"
+                class="subnav-item w-full text-left"
                 :class="{ active: isRouteActive('data_hub') }"
-                @click="close()"
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                   <path d="M12 2C9 6 6 9.5 6 13a6 6 0 0 0 12 0c0-3.5-3-7-6-11z" stroke-width="2" />
                 </svg>
                 <span>Water Quality</span>
-              </RouterLink>
+              </button>
             </li>
 
             <!-- Bacteria Patrol (points to new BacteriaPatrol page) -->
             <li>
-              <RouterLink
-                :to="{ name: 'BacteriaPatrol' }"
-                class="subnav-item"
+              <button
+                @click="navigateTo('BacteriaPatrol')"
+                class="subnav-item w-full text-left"
                 :class="{ active: isRouteActive(['BacteriaPatrol','bacteria_patrol']) }"
-                @click="close()"
               >
                 <!-- Small microscope/bacteria icon -->
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -175,19 +179,18 @@ const close = () =>
                   <circle cx="11.2" cy="11.4" r="0.8" fill="currentColor" />
                 </svg>
                 <span>Protect our Bay · Bacteria Patrol</span>
-              </RouterLink>
+              </button>
             </li>
           </ul>
         </transition>
 
         <!-- Other main menu items -->
-        <RouterLink
+        <button
           v-for="it in navItems"
           :key="it.key"
-          :to="it.to"
-          class="nav-item"
+          @click="navigateTo(it.to.name as string)"
+          class="nav-item w-full text-left"
           :class="{ active: isRouteActive(it.to.name as string) }"
-          @click="close()"
         >
           <svg v-if="it.icon==='home'" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <path d="M3 11l9-8 9 8" stroke-width="2" />
@@ -220,7 +223,7 @@ const close = () =>
             <path d="M20 21v-7M4 21v-7M4 10a4 4 0 1 1 6 3.46A5 5 0 0 0 20 18" stroke-width="2"/>
           </svg>
           <span>{{ it.name }}</span>
-        </RouterLink>
+        </button>
       </nav>
     </aside>
   </div>

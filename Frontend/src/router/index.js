@@ -43,7 +43,7 @@ const routes = [
         path: '/epic2',
         name: 'activity', // Consistent with navigation naming
         component: Epic2List,
-        meta: {title: 'LifeBelowWater | Volunteer Activity'}
+        meta: {title: 'LifeBelowWater | Volunteer Activity', forceRefresh: true}
     },
     {
         path: '/epic2/register/:id',

@@ -12,20 +12,22 @@
 
     <main id="main-content" class="flex-1">
       <RouterView v-slot="{ Component, route }">
-        <transition name="fade" mode="out-in">
-          <Suspense v-if="Component">
-            <template #default>
-              <component :is="Component" :key="route.path" />
-            </template>
-            <template #fallback>
-              <div class="min-h-[60vh] flex items-center justify-center">
-                <div class="text-center">
-                  <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-blue-500 border-t-transparent"></div>
-                  <p class="mt-4 text-slate-600">Loading...</p>
+        <transition name="fade" mode="out-in" appear>
+          <div v-if="Component" :key="route.path">
+            <Suspense>
+              <template #default>
+                <component :is="Component" />
+              </template>
+              <template #fallback>
+                <div class="min-h-[60vh] flex items-center justify-center">
+                  <div class="text-center">
+                    <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-blue-500 border-t-transparent"></div>
+                    <p class="mt-4 text-slate-600">Loading...</p>
+                  </div>
                 </div>
-              </div>
-            </template>
-          </Suspense>
+              </template>
+            </Suspense>
+          </div>
         </transition>
       </RouterView>
     </main>
