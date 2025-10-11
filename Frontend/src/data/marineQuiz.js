@@ -14,7 +14,7 @@ const mcq = [
     promptImg: `${import.meta.env.BASE_URL}/quiz/pics/sea_turtle.jpg`,
     options: [
       { key: 'a', name: 'Dolphin' },
-      { key: 'b', name: 'Sea Turtle' }, // ✅
+      { key: 'b', name: 'Sea Turtle' },
       { key: 'c', name: 'Shark' },
     ],
     answer: 'b',
@@ -26,7 +26,7 @@ const mcq = [
     type: 'mcq',
     text: 'Which animal uses sounds to talk with friends?',
     options: [
-      { key: 'a', name: 'Dolphin', img: `${import.meta.env.BASE_URL}/quiz/animals/dolphin.jpg` }, // ✅
+      { key: 'a', name: 'Dolphin', img: `${import.meta.env.BASE_URL}/quiz/animals/dolphin.jpg` },
       { key: 'b', name: 'Octopus', img: `${import.meta.env.BASE_URL}/quiz/animals/octopus.jpg` },
       { key: 'c', name: 'Crab',    img: `${import.meta.env.BASE_URL}/quiz/animals/crab.jpg` },
     ],
@@ -39,7 +39,7 @@ const mcq = [
     type: 'mcq',
     text: 'Which fish lives safely in sea anemones?',
     options: [
-      { key: 'a', name: 'Clownfish', img: `${import.meta.env.BASE_URL}/quiz/animals/clownfish.jpg` }, // ✅
+      { key: 'a', name: 'Clownfish', img: `${import.meta.env.BASE_URL}/quiz/animals/clownfish.jpg` },
       { key: 'b', name: 'Seahorse',  img: `${import.meta.env.BASE_URL}/quiz/animals/seahorse.jpg` },
       { key: 'c', name: 'Tuna',      img: `${import.meta.env.BASE_URL}/quiz/animals/tuna.jpg` },
     ],
@@ -52,7 +52,7 @@ const mcq = [
     type: 'mcq',
     text: 'What grows underwater and makes oxygen for fish?',
     options: [
-      { key: 'a', name: 'Seagrass', img: `${import.meta.env.BASE_URL}/quiz/animals/seagrass.jpg` }, // ✅ 可用示意图
+      { key: 'a', name: 'Seagrass', img: `${import.meta.env.BASE_URL}/quiz/animals/seagrass.jpg` }, // Available illustration
       { key: 'b', name: 'Cactus',   img: `${import.meta.env.BASE_URL}/quiz/animals/cactus.jpg` },
       { key: 'c', name: 'Bamboo',   img: `${import.meta.env.BASE_URL}/quiz/animals/bamboo.jpg` },
     ],
@@ -65,7 +65,7 @@ const mcq = [
     type: 'mcq',
     text: 'Which one has 10 legs and walks sideways?',
     options: [
-      { key: 'a', name: 'Crab',     img: `${import.meta.env.BASE_URL}/quiz/animals/crab.jpg` }, // ✅
+      { key: 'a', name: 'Crab',     img: `${import.meta.env.BASE_URL}/quiz/animals/crab.jpg` },
       { key: 'b', name: 'Starfish', img: `${import.meta.env.BASE_URL}/quiz/animals/starfish.jpg` },
       { key: 'c', name: 'Seal',     img: `${import.meta.env.BASE_URL}/quiz/animals/seal.jpg` },
     ],
@@ -190,7 +190,7 @@ const pic = [
     text: 'What is this fish?',
     image: `${import.meta.env.BASE_URL}/quiz/pics/clownfish.jpg`,
     options: [
-      { key: 'a', name: 'Clownfish' }, // ✅
+      { key: 'a', name: 'Clownfish' },
       { key: 'b', name: 'Starfish' },
       { key: 'c', name: 'Seahorse' },
     ],
@@ -204,7 +204,7 @@ const pic = [
     text: 'What is this?',
     image: `${import.meta.env.BASE_URL}/quiz/pics/sea_turtle.jpg`,
     options: [
-      { key: 'a', name: 'Turtle' }, // ✅
+      { key: 'a', name: 'Turtle' },
       { key: 'b', name: 'Crab' },
       { key: 'c', name: 'Stingray' },
     ],
@@ -218,7 +218,7 @@ const pic = [
     text: 'Which animal is this?',
     image: `${import.meta.env.BASE_URL}/quiz/pics/octopus.jpg`,
     options: [
-      { key: 'a', name: 'Octopus' }, // ✅
+      { key: 'a', name: 'Octopus' },
       { key: 'b', name: 'Squid' },
       { key: 'c', name: 'Crab' },
     ],
@@ -232,7 +232,7 @@ const pic = [
     text: 'Who is this?',
     image: `${import.meta.env.BASE_URL}/quiz/pics/dolphin.jpg`,
     options: [
-      { key: 'a', name: 'Dolphin' }, // ✅
+      { key: 'a', name: 'Dolphin' },
       { key: 'b', name: 'Shark' },
       { key: 'c', name: 'Seal' },
     ],
@@ -246,7 +246,7 @@ const pic = [
     text: 'What animal is this?',
     image: `${import.meta.env.BASE_URL}/quiz/pics/starfish.jpg`,
     options: [
-      { key: 'a', name: 'Starfish' }, // ✅
+      { key: 'a', name: 'Starfish' },
       { key: 'b', name: 'Crab' },
       { key: 'c', name: 'Jellyfish' },
     ],

@@ -1,14 +1,15 @@
 <script setup lang="ts">
 import { ref, reactive, computed, onMounted, onBeforeUnmount } from 'vue'
-import { useRoute, RouterLink } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import logo from '@/assets/images/logo.jpg'
 import { useAuth } from "@/assets/security/auth";
 
 const route = useRoute()
+const router = useRouter()
 const isOpen = ref(false)
 const brand = 'Port Philip Protectors'
 
-// 桌面端是否默认展开侧边栏
+// Whether to expand sidebar by default on desktop
 const openOnDesktop = false
 let mq: MediaQueryList | null = null
 const syncDrawer = () => {
@@ -24,7 +25,7 @@ onBeforeUnmount(() => {
   mq?.removeEventListener?.('change', syncDrawer)
 })
 
-// 主导航（已移除 LearningModule 独立项）
+// Main navigation (removed LearningModule as independent item)
 const navItems = [
   { name: 'Home', to: { name: 'home' }, key: 'home', icon: 'home' },
   { name: 'Nearby Beach', to: { name: 'nearby' }, key: 'nearby', icon: 'beach' },
@@ -33,7 +34,7 @@ const navItems = [
   { name: 'Fish Buddy', to: { name: 'fish_identity' }, key: 'fish_identity', icon: 'fish' },
 ]
 
-// 下拉分组：Learning（包含 Learning Module + Water Quality + Bacteria Patrol）
+// Dropdown group: Learning (includes Learning Module + Water Quality + Bacteria Patrol)
 const groups = reactive({ learning: false })
 
 function isRouteActive(names: string | string[]) {
@@ -41,7 +42,7 @@ function isRouteActive(names: string | string[]) {
   return Array.isArray(names) ? names.includes(cur) : cur === names
 }
 
-// ✅ Learning 分组在以下路由高亮：learningModule / LearningModule、data_hub、BacteriaPatrol / bacteria_patrol
+// Learning group highlights on these routes: learningModule / LearningModule, data_hub, BacteriaPatrol / bacteria_patrol
 const isLearningActive = computed(() =>
   isRouteActive(['learningModule', 'LearningModule', 'data_hub', 'BacteriaPatrol', 'bacteria_patrol'])
 )
@@ -51,6 +52,12 @@ const toggleGroup = (k: keyof typeof groups) => {
 }
 const close = () =>
   (isOpen.value = openOnDesktop && (mq?.matches ?? false) ? true : false)
+
+// Navigation functions
+const navigateTo = (routeName: string) => {
+  router.push({ name: routeName })
+  close()
+}
 </script>
 
 <template>
@@ -68,15 +75,15 @@ const close = () =>
         ☰
       </button>
 
-      <RouterLink
-        to="/"
-        class="font-extrabold text-base md:text-lg text-white flex justify-center items-center gap-2"
+      <button
+        @click="router.push('/')"
+        class="font-extrabold text-base md:text-lg text-white flex justify-center items-center gap-2 hover:opacity-80 transition-opacity"
       >
         <div class="w-12 rounded-lg overflow-hidden ring-1 ring-white/15">
           <img :src="logo" class="object-fill rounded-lg" alt="" />
         </div>
         <span>{{ brand }}</span>
-      </RouterLink>
+      </button>
 
       <div class="flex-1"></div>
     </nav>
@@ -97,7 +104,7 @@ const close = () =>
       </div>
 
       <nav class="sidenav-nav">
-        <!-- ▼ Learning 分组（Dropdown） -->
+        <!-- Learning Group (Dropdown) -->
         <div
           class="nav-item cursor-pointer select-none"
           :class="{ active: isLearningActive }"
@@ -106,7 +113,7 @@ const close = () =>
           aria-controls="submenu-learning"
           role="button"
         >
-          <!-- 图标 -->
+          <!-- Icon -->
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <ellipse cx="12" cy="5" rx="9" ry="3" stroke-width="2" />
             <path d="M3 5v6c0 1.7 4 3 9 3s9-1.3 9-3V5" stroke-width="2" />
@@ -128,46 +135,43 @@ const close = () =>
 
         <transition name="collapse">
           <ul v-show="groups.learning" id="submenu-learning" class="subnav" aria-label="Learning submenu">
-            <!-- Learning Module（保持你原来的 name 写法，可按需改成 'LearningModule'） -->
+            <!-- Learning Module (keep original name format, can be changed to 'LearningModule' if needed) -->
             <li>
-              <RouterLink
-                :to="{ name: 'learningModule' }"
-                class="subnav-item"
+              <button
+                @click="navigateTo('learningModule')"
+                class="subnav-item w-full text-left"
                 :class="{ active: isRouteActive(['learningModule','LearningModule']) }"
-                @click="close()"
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                   <path d="M4 19.5V5a2 2 0 0 1 2-2h11" stroke-width="2" />
                   <path d="M20 22V4a2 2 0 0 0-2-2H6" stroke-width="2" />
                 </svg>
                 <span>Learning Module</span>
-              </RouterLink>
+              </button>
             </li>
 
-            <!-- Water Quality（指向 data_hub 路由） -->
+            <!-- Water Quality (points to data_hub route) -->
             <li>
-              <RouterLink
-                :to="{ name: 'data_hub' }"
-                class="subnav-item"
+              <button
+                @click="navigateTo('data_hub')"
+                class="subnav-item w-full text-left"
                 :class="{ active: isRouteActive('data_hub') }"
-                @click="close()"
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                   <path d="M12 2C9 6 6 9.5 6 13a6 6 0 0 0 12 0c0-3.5-3-7-6-11z" stroke-width="2" />
                 </svg>
                 <span>Water Quality</span>
-              </RouterLink>
+              </button>
             </li>
 
-            <!-- Bacteria Patrol（指向新页面 BacteriaPatrol） -->
+            <!-- Bacteria Patrol (points to new BacteriaPatrol page) -->
             <li>
-              <RouterLink
-                :to="{ name: 'BacteriaPatrol' }"
-                class="subnav-item"
+              <button
+                @click="navigateTo('BacteriaPatrol')"
+                class="subnav-item w-full text-left"
                 :class="{ active: isRouteActive(['BacteriaPatrol','bacteria_patrol']) }"
-                @click="close()"
               >
-                <!-- 小显微镜/细菌图标 -->
+                <!-- Small microscope/bacteria icon -->
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                   <circle cx="10" cy="10" r="5" stroke-width="2" />
                   <path d="M14 14l4.5 4.5" stroke-width="2" />
@@ -175,19 +179,18 @@ const close = () =>
                   <circle cx="11.2" cy="11.4" r="0.8" fill="currentColor" />
                 </svg>
                 <span>Protect our Bay · Bacteria Patrol</span>
-              </RouterLink>
+              </button>
             </li>
           </ul>
         </transition>
 
-        <!-- 其它主菜单项 -->
-        <RouterLink
+        <!-- Other main menu items -->
+        <button
           v-for="it in navItems"
           :key="it.key"
-          :to="it.to"
-          class="nav-item"
+          @click="navigateTo(it.to.name as string)"
+          class="nav-item w-full text-left"
           :class="{ active: isRouteActive(it.to.name as string) }"
-          @click="close()"
         >
           <svg v-if="it.icon==='home'" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <path d="M3 11l9-8 9 8" stroke-width="2" />
@@ -220,14 +223,14 @@ const close = () =>
             <path d="M20 21v-7M4 21v-7M4 10a4 4 0 1 1 6 3.46A5 5 0 0 0 20 18" stroke-width="2"/>
           </svg>
           <span>{{ it.name }}</span>
-        </RouterLink>
+        </button>
       </nav>
     </aside>
   </div>
 </template>
 
 <style scoped>
-/* 海洋渐变 */
+/* Ocean gradient */
 .o-header {
   color: #fff;
   background: linear-gradient(180deg, #1f3b82 0%, #1e40af 40%, #4338ca 75%, #4f46e5 100%);
@@ -249,7 +252,7 @@ const close = () =>
   opacity: .75;
 }
 
-/* 海浪 */
+/* Ocean waves */
 .waves {
   position: absolute;
   left: 0;
@@ -266,7 +269,7 @@ const close = () =>
   100% { transform: translateX(-50%) }
 }
 
-/* 抽屉保持原样式 */
+/* Drawer maintains original style */
 .drawer-root { position: fixed; inset: 0; pointer-events: none; z-index: 60; }
 .drawer-root.open { pointer-events: auto; }
 .backdrop { position: absolute; inset: 0; background: rgba(0, 0, 0, .4); opacity: 0; transition: opacity .2s; }
@@ -293,7 +296,7 @@ const close = () =>
 .nav-item:hover { background: rgba(255, 255, 255, .08); }
 .nav-item.active { background: rgba(56, 139, 253, .2); color: #58a6ff; }
 
-/* 子菜单 */
+/* Submenu */
 .subnav { list-style: none; margin: 0; padding: 4px 0 4px 34px; }
 .subnav-item {
   display: flex; align-items: center; gap: 8px; padding: 8px 10px; margin: 2px 0;
@@ -302,7 +305,7 @@ const close = () =>
 .subnav-item:hover { background: rgba(255, 255, 255, .06); }
 .subnav-item.active { background: rgba(56, 139, 253, .18); color: #58a6ff; }
 
-/* 折叠动画 */
+/* Collapse animation */
 .collapse-enter-from, .collapse-leave-to { max-height: 0; opacity: 0; }
 .collapse-enter-to, .collapse-leave-from { max-height: 180px; opacity: 1; }
 .collapse-enter-active, .collapse-leave-active { transition: all .18s ease; }
