@@ -130,7 +130,7 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import bank from '@/data/marineQuiz'
+import bank from '@/data/marineQuiz.randomized.js'
 import FullscreenMessage from '@/components/FullscreenMessage.vue'
 import { useRouter } from 'vue-router'
 

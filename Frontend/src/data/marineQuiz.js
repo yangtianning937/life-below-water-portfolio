@@ -11,7 +11,7 @@ const mcq = [
     key: 'mcq-turtle-1',
     type: 'mcq',
     text: 'What is this animal?',
-    promptImg: `${import.meta.env.BASE_URL}/quiz/pics/sea_turtle.jpg`,
+    image: `${import.meta.env.BASE_URL}/quiz/pics/sea_turtle.jpg`,
     options: [
       { key: 'a', name: 'Dolphin' },
       { key: 'b', name: 'Sea Turtle' },

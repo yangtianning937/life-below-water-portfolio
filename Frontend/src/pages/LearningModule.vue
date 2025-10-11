@@ -40,7 +40,8 @@ import ModuleIntro from '../components/learning/ModuleIntro.vue';
 import ModuleBeaches from '../components/learning/ModuleBeaches.vue'
 import ModuleProtect from '../components/learning/ModuleProtect.vue'
 import QuizBlock     from '../components/learning/QuizBlock.vue'
-import learningQuiz  from '../data/learningQuiz'
+import learningQuiz from '../data/learningQuiz.randomized.js'
+
 
 
 type ModuleKey = 'm1'|'m2'|'m3'|'m4'
