@@ -121,7 +121,7 @@
       :title="submitTitle"
       :message="submitText"
       icon="🎉"
-      confirmText="OK"
+      confirmText="Go To HomePage"
       :persistent="false"
       @confirm="goHome"
     />
