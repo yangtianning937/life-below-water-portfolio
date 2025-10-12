@@ -6,8 +6,6 @@ import uuid
 from typing import Dict, Tuple, List
 
 import httpx
-from fastapi import APIRouter, Query
-from fastapi.responses import JSONResponse
 
 API_KEY = os.getenv("GOOGLE_MAPS_API_KEY", "AIzaSyDupqg3HPeQuhG5M8YaIFou9Vi0d27CKgQ")
 

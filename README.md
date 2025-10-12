@@ -57,24 +57,86 @@ By combining clear educational content with an interactive design, the project s
 ## Project Structure
 ```
 Life-Below-Water_TA26/
-├── Frontend/                 # Vue.js frontend application
+├── Frontend/                      # Vue.js frontend application
 │   ├── src/
-│   │   ├── components/       # Reusable Vue components
-│   │   ├── pages/           # Page components
-│   │   ├── router/          # Vue Router configuration
-│   │   ├── assets/          # Static assets and utilities
-│   │   └── data/            # Quiz data and CSV files
-│   ├── public/              # Public static files
-│   └── package.json         # Frontend dependencies
-├── Backend/                 # FastAPI backend application
-│   ├── db/                  # Database models and configuration
-│   ├── data/                # CSV data files
-│   ├── recommend/           # AI recommendation system
-│   ├── geocode/             # Geocoding services
-│   └── main.py              # FastAPI application entry point
-└── AI/                      # Data processing and model files
-    ├── data_processing_code/ # Data analysis notebooks
-    └── e3_model/            # Machine learning models
+│   │   ├── components/            # Reusable Vue components
+│   │   │   ├── epic1/            # Epic 1 specific components
+│   │   │   ├── learning/         # Learning module components
+│   │   │   ├── decorations/      # UI decoration components
+│   │   │   ├── AppHeader.vue     # Main header component
+│   │   │   ├── AppFooter.vue     # Main footer component
+│   │   │   └── FullscreenMessage.vue  # Error/message modal
+│   │   ├── pages/                # Page components
+│   │   │   ├── HomePage.vue      # Landing page
+│   │   │   ├── FishIdentity.vue  # Fish buddy generator
+│   │   │   ├── BacteriaPatrol.vue # Water quality dashboard
+│   │   │   ├── Epic1Page.vue     # Data visualization page
+│   │   │   ├── Epic2List.vue     # Activity listing
+│   │   │   ├── Epic2Register.vue # Activity registration
+│   │   │   ├── LearningModule.vue # Educational modules
+│   │   │   ├── MarineQuiz.vue    # Marine life quiz
+│   │   │   ├── NearbyBeach.vue   # Beach finder
+│   │   │   └── LockPage.vue      # Access control page
+│   │   ├── router/               # Vue Router configuration
+│   │   │   └── index.js          # Route definitions
+│   │   ├── assets/               # Static assets and utilities
+│   │   │   ├── ts/              # TypeScript utilities
+│   │   │   ├── images/          # Image assets
+│   │   │   ├── security/        # Security utilities
+│   │   │   └── global.css       # Global styles
+│   │   ├── data/                # Quiz data and CSV files
+│   │   │   ├── learningQuiz.js  # Learning module quizzes
+│   │   │   ├── marineQuiz.js    # Marine life quizzes
+│   │   │   └── *.csv            # Water quality data
+│   │   ├── utils/               # Utility functions
+│   │   └── main.js              # Application entry point
+│   ├── public/                  # Public static files
+│   │   ├── learning/            # Learning module assets
+│   │   └── quiz/                # Quiz images
+│   ├── dist/                    # Production build output
+│   ├── package.json             # Frontend dependencies
+│   ├── vite.config.js           # Vite configuration
+│   └── tailwind.config.js       # Tailwind CSS configuration
+│
+├── Backend/                     # FastAPI backend application
+│   ├── db/                      # Database layer
+│   │   ├── db.py               # Database connection
+│   │   └── models.py           # SQLAlchemy models
+│   ├── data/                    # CSV data files
+│   │   ├── activity_data.csv   # Activity information
+│   │   ├── fish_names.csv      # Fish species data
+│   │   ├── site_metadata.csv   # Site information
+│   │   └── water_quality_data.csv # Water quality records
+│   ├── fish/                    # Fish identity system
+│   │   ├── info.py             # Fish identity generation
+│   │   ├── avatar.py           # Image cartoon processing
+│   │   └── fne.pt              # PyTorch model weights
+│   ├── recommend/               # AI recommendation system
+│   │   ├── model.py            # Recommendation model
+│   │   ├── process.py          # Processing pipeline
+│   │   └── fav2.pt             # Model weights
+│   ├── geocode/                 # Geocoding services
+│   │   └── geocode.py          # Google Maps API integration
+│   ├── utils/                   # Utility functions
+│   │   └── csv_utils.py        # CSV processing utilities
+│   ├── img/                     # Image assets
+│   ├── dist/                    # Frontend production build
+│   ├── main.py                  # FastAPI application entry point
+│   ├── request_model.py         # Pydantic request models
+│   ├── dynamic_cors_middleware.py # CORS middleware
+│   ├── fish_mapping.py          # Fish data mapping
+│   └── requirements.txt         # Python dependencies
+│
+└── AI/                          # Data processing and ML models
+    ├── data_processing_code/    # Data analysis notebooks
+    │   ├── e1_datap_code.ipynb # Data processing
+    │   ├── site_averages_recent_year_lll.csv
+    │   └── water_quality_classified_lll.csv
+    ├── e3_model/                # Recommendation model
+    │   ├── main.ipynb          # Model training
+    │   └── model.py            # Model definition
+    ├── fish.ipynb              # Fish identity experiments
+    └── fne.pt                  # Fish neural network weights
 ```
 
 ---
