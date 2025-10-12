@@ -128,7 +128,7 @@ def get_model():
     return _MODEL_CACHE["model"], _MODEL_CACHE["device"]
 
 
-def download_image(url, timeout=5):
+def download_image(url, timeout=3):
     """Download a single image with shorter timeout using session for connection pooling."""
     try:
         print(f"Downloading image from URL: {url}")

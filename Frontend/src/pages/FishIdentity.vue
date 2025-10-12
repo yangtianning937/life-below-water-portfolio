@@ -1,7 +1,7 @@
 <!-- src/pages/FishIdentity.vue -->
 <template>
   <main class="min-h-screen bg-gradient-to-b from-sky-50 to-blue-50">
-    <section class="mx-auto max-w-5xl px-4 py-8">
+    <section class="mx-auto max-w-7xl px-6 py-8">
       <!-- Header -->
       <header class="mb-6">
         <h1 class="text-2xl md:text-3xl font-semibold text-slate-800">
@@ -12,9 +12,9 @@
         </p>
       </header>
 
-      <div class="grid lg:grid-cols-2 gap-6">
+      <div class="grid lg:grid-cols-2 gap-8">
         <!-- ===== Left: Form ===== -->
-        <section class="bg-white/90 backdrop-blur rounded-2xl shadow p-5 md:p-6">
+        <section class="bg-white rounded-xl shadow-lg p-6 lg:p-8">
           <form @submit.prevent="onGenerate" novalidate>
             <!-- Name -->
             <label for="name" class="block text-sm font-medium text-slate-700">Name <span class="text-rose-600">(required)</span></label>
@@ -96,7 +96,7 @@
         </section>
 
         <!-- ===== Right: Result ===== -->
-        <section class="bg-white/90 rounded-2xl shadow p-5 md:p-6 relative">
+        <section class="bg-white rounded-xl shadow-lg p-6 lg:p-8 relative">
           <!-- Loading skeleton -->
           <div v-if="ui.loading" class="absolute inset-0 rounded-2xl bg-white/70 backdrop-blur-sm z-10">
             <div class="h-1 w-full bg-slate-100 rounded-full overflow-hidden mt-4">
@@ -115,15 +115,64 @@
 
           <!-- Result -->
           <template v-if="result">
-            <!-- Progress bar (subtle) -->
+            <!-- Progress bar (completed) -->
             <div class="h-2 w-full bg-slate-100 rounded-full mb-4 overflow-hidden">
-              <div class="h-full bg-emerald-400" style="width: 65%"></div>
+              <div class="h-full bg-emerald-400 transition-all duration-500" style="width: 100%"></div>
             </div>
 
-            <!-- Avatar canvas -->
-            <div class="rounded-2xl bg-gradient-to-b from-sky-50 to-blue-50 p-4 md:p-6">
-              <div class="relative aspect-[16/9] w-full rounded-xl overflow-hidden" ref="avatarWrap">
-                <svg
+            <!-- Avatar Gallery -->
+            <div class="rounded-xl bg-gradient-to-br from-slate-50 to-blue-50 p-6 shadow-md border border-slate-200">
+              <!-- Gallery Header -->
+              <div class="text-center mb-6">
+                <h3 class="text-xl font-bold text-slate-800 mb-2">Your Fish Buddy Gallery</h3>
+                <p class="text-slate-600 text-sm">Compare the real fish with your personalized cartoon avatar</p>
+              </div>
+
+              <!-- Image Comparison -->
+              <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Real Fish Card -->
+                <div class="group">
+                  <div class="relative aspect-[4/3] rounded-2xl overflow-hidden bg-gradient-to-br from-slate-100 to-slate-200 shadow-lg border-2 border-white/50 group-hover:shadow-xl transition-all duration-300">
+                    <img 
+                      v-if="realImageUrl && !realImageUrl.includes('placeholder')"
+                      :src="realImageUrl"
+                      alt="Real fish image"
+                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      @error="realImageError = true"
+                    />
+                    <div v-else class="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200">
+                      <div class="w-16 h-16 rounded-full bg-slate-300 flex items-center justify-center mb-3">
+                        <svg class="w-8 h-8 text-slate-500" fill="currentColor" viewBox="0 0 20 20">
+                          <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"/>
+                        </svg>
+                      </div>
+                      <span class="text-slate-500 text-sm font-medium">Loading Real Image...</span>
+                    </div>
+                    
+                    <!-- Image Badge -->
+                    <div class="absolute top-3 left-3 bg-blue-600 text-white px-3 py-1 rounded-full text-xs font-semibold shadow-lg">
+                      Real Fish
+                    </div>
+                  </div>
+                  
+                  <!-- Real Image Info -->
+                  <div class="mt-4 text-center">
+                    <h4 class="font-semibold text-slate-800 mb-1">{{ result?.commonName }}</h4>
+                    <p class="text-sm text-slate-600">From Wikipedia</p>
+                  </div>
+                </div>
+                
+                <!-- Cartoon Avatar Card -->
+                <div class="group">
+                  <div class="relative aspect-[4/3] rounded-2xl overflow-hidden bg-gradient-to-br from-cyan-100 to-teal-200 shadow-lg border-2 border-white/50 group-hover:shadow-xl transition-all duration-300">
+                    <img 
+                      v-if="cartoonImageBase64"
+                      :src="cartoonImageBase64"
+                      alt="Cartoon fish avatar"
+                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                    <svg
+                      v-else
                   ref="avatarSvg"
                   xmlns="http://www.w3.org/2000/svg"
                   class="w-full h-full"
@@ -166,60 +215,247 @@
                   <circle cx="560" cy="240" r="22" fill="#FFFFFF"/>
                   <circle cx="566" cy="246" r="9" fill="#1F2937"/>
                 </svg>
+                    
+                    <!-- Cartoon Badge -->
+                    <div class="absolute top-3 left-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white px-3 py-1 rounded-full text-xs font-semibold shadow-lg">
+                      AI Cartoon
+                    </div>
+                  </div>
+                  
+                  <!-- Cartoon Info -->
+                  <div class="mt-4 text-center">
+                    <h4 class="font-semibold text-slate-800 mb-1">{{ result?.subtitle || 'Your Avatar' }}</h4>
+                    <p class="text-sm text-slate-600">AI Generated</p>
+                  </div>
+                </div>
               </div>
 
-              <div class="mt-3 flex flex-wrap gap-2">
-                <button class="px-3 py-2 rounded-xl bg-slate-800 text-white hover:opacity-95"
+              <!-- Action Buttons -->
+              <div class="mt-8 flex flex-wrap justify-center gap-3">
+                <button v-if="realImageUrl && !realImageUrl.includes('placeholder')" 
+                        class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-600 text-white hover:bg-blue-700 transition-colors shadow-md hover:shadow-lg">
+                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                  </svg>
+                  Download Real
+                </button>
+                
+                <button v-if="cartoonImageBase64" 
+                        class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700 transition-all shadow-md hover:shadow-lg">
+                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                  </svg>
+                  Download Cartoon
+                </button>
+                
+                <button v-else class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-600 text-white hover:bg-slate-700 transition-colors shadow-md hover:shadow-lg"
                         @click="download('png')">
+                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                  </svg>
                   Download PNG
                 </button>
-                <button class="px-3 py-2 rounded-xl border border-slate-300 hover:border-sky-300"
+                
+                <button v-if="!cartoonImageBase64" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl border-2 border-slate-300 text-slate-700 hover:border-slate-400 hover:bg-slate-50 transition-colors"
                         @click="download('svg')">
+                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                  </svg>
                   Download SVG
                 </button>
-                <button v-if="canShare" class="px-3 py-2 rounded-xl border border-slate-300 hover:border-sky-300"
+                
+                <button v-if="canShare" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl border-2 border-emerald-300 text-emerald-700 hover:border-emerald-400 hover:bg-emerald-50 transition-colors"
                         @click="shareIt">
+                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z"/>
+                  </svg>
                   Share
                 </button>
               </div>
             </div>
 
-            <!-- Profile panel -->
-            <div class="mt-5">
-              <div class="flex items-center gap-2">
-                <span class="inline-block h-3 w-3 rounded-full bg-sky-400"></span>
-                <h2 class="text-lg md:text-xl font-semibold text-slate-800">
-                  {{ displayName }}’s {{ result.commonName }}
-                  <span class="text-slate-500">· {{ result.scientific }}</span>
+            <!-- Two Column Layout -->
+            <div class="mt-8 grid grid-cols-1 xl:grid-cols-2 gap-8">
+              
+              <!-- Feature 1: Personified Fish ID Card -->
+              <div class="bg-white rounded-xl p-6 shadow-md border border-slate-200">
+                <div class="text-center mb-6">
+                  <div class="inline-flex items-center gap-3 bg-gradient-to-r from-purple-100 to-pink-100 px-6 py-3 rounded-full">
+                    <div class="w-4 h-4 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 animate-pulse"></div>
+                    <h2 class="text-lg font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                      Personified Fish ID Card
                 </h2>
               </div>
-              <p class="mt-1 text-slate-600">{{ result.subtitle }}</p>
+                </div>
 
-              <div class="mt-5 grid md:grid-cols-2 gap-4">
-                <div class="rounded-xl border border-slate-200 p-4">
-                  <h3 class="font-semibold text-slate-800">Personality tags</h3>
-                  <p class="mt-1 text-slate-700">{{ result.tags.join(' · ') }}</p>
+                <!-- Personal Info -->
+                <div class="space-y-4">
+                  <!-- Name and Age -->
+                  <div class="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-4 border border-purple-200">
+                    <div class="flex items-center gap-3 mb-2">
+                      <div class="w-8 h-8 rounded-lg bg-purple-500 flex items-center justify-center">
+                        <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                          <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
+                        </svg>
+                      </div>
+                      <h3 class="font-bold text-slate-800">Personal Info</h3>
+                    </div>
+                    <div class="space-y-2 text-sm">
+                      <p><span class="font-semibold text-purple-600">Name:</span> {{ result.personInfo?.Name }}</p>
+                      <p><span class="font-semibold text-purple-600">Species:</span> {{ result.personInfo?.Species }}</p>
+                      <p><span class="font-semibold text-purple-600">Age:</span> {{ result.personInfo?.Age }}</p>
+                    </div>
+                  </div>
+
+                  <!-- Personality -->
+                  <div class="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-xl p-4 border border-emerald-200">
+                    <div class="flex items-center gap-3 mb-2">
+                      <div class="w-8 h-8 rounded-lg bg-emerald-500 flex items-center justify-center">
+                        <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                        </svg>
+                      </div>
+                      <h3 class="font-bold text-slate-800">Personality</h3>
+                    </div>
+                    <p class="text-sm text-slate-700">{{ result.personInfo?.Personality }}</p>
+                  </div>
+
+                  <!-- Hobbies -->
+                  <div class="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl p-4 border border-blue-200">
+                    <div class="flex items-center gap-3 mb-2">
+                      <div class="w-8 h-8 rounded-lg bg-blue-500 flex items-center justify-center">
+                        <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                          <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"/>
+                        </svg>
+                      </div>
+                      <h3 class="font-bold text-slate-800">Hobbies</h3>
+                    </div>
+                    <p class="text-sm text-slate-700">{{ result.personInfo?.Hobbies }}</p>
+                  </div>
+
+                  <!-- Special Feature -->
+                  <div class="bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl p-4 border border-amber-200">
+                    <div class="flex items-center gap-3 mb-2">
+                      <div class="w-8 h-8 rounded-lg bg-amber-500 flex items-center justify-center">
+                        <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                          <path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd"/>
+                        </svg>
+                      </div>
+                      <h3 class="font-bold text-slate-800">Special Feature</h3>
+                    </div>
+                    <p class="text-sm text-slate-700">{{ result.personInfo?.Special_Feature }}</p>
+                  </div>
                 </div>
-                <div class="rounded-xl border border-slate-200 p-4">
-                  <h3 class="font-semibold text-slate-800">Badge suggestion</h3>
-                  <p class="mt-1 text-slate-700">{{ result.badge }}</p>
+              </div>
+
+              <!-- Feature 2: Complete Base Marine Identity -->
+              <div class="bg-white rounded-xl p-6 shadow-md border border-slate-200">
+                <div class="text-center mb-6">
+                  <div class="inline-flex items-center gap-3 bg-gradient-to-r from-blue-100 to-cyan-100 px-6 py-3 rounded-full">
+                    <div class="w-4 h-4 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 animate-pulse"></div>
+                    <h2 class="text-lg font-bold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
+                      Complete Base Marine Identity
+                    </h2>
+                  </div>
                 </div>
-                <div class="rounded-xl border border-slate-200 p-4 md:col-span-2">
-                  <h3 class="font-semibold text-slate-800">Backstory</h3>
-                  <p class="mt-1 text-slate-700">{{ result.backstory }}</p>
+
+                <!-- Marine Info -->
+                <div class="space-y-4">
+                  <!-- Species Names -->
+                  <div class="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl p-4 border border-blue-200">
+                    <div class="flex items-center gap-3 mb-2">
+                      <div class="w-8 h-8 rounded-lg bg-blue-500 flex items-center justify-center">
+                        <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                          <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"/>
+                        </svg>
+                      </div>
+                      <h3 class="font-bold text-slate-800">Species Names</h3>
+                    </div>
+                    <div class="text-sm">
+                      <p class="font-semibold text-blue-600">{{ result.baseInfo?.Species_Name_EN }}</p>
+                    </div>
+                  </div>
+
+                  <!-- Core Feature -->
+                  <div class="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-4 border border-purple-200">
+                    <div class="flex items-center gap-3 mb-2">
+                      <div class="w-8 h-8 rounded-lg bg-purple-500 flex items-center justify-center">
+                        <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                          <path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd"/>
+                        </svg>
+                      </div>
+                      <h3 class="font-bold text-slate-800">Core Feature</h3>
+                    </div>
+                    <p class="text-sm text-slate-700">{{ result.baseInfo?.Core_Feature_CN }}</p>
+                  </div>
+
+                  <!-- Age & Size -->
+                  <div class="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-xl p-4 border border-emerald-200">
+                    <div class="flex items-center gap-3 mb-2">
+                      <div class="w-8 h-8 rounded-lg bg-emerald-500 flex items-center justify-center">
+                        <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                          <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"/>
+                        </svg>
+                      </div>
+                      <h3 class="font-bold text-slate-800">Age & Size</h3>
+                    </div>
+                    <p class="text-sm text-slate-700">{{ result.baseInfo?.Age_Size_Description_CN }}</p>
+                  </div>
+
+                  <!-- Personality -->
+                  <div class="bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl p-4 border border-amber-200">
+                    <div class="flex items-center gap-3 mb-2">
+                      <div class="w-8 h-8 rounded-lg bg-amber-500 flex items-center justify-center">
+                        <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                        </svg>
+                      </div>
+                      <h3 class="font-bold text-slate-800">Personality</h3>
+                    </div>
+                    <p class="text-sm text-slate-700">{{ result.baseInfo?.Personality_CN }}</p>
+                  </div>
+
+                  <!-- Habitat -->
+                  <div class="bg-gradient-to-br from-teal-50 to-cyan-50 rounded-xl p-4 border border-teal-200">
+                    <div class="flex items-center gap-3 mb-2">
+                      <div class="w-8 h-8 rounded-lg bg-teal-500 flex items-center justify-center">
+                        <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                          <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/>
+                        </svg>
+                      </div>
+                      <h3 class="font-bold text-slate-800">Habitat</h3>
+                    </div>
+                    <p class="text-sm text-slate-700">{{ result.baseInfo?.Habitat_CN }}</p>
+                  </div>
+
+                  <!-- Fun Story -->
+                  <div class="bg-gradient-to-br from-rose-50 to-pink-50 rounded-xl p-4 border border-rose-200">
+                    <div class="flex items-center gap-3 mb-2">
+                      <div class="w-8 h-8 rounded-lg bg-rose-500 flex items-center justify-center">
+                        <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                          <path fill-rule="evenodd" d="M18 13V5a2 2 0 00-2-2H4a2 2 0 00-2 2v8a2 2 0 002 2h3l3 3 3-3h3a2 2 0 002-2zM5 7a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1zm1 3a1 1 0 100 2h3a1 1 0 100-2H6z" clip-rule="evenodd"/>
+                        </svg>
+                      </div>
+                      <h3 class="font-bold text-slate-800">Fun Story</h3>
+                    </div>
+                    <p class="text-sm text-slate-700">{{ result.baseInfo?.Fun_Story_CN }}</p>
+                  </div>
                 </div>
-                <div class="rounded-xl border border-slate-200 p-4">
-                  <h3 class="font-semibold text-slate-800">Strengths</h3>
-                  <p class="mt-1 text-slate-700">{{ result.strengths.join('; ') }}</p>
+              </div>
+            </div>
+
+            <!-- Action Panel -->
+            <div class="mt-6 bg-gradient-to-br from-emerald-50 to-teal-50 rounded-xl p-6 shadow-md border border-emerald-200">
+              <div class="flex items-center gap-3 mb-4">
+                <div class="w-8 h-8 rounded-lg bg-emerald-500 flex items-center justify-center">
+                  <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
+                  </svg>
                 </div>
-                <div class="rounded-xl border border-slate-200 p-4">
-                  <h3 class="font-semibold text-slate-800">Growth tips</h3>
-                  <p class="mt-1 text-slate-700">{{ result.growth.join('; ') }}</p>
+                <h3 class="font-bold text-slate-800">Take Action</h3>
                 </div>
-                <div class="rounded-xl border border-slate-200 p-4 md:col-span-2">
-                  <h3 class="font-semibold text-slate-800">Real-world action</h3>
-                  <p class="mt-1 text-slate-700">{{ result.action }}</p>
-                </div>
+              <div class="bg-emerald-500 text-white p-4 rounded-lg">
+                <p class="text-sm font-medium">{{ result.action }}</p>
               </div>
             </div>
           </template>
@@ -231,11 +467,28 @@
         </section>
       </div>
     </section>
+
+    <!-- Error Message -->
+    <FullscreenMessage
+      v-model="errorMessage.show"
+      :title="errorMessage.title"
+      :icon="'⚠️'"
+      confirm-text="Try Again"
+      cancel-text="Cancel"
+      :persistent="false"
+      @confirm="retryGeneration"
+      @close="closeErrorMessage"
+    >
+      <p>{{ errorMessage.message }}</p>
+    </FullscreenMessage>
   </main>
 </template>
 
 <script setup lang="ts">
 import { nextTick, onMounted, reactive, ref, computed } from 'vue'
+import { fetch_fish_info } from '../assets/ts/fetch_fish_info'
+import { fetch_fish_avatar } from '../assets/ts/fetch_fish_avatar'
+import FullscreenMessage from '../components/FullscreenMessage.vue'
 
 type EnergyLevel = 'Low' | 'Medium' | 'High'
 type Trait = 'Curious' | 'Careful' | 'Shy' | 'Brave' | 'Explorer' | 'Gentle' | 'Steady' | 'Lively'
@@ -252,9 +505,22 @@ const form = reactive<{ name: string; energy: EnergyLevel; traits: Trait[] }>({
 const errors = reactive<{ name?: string; traits?: string }>({})
 
 const ui = reactive({ loading: false, progress: 0 })
-const result = ref<ReturnType<typeof buildProfile> | null>(null)
+const result = ref<any | null>(null)
 const avatarSvg = ref<SVGSVGElement | null>(null)
 const avatarWrap = ref<HTMLDivElement | null>(null)
+const cartoonImageBase64 = ref<string>('')
+const realImageUrl = ref<string>('')
+const realImageError = ref<boolean>(false)
+
+// Error message state
+const errorMessage = ref<{ show: boolean; title: string; message: string }>({
+  show: false,
+  title: '',
+  message: ''
+})
+
+// Cache for fish info to avoid repeated API calls
+const fishInfoCache = ref<Map<string, any>>(new Map())
 
 const canShare = 'share' in navigator
 
@@ -381,25 +647,137 @@ const tailPoints = computed(() => {
   return `${cx},${cy} ${cx-w},${cy-h/2} ${cx-w},${cy+h/2}`
 })
 
+// Helper functions for better code organization
+function showError(title: string, message: string) {
+  errorMessage.value = { show: true, title, message }
+}
+
+function updateProgress(increment: number = 7) {
+  ui.progress = Math.min(90, ui.progress + increment)
+}
+
+async function fetchFishInfoWithCache(name: string) {
+  const cacheKey = name.toLowerCase().trim()
+  
+  // Check cache first
+  if (fishInfoCache.value.has(cacheKey)) {
+    console.log('Using cached fish info for:', name)
+    return fishInfoCache.value.get(cacheKey)
+  }
+  
+  // Fetch from API
+  const fishInfo = await fetch_fish_info(name)
+  if (fishInfo) {
+    fishInfoCache.value.set(cacheKey, fishInfo)
+  }
+  return fishInfo
+}
+
+async function fetchCartoonAvatar(wikiImageUrl: string) {
+  if (!wikiImageUrl || wikiImageUrl.includes('placeholder') || wikiImageUrl.includes('error')) {
+    console.log('Wikipedia image URL is invalid or placeholder, skipping cartoon processing')
+    return ''
+  }
+  
+  try {
+    const avatarResponse = await fetch_fish_avatar(wikiImageUrl)
+    if (avatarResponse?.success && avatarResponse?.cartoon_image) {
+      return avatarResponse.cartoon_image
+    } else {
+      console.warn('Cartoon avatar generation failed:', avatarResponse?.error || 'Unknown error')
+      return ''
+    }
+  } catch (err) {
+    console.error('Failed to fetch cartoon avatar:', err)
+    return ''
+  }
+}
+
+function transformFishData(fishInfo: any) {
+  const baseInfo = fishInfo.Complete_Base_Marine_Identity
+  const personInfo = fishInfo.Personified_Fish_ID_Card
+  
+  // Process tags: combine user-selected traits with energy level
+  const energyTag = form.energy === 'Low' ? 'Observer' : form.energy === 'High' ? 'Lively' : 'Steady'
+  const allTags = form.traits.length > 0 
+    ? [...form.traits, energyTag]
+    : ['Curious', 'Gentle', energyTag]
+  
+  return {
+    commonName: baseInfo.Species_Name_EN,
+    scientific: baseInfo.Species_Name_EN,
+    subtitle: `Your marine buddy - ${personInfo.Name}`,
+    tags: allTags,
+    badge: form.energy === 'Low' ? 'Seagrass Saver' : form.energy === 'High' ? 'Reef Ranger' : 'Bay Buddy',
+    backstory: baseInfo.Personality_CN || baseInfo.Habitat_CN,
+    strengths: [
+      `Age: ${personInfo.Age}`,
+      personInfo.Personality
+    ],
+    growth: [
+      personInfo.Hobbies,
+      baseInfo.Special_Feature || 'Unique marine characteristics'
+    ],
+    action: 'Do a "Pick 3" mini clean-up with your family to protect local habitats.',
+    palette: SPECIES[0].palette,
+    
+    // Separate the two features
+    personInfo: personInfo,
+    baseInfo: baseInfo
+  }
+}
+
 async function onGenerate() {
   if (!validate()) return
 
   ui.loading = true
   ui.progress = 10
 
-  // Simulated quick generation (< 3s); replace with API call when ready.
-  const seed = `${form.name}|${form.energy}|${form.traits.join(',')}`
-  const tick = setInterval(()=>{ ui.progress = Math.min(95, ui.progress + 7) }, 120)
+  try {
+    const tick = setInterval(() => updateProgress(), 120)
 
-  // If you have backend, await fetch('/api/identity/generate', { ... })
-  await new Promise(r => setTimeout(r, 1200)) // kid-friendly quick load
-  result.value = buildProfile(seed, form.energy, form.traits)
+    // Step 1: Fetch fish info (with caching)
+    updateProgress(20)
+    const fishInfo = await fetchFishInfoWithCache(form.name)
+    
+    if (!fishInfo) {
+      clearInterval(tick)
+      showError(
+        'Failed to Fetch Fish Info',
+        'Unable to retrieve fish information. Please check your connection and try again.'
+      )
+      ui.loading = false
+      return
+    }
 
-  clearInterval(tick)
-  ui.progress = 100
-  ui.loading = false
-  await nextTick()
-  avatarWrap.value?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    // Step 2: Store real image URL
+    updateProgress(20)
+    const wikiImageUrl = fishInfo.Complete_Base_Marine_Identity?.Wikipedia_Image_URL
+    realImageUrl.value = wikiImageUrl || ''
+    
+    // Step 3: Fetch cartoon avatar (async, non-blocking)
+    updateProgress(10)
+    const cartoonImage = await fetchCartoonAvatar(wikiImageUrl)
+
+    // Step 4: Transform data and update UI
+    updateProgress(10)
+    result.value = transformFishData(fishInfo)
+    cartoonImageBase64.value = cartoonImage
+
+    // Complete
+    clearInterval(tick)
+    ui.progress = 100
+    ui.loading = false
+    await nextTick()
+    avatarWrap.value?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  } catch (error) {
+    console.error('Generation failed:', error)
+    showError(
+      'Generation Failed',
+      'Something went wrong while generating your fish buddy. Please try again.'
+    )
+    ui.loading = false
+  }
 }
 
 function onSurprise() {
@@ -448,11 +826,54 @@ async function download(kind: 'png'|'svg') {
   }
 }
 
+async function downloadRealImage() {
+  if (!realImageUrl.value || realImageUrl.value.includes('placeholder')) return
+  
+  try {
+    const response = await fetch(realImageUrl.value)
+    const blob = await response.blob()
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `${form.name || 'fish'}-real.jpg`
+    a.click()
+    URL.revokeObjectURL(url)
+  } catch (err) {
+    console.error('Failed to download real image:', err)
+    errorMessage.value = {
+      show: true,
+      title: 'Download Failed',
+      message: 'Unable to download the real fish image. Please try again.'
+    }
+  }
+}
+
+async function downloadCartoon() {
+  if (!cartoonImageBase64.value) return
+  
+  // Convert base64 to blob and download
+  const base64Data = cartoonImageBase64.value.split(',')[1]
+  const byteCharacters = atob(base64Data)
+  const byteNumbers = new Array(byteCharacters.length)
+  for (let i = 0; i < byteCharacters.length; i++) {
+    byteNumbers[i] = byteCharacters.charCodeAt(i)
+  }
+  const byteArray = new Uint8Array(byteNumbers)
+  const blob = new Blob([byteArray], { type: 'image/png' })
+  
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = `${form.name || 'fish-avatar'}-cartoon.png`
+  a.click()
+  URL.revokeObjectURL(url)
+}
+
 async function shareIt() {
   if (!result.value) return
   try {
     await (navigator as any).share({
-      title: `${displayName.value}’s Fish Buddy`,
+      title: `${displayName.value}'s Fish Buddy`,
       text: `I matched with a ${result.value.commonName}!`
     })
   } catch { /* user cancelled */ }
@@ -461,4 +882,27 @@ async function shareIt() {
 onMounted(() => {
   // prefer reduced motion users still get subtle animations
 })
+
+// Error message handlers
+function closeErrorMessage() {
+  errorMessage.value.show = false
+}
+
+function retryGeneration() {
+  errorMessage.value.show = false
+  onGenerate()
+}
+
+// Utility function to clear cache
+function clearCache() {
+  fishInfoCache.value.clear()
+  console.log('Fish info cache cleared')
+}
+
+// Auto-clear cache periodically to prevent memory issues
+setInterval(() => {
+  if (fishInfoCache.value.size > 10) {
+    clearCache()
+  }
+}, 300000) // Clear every 5 minutes if cache is large
 </script>
