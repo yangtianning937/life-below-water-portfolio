@@ -1,8 +1,8 @@
 import hashlib
 import random
-from typing import Dict, Any
-
+from typing import Dict, Any, List
 import requests
+import json
 
 # ==============================================================================
 # Step 1: External Configuration and Marine Life Data

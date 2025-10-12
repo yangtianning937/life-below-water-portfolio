@@ -1,9 +1,10 @@
 import uuid
 from datetime import datetime
 from pathlib import Path
+from typing import Dict
 
 import requests
-from fastapi import FastAPI, Depends, APIRouter, Query
+from fastapi import FastAPI, Depends, APIRouter, Query, Body
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.responses import JSONResponse, FileResponse, HTMLResponse
@@ -221,37 +222,21 @@ async def places_find(
 # APIs for Epic 5
 ##################
 @api.post("/fish/avatar")
-async def fish_avatar(data: dict):
-    """
-    Convert image URL to cartoon style
-    
-    Request body:
-        {
-            "image_url": "https://example.com/image.jpg"
-        }
-    
-    Response:
-        {
-            "success": true,
-            "cartoon_image": "data:image/png;base64,..."
-        }
-        or
-        {
-            "success": false,
-            "error": "error message"
-        }
-    """
-    from fish.avatar import process_avatar
-    
-    image_url = data.get("image_url")
-    if not image_url:
-        return JSONResponse(
-            content={"success": False, "error": "image_url is required"}, 
-            status_code=400
-        )
-    
+async def fish_avatar(body: Dict = Body(...)):
     try:
-        result = process_avatar(image_url)
+        species_en = body.get("species_en")
+        image_folder = body.get("image_folder")
+        
+        if not species_en:
+            return JSONResponse(
+                content={"success": False, "error": "species_en is required"}, 
+                status_code=400
+            )
+        
+        result = process_avatar(
+            species_en=species_en,
+            image_folder=image_folder
+        )
         status_code = 200 if result.get("success") else 500
         return JSONResponse(content=result, status_code=status_code)
             

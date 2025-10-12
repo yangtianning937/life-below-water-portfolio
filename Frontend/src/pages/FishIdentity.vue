@@ -673,14 +673,14 @@ async function fetchFishInfoWithCache(name: string) {
   return fishInfo
 }
 
-async function fetchCartoonAvatar(wikiImageUrl: string) {
-  if (!wikiImageUrl || wikiImageUrl.includes('placeholder') || wikiImageUrl.includes('error')) {
-    console.log('Wikipedia image URL is invalid or placeholder, skipping cartoon processing')
+async function fetchCartoonAvatar(speciesEnglishName: string) {
+  if (!speciesEnglishName) {
+    console.log('Species English name is missing, skipping cartoon avatar')
     return ''
   }
   
   try {
-    const avatarResponse = await fetch_fish_avatar(wikiImageUrl)
+    const avatarResponse = await fetch_fish_avatar(speciesEnglishName)
     if (avatarResponse?.success && avatarResponse?.cartoon_image) {
       return avatarResponse.cartoon_image
     } else {
@@ -750,14 +750,15 @@ async function onGenerate() {
       return
     }
 
-    // Step 2: Store real image URL
+    // Step 2: Store real image URL and get species English name
     updateProgress(20)
     const wikiImageUrl = fishInfo.Complete_Base_Marine_Identity?.Wikipedia_Image_URL
+    const speciesEnglishName = fishInfo.Complete_Base_Marine_Identity?.Species_Name_EN
     realImageUrl.value = wikiImageUrl || ''
     
-    // Step 3: Fetch cartoon avatar (async, non-blocking)
+    // Step 3: Fetch cartoon avatar using species English name
     updateProgress(10)
-    const cartoonImage = await fetchCartoonAvatar(wikiImageUrl)
+    const cartoonImage = await fetchCartoonAvatar(speciesEnglishName)
 
     // Step 4: Transform data and update UI
     updateProgress(10)
