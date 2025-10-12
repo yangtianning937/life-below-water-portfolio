@@ -10,7 +10,7 @@ from starlette.responses import JSONResponse, FileResponse
 from starlette.staticfiles import StaticFiles
 from uvicorn.middleware.proxy_headers import ProxyHeadersMiddleware
 
-import csv_utils
+from utils import csv_utils
 from geocode.geocode import reverse_geocode_service, places_autocomplete_service, place_details_service, \
     places_find_service
 from db.db import get_db
