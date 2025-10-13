@@ -1,3 +1,6 @@
+const IS_DEV = import.meta.env.MODE === 'development'
+const CURR_ITER = import.meta.env.BASE_URL
+
 /**
  * @member api_prefix
  * @return Returns the prefix of the URL base on the environment (dev or product).
@@ -9,5 +12,8 @@ export function api_prefix() {
     if (port === null || port === undefined || port === "")
         port = null;
 
-    return `${protocol}//${hostname}${port != null ? `:${8000}` : ""}/iter2/api`;
+
+    if (IS_DEV)
+        return `${protocol}//${hostname}${port != null ? `:${8000}` : ""}/api`;
+    return `${protocol}//${hostname}${port != null ? `:${8000}` : ""}/${CURR_ITER}api`;
 }

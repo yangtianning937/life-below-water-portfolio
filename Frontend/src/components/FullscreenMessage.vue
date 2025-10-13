@@ -7,13 +7,15 @@ const props = withDefaults(defineProps<{
   message?: string
   icon?: string
   confirmText?: string
-  persistent?: boolean   // 为 true 时，禁用点击空白/ESC 关闭
+  cancelText?: string
+  persistent?: boolean   // When true, disables clicking outside/ESC to close
 }>(), {
   modelValue: true,
   title: "Message",
   message: "",
   icon: "ℹ️",
   confirmText: "",
+  cancelText: "Cancel",
   persistent: false
 })
 
@@ -38,19 +40,19 @@ function confirm() {
   if (!props.persistent) close()
 }
 
-// 键盘 ESC
+// Keyboard ESC
 function onKey(e: KeyboardEvent) { if (e.key === "Escape") close() }
 onMounted(() => window.addEventListener("keydown", onKey))
 onBeforeUnmount(() => window.removeEventListener("keydown", onKey))
 
-// 阻止背景滚动 + 聚焦到面板
+// Prevent background scrolling + focus to panel
 const panel = ref<HTMLElement | null>(null)
 watch(open, (v) => {
   document.body.classList.toggle("overflow-hidden", v)
   if (v) setTimeout(() => panel.value?.focus(), 0)
 })
 
-// 无障碍：自动生成 id
+// Accessibility: auto-generate id
 const ids = {
   title: `msg-title-${Math.random().toString(36).slice(2)}`,
   desc: `msg-desc-${Math.random().toString(36).slice(2)}`
@@ -83,7 +85,7 @@ const ids = {
           <h2 :id="ids.title" class="text-lg font-semibold">{{ title }}</h2>
           <button v-if="!persistent"
                   class="ml-auto rounded-xl p-2 hover:bg-black/5 focus:outline-none focus:ring"
-                  @click="close" aria-label="关闭">✕</button>
+                  @click="close" aria-label="Close">✕</button>
         </header>
 
         <div :id="ids.desc" class="px-6 py-5 text-sm/6 text-black-700">
@@ -93,7 +95,7 @@ const ids = {
         <footer class="flex items-center justify-end gap-3 border-t border-black/5 px-6 py-4">
           <button v-if="!persistent"
                   class="rounded-xl px-4 py-2 text-sm hover:bg-black/5 focus:outline-none focus:ring"
-                  @click="close">Close</button>
+                  @click="close">{{ cancelText }}</button>
           <button v-if="confirmText"
                   class="rounded-xl bg-blue-600 px-4 py-2 text-sm text-white hover:bg-blue-700 focus:outline-none focus:ring"
                   @click="confirm">{{ confirmText }}</button>

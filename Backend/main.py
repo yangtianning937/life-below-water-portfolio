@@ -1,22 +1,26 @@
-import json
 import uuid
 from datetime import datetime
 from pathlib import Path
+from typing import Dict
 
 import requests
-from fastapi import FastAPI, Depends, APIRouter
+from fastapi import FastAPI, Depends, APIRouter, Query, Body
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from starlette.responses import JSONResponse, FileResponse
+from starlette.responses import JSONResponse, FileResponse, HTMLResponse
 from starlette.staticfiles import StaticFiles
 from uvicorn.middleware.proxy_headers import ProxyHeadersMiddleware
 
-import csv_utils
-from recommend.process import analyze_nearby_beaches
+from fish.info import process_info
+from fish.avatar import process_avatar
 from db.db import get_db
 from db.models import SiteMetadata, WaterQualityData
-from dynamic_CORS_middleware import DynamicCORSMiddleware
+from dynamic_cors_middleware import DynamicCORSMiddleware
+from geocode.geocode import reverse_geocode_service, places_autocomplete_service, place_details_service, \
+    places_find_service
+from recommend.process import analyze_nearby_beaches
 from request_model import Activity, Form
+from utils import csv_utils
 
 # python -m uvicorn Backend.main:app --reload
 # ssh -i path/to/Group26.pem -N -L 6543:waterqdb.cpmwumooifyh.ap-southeast-2.rds.amazonaws.com:5432 ubuntu@<PUBLIC_IP>
@@ -26,6 +30,7 @@ app.add_middleware(DynamicCORSMiddleware)
 app.add_middleware(ProxyHeadersMiddleware, trusted_hosts="*")
 
 api = APIRouter(prefix="/api", tags=["api"])
+
 
 # @app.exception_handler(RequestValidationError)
 # async def validation_exception_handler(request: Request, exc: RequestValidationError):
@@ -176,6 +181,114 @@ async def get_nearby_beach(latitude: str | float, longitude: str | float):
         return JSONResponse(content={"msg": "Invalid latitude or longitude"}, status_code=400)
 
 
+@api.get("/reverse_geocode/{latitude}/{longitude}")
+async def reverse_geocode(latitude: str | float, longitude: str | float):
+    try:
+        latitude = float(latitude)
+        longitude = float(longitude)
+        return await reverse_geocode_service(latitude, longitude)
+    except ValueError:
+        return JSONResponse(content={"msg": "Invalid latitude or longitude"}, status_code=400)
+
+
+@api.get("/places/autocomplete")
+async def places_autocomplete(
+        q: str = Query(..., min_length=2),
+        country: str = Query("AU"),
+        limit: int = Query(8, ge=1, le=10),
+        language: str = Query("en")
+):
+    return JSONResponse(await places_autocomplete_service(q, country, limit, language))
+
+
+@api.get("/places/details")
+async def place_details(
+        place_id: str = Query(...),
+        language: str = Query("en")
+):
+    return JSONResponse(await place_details_service(place_id, language))
+
+
+@api.get("/places/find")
+async def places_find(
+        q: str = Query(..., min_length=2),
+        country: str = Query("AU"),
+        language: str = Query("en")
+):
+    return JSONResponse(await places_find_service(q, country, language))
+
+
+##################
+# APIs for Epic 5
+##################
+@api.post("/fish/avatar")
+async def fish_avatar(body: Dict = Body(...)):
+    try:
+        species_en = body.get("species_en")
+        image_folder = body.get("image_folder")
+        
+        if not species_en:
+            return JSONResponse(
+                content={"success": False, "error": "species_en is required"}, 
+                status_code=400
+            )
+        
+        result = process_avatar(
+            species_en=species_en,
+            image_folder=image_folder
+        )
+        status_code = 200 if result.get("success") else 500
+        return JSONResponse(content=result, status_code=status_code)
+            
+    except Exception as e:
+        return JSONResponse(
+            content={"success": False, "error": f"Server error: {str(e)}"}, 
+            status_code=500
+        )
+
+
+@api.get("/fish/info/{name}")
+async def fish_info(name: str):
+    """
+    Get fish identity information based on user name
+    
+    Parameters:
+        name: User's name
+    
+    Response:
+        {
+            "Complete_Base_Marine_Identity": {
+                "Species_Name_CN": "...",
+                "Species_Name_EN": "...",
+                "Core_Feature_CN": "...",
+                "Age_Size_Description_CN": "...",
+                "Personality_CN": "...",
+                "Habitat_CN": "...",
+                "Fun_Story_CN": "...",
+                "Wikipedia_Image_URL": "..."
+            },
+            "Personified_Fish_ID_Card": {
+                "Name": "...",
+                "Species": "...",
+                "Age": "...",
+                "Personality": "...",
+                "Hobbies": "...",
+                "Special_Feature": "..."
+            }
+        }
+    """
+    from fish.info import process_info
+    
+    try:
+        result = process_info(name)
+        return JSONResponse(result, status_code=200)
+    except Exception as e:
+        return JSONResponse(
+            content={"error": f"Server error: {str(e)}"}, 
+            status_code=500
+        )
+
+
 ##################
 # Other APIs
 ##################
@@ -186,6 +299,7 @@ async def get_image(name: str):
         return JSONResponse(content={"msg": "not found"}, status_code=404)
     else:
         return FileResponse(image_path)
+
 
 app.include_router(api)
 

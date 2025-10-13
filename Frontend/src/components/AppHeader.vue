@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import { ref, reactive, computed, onMounted, onBeforeUnmount } from 'vue'
-import { useRoute, RouterLink } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import logo from '@/assets/images/logo.jpg'
+import { useAuth } from "@/assets/security/auth";
 
 const route = useRoute()
+const router = useRouter()
 const isOpen = ref(false)
 const brand = 'Port Philip Protectors'
 
-// 桌面端是否默认展开侧边栏
+// Whether to expand sidebar by default on desktop
 const openOnDesktop = false
 let mq: MediaQueryList | null = null
 const syncDrawer = () => {
@@ -23,15 +25,16 @@ onBeforeUnmount(() => {
   mq?.removeEventListener?.('change', syncDrawer)
 })
 
-// 主导航（已移除 LearningModule 独立项）
+// Main navigation (removed LearningModule as independent item)
 const navItems = [
   { name: 'Home', to: { name: 'home' }, key: 'home', icon: 'home' },
   { name: 'Nearby Beach', to: { name: 'nearby' }, key: 'nearby', icon: 'beach' },
   { name: 'Volunteer Activity', to: { name: 'activity' }, key: 'activity', icon: 'vol' },
   { name: 'Quiz', to: { name: 'marine_quiz' }, key: 'marine_quiz', icon: 'quiz' },
+  { name: 'Fish Buddy', to: { name: 'fish_identity' }, key: 'fish_identity', icon: 'fish' },
 ]
 
-// 下拉分组：Learning（包含 Learning Module + Water Quality）
+// Dropdown group: Learning (includes Learning Module + Water Quality + Bacteria Patrol)
 const groups = reactive({ learning: false })
 
 function isRouteActive(names: string | string[]) {
@@ -39,14 +42,22 @@ function isRouteActive(names: string | string[]) {
   return Array.isArray(names) ? names.includes(cur) : cur === names
 }
 
-// ✅ Learning 分组在以下路由高亮：learningModule、data_hub
+// Learning group highlights on these routes: learningModule / LearningModule, data_hub, BacteriaPatrol / bacteria_patrol
 const isLearningActive = computed(() =>
-  isRouteActive(['learningModule', 'data_hub'])
+  isRouteActive(['learningModule', 'LearningModule', 'data_hub', 'BacteriaPatrol', 'bacteria_patrol'])
 )
 
-const toggleGroup = (k: keyof typeof groups) => { groups[k] = !groups[k] }
+const toggleGroup = (k: keyof typeof groups) => {
+  groups[k] = !groups[k]
+}
 const close = () =>
   (isOpen.value = openOnDesktop && (mq?.matches ?? false) ? true : false)
+
+// Navigation functions
+const navigateTo = (routeName: string) => {
+  router.push({ name: routeName })
+  close()
+}
 </script>
 
 <template>
@@ -55,6 +66,7 @@ const close = () =>
 
     <nav class="w-full h-[56px] pl-2 pr-2 flex items-center gap-3">
       <button
+        v-if="route.name != 'lock'"
         class="p-2 rounded text-white hover:bg-white/10"
         :aria-expanded="isOpen"
         aria-label="Toggle menu"
@@ -63,15 +75,15 @@ const close = () =>
         ☰
       </button>
 
-      <RouterLink
-        to="/"
-        class="font-extrabold text-base md:text-lg text-white flex justify-center items-center gap-2"
+      <button
+        @click="router.push({ name: 'home' })"
+        class="font-extrabold text-base md:text-lg text-white flex justify-center items-center gap-2 hover:opacity-80 transition-opacity"
       >
         <div class="w-12 rounded-lg overflow-hidden ring-1 ring-white/15">
           <img :src="logo" class="object-fill rounded-lg" alt="" />
         </div>
         <span>{{ brand }}</span>
-      </RouterLink>
+      </button>
 
       <div class="flex-1"></div>
     </nav>
@@ -92,7 +104,7 @@ const close = () =>
       </div>
 
       <nav class="sidenav-nav">
-        <!-- ▼ Learning 分组（Dropdown） -->
+        <!-- Learning Group (Dropdown) -->
         <div
           class="nav-item cursor-pointer select-none"
           :class="{ active: isLearningActive }"
@@ -101,7 +113,7 @@ const close = () =>
           aria-controls="submenu-learning"
           role="button"
         >
-          <!-- 图标 -->
+          <!-- Icon -->
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <ellipse cx="12" cy="5" rx="9" ry="3" stroke-width="2" />
             <path d="M3 5v6c0 1.7 4 3 9 3s9-1.3 9-3V5" stroke-width="2" />
@@ -111,7 +123,11 @@ const close = () =>
           <svg
             class="transition-transform"
             :style="{ transform: groups.learning ? 'rotate(180deg)' : 'rotate(0deg)' }"
-            width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
           >
             <path d="M6 9l6 6 6-6" stroke-width="2" />
           </svg>
@@ -119,55 +135,86 @@ const close = () =>
 
         <transition name="collapse">
           <ul v-show="groups.learning" id="submenu-learning" class="subnav" aria-label="Learning submenu">
+            <!-- Learning Module (keep original name format, can be changed to 'LearningModule' if needed) -->
             <li>
-              <RouterLink
-                :to="{ name: 'learningModule' }"
-                class="subnav-item"
-                :class="{ active: isRouteActive('learningModule') }"
-                @click="close()"
+              <button
+                @click="navigateTo('learningModule')"
+                class="subnav-item w-full text-left"
+                :class="{ active: isRouteActive(['learningModule','LearningModule']) }"
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                   <path d="M4 19.5V5a2 2 0 0 1 2-2h11" stroke-width="2" />
                   <path d="M20 22V4a2 2 0 0 0-2-2H6" stroke-width="2" />
                 </svg>
                 <span>Learning Module</span>
-              </RouterLink>
+              </button>
             </li>
 
-            <!-- ✅ Water Quality（指向 data_hub 路由） -->
+            <!-- Water Quality (points to data_hub route) -->
             <li>
-              <RouterLink
-                :to="{ name: 'data_hub' }"
-                class="subnav-item"
+              <button
+                @click="navigateTo('data_hub')"
+                class="subnav-item w-full text-left"
                 :class="{ active: isRouteActive('data_hub') }"
-                @click="close()"
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                   <path d="M12 2C9 6 6 9.5 6 13a6 6 0 0 0 12 0c0-3.5-3-7-6-11z" stroke-width="2" />
                 </svg>
                 <span>Water Quality</span>
-              </RouterLink>
+              </button>
+            </li>
+
+            <!-- Bacteria Patrol (points to new BacteriaPatrol page) -->
+            <li>
+              <button
+                @click="navigateTo('BacteriaPatrol')"
+                class="subnav-item w-full text-left"
+                :class="{ active: isRouteActive(['BacteriaPatrol','bacteria_patrol']) }"
+              >
+                <!-- Small microscope/bacteria icon -->
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <circle cx="10" cy="10" r="5" stroke-width="2" />
+                  <path d="M14 14l4.5 4.5" stroke-width="2" />
+                  <circle cx="8.5" cy="9" r="0.9" fill="currentColor" />
+                  <circle cx="11.2" cy="11.4" r="0.8" fill="currentColor" />
+                </svg>
+                <span>Protect our Bay · Bacteria Patrol</span>
+              </button>
             </li>
           </ul>
         </transition>
 
-        <!-- 其它主菜单项 -->
-        <RouterLink
+        <!-- Other main menu items -->
+        <button
           v-for="it in navItems"
           :key="it.key"
-          :to="it.to"
-          class="nav-item"
+          @click="navigateTo(it.to.name as string)"
+          class="nav-item w-full text-left"
           :class="{ active: isRouteActive(it.to.name as string) }"
-          @click="close()"
         >
           <svg v-if="it.icon==='home'" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path d="M3 11l9-8 9 8" stroke-width="2"/><path d="M9 22V12h6v10" stroke-width="2"/>
+            <path d="M3 11l9-8 9 8" stroke-width="2" />
+            <path d="M9 22V12h6v10" stroke-width="2" />
           </svg>
-          <svg v-else-if="it.icon==='beach'" width="18" height="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-               fill="currentColor" aria-hidden="true">
+          <svg v-else-if="it.icon==='beach'" width="18" height="18" xmlns="http://www.w3.org/2000/svg"
+               viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
             <path d="M12 6c-3.5 0-5.6 2.2-6.6 4.6h13.2C17.6 8.2 15.5 6 12 6Z"/>
             <path d="M10.4 6.2c.5.1.9.5.8 1.1l-1.5 10.9a1 1 0 1 1-2-.3l1.5-10.9c.1-.6.7-1 .1.0Z"/>
             <path d="M3 17.25c2.2 1.6 4.4 1.6 6.6 0 2.2 1.6 4.4 1.6 6.6 0 2.2 1.6 4.4 1.6 6.6 0v1.2c-2.2 1.6-4.4 1.6-6.6 0-2.2 1.6-4.4 1.6-6.6 0v-1.2Z"/>
+          </svg>
+          <svg v-else-if="it.icon==='fish'" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+               role="img" aria-label="Fish Buddy"
+               fill="none" stroke="currentColor" stroke-width="1.7"
+               stroke-linecap="round" stroke-linejoin="round"
+               class="h-7 w-7">
+            <ellipse cx="13.6" cy="12" rx="5.7" ry="3.9"/>
+            <path d="M8 12 L3.8 10.5 L3.8 13.5 Z"/>
+            <path d="M11 10.7 C10 10.2 9.6 9.7 9.3 9.1"/>
+            <path d="M11 13.3 C10 13.8 9.6 14.3 9.3 14.9"/>
+            <circle cx="16.6" cy="11.2" r="0.95" fill="currentColor"/>
+            <path d="M3.2 17.2 q2 -1.2 4 0 t4 0 t4 0" opacity=".5"/>
+            <path d="M18.5 5.2 v1.6 M17.7 6 h1.6"/>
+            <path d="M16.2 3.9 v1.2 M15.6 4.5 h1.2" opacity=".85"/>
           </svg>
           <svg v-else-if="it.icon==='quiz'" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <path d="M20 21v-7M4 21v-7M4 10a4 4 0 1 1 6 3.46A5 5 0 0 0 20 18" stroke-width="2"/>
@@ -176,47 +223,61 @@ const close = () =>
             <path d="M20 21v-7M4 21v-7M4 10a4 4 0 1 1 6 3.46A5 5 0 0 0 20 18" stroke-width="2"/>
           </svg>
           <span>{{ it.name }}</span>
-        </RouterLink>
+        </button>
       </nav>
     </aside>
   </div>
 </template>
 
 <style scoped>
-/* 海洋渐变 */
+/* Ocean gradient */
 .o-header {
   color: #fff;
-  background: linear-gradient(180deg,#1f3b82 0%,#1e40af 40%,#4338ca 75%,#4f46e5 100%);
-  border-bottom: 1px solid rgba(255,255,255,.12);
-  box-shadow: 0 6px 18px rgba(0,0,0,.12);
+  background: linear-gradient(180deg, #1f3b82 0%, #1e40af 40%, #4338ca 75%, #4f46e5 100%);
+  border-bottom: 1px solid rgba(255, 255, 255, .12);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, .12);
   overflow: hidden;
 }
+
 .ocean-ornaments {
-  pointer-events: none; position: absolute; inset: 0;
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
   background:
-    radial-gradient(130px 70px at 18% 0%, rgba(255,255,255,.18), transparent 60%),
-    radial-gradient(150px 80px at 46% -10%, rgba(255,255,255,.15), transparent 70%),
-    radial-gradient(170px 90px at 80% 0%, rgba(255,255,255,.12), transparent 70%),
-    repeating-linear-gradient(125deg, rgba(255,255,255,.05) 0 14px, rgba(255,255,255,.025) 14px 28px);
-  mask-image: linear-gradient(to bottom, rgba(0,0,0,.95), rgba(0,0,0,.2));
+    radial-gradient(130px 70px at 18% 0%, rgba(255, 255, 255, .18), transparent 60%),
+    radial-gradient(150px 80px at 46% -10%, rgba(255, 255, 255, .15), transparent 70%),
+    radial-gradient(170px 90px at 80% 0%, rgba(255, 255, 255, .12), transparent 70%),
+    repeating-linear-gradient(125deg, rgba(255, 255, 255, .05) 0 14px, rgba(255, 255, 255, .025) 14px 28px);
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, .95), rgba(0, 0, 0, .2));
   opacity: .75;
 }
-/* 海浪 */
-.waves { position: absolute; left: 0; right: 0; bottom: -1px; width: 100%; height: 28px; }
-.wave { fill: rgba(255,255,255,.10); }
+
+/* Ocean waves */
+.waves {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  width: 100%;
+  height: 28px;
+}
+.wave { fill: rgba(255, 255, 255, .10); }
 .wave-1 { animation: drift 12s linear infinite; }
 .wave-2 { animation: drift 9s linear infinite reverse; opacity: .7; }
-@keyframes drift { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+@keyframes drift {
+  0% { transform: translateX(0) }
+  100% { transform: translateX(-50%) }
+}
 
-/* 抽屉保持原样式 */
+/* Drawer maintains original style */
 .drawer-root { position: fixed; inset: 0; pointer-events: none; z-index: 60; }
 .drawer-root.open { pointer-events: auto; }
-.backdrop { position: absolute; inset: 0; background: rgba(0,0,0,.4); opacity: 0; transition: opacity .2s; }
+.backdrop { position: absolute; inset: 0; background: rgba(0, 0, 0, .4); opacity: 0; transition: opacity .2s; }
 .drawer-root.open .backdrop { opacity: 1; }
 
 .sidenav {
   position: absolute; top: 0; left: 0; height: 100%; width: 272px;
-  background: #0d1117; color: #fff; box-shadow: 0 10px 30px rgba(0,0,0,.3);
+  background: #0d1117; color: #fff; box-shadow: 0 10px 30px rgba(0, 0, 0, .3);
   transform: translateX(-100%); transition: transform .22s ease;
   display: flex; flex-direction: column;
 }
@@ -224,29 +285,27 @@ const close = () =>
 
 .sidenav-head {
   height: 56px; display: flex; align-items: center; justify-content: space-between;
-  padding: 0 16px; border-bottom: 1px solid rgba(255,255,255,.08);
+  padding: 0 16px; border-bottom: 1px solid rgba(255, 255, 255, .08);
 }
 .sidenav-nav { padding: 8px; }
 
 .nav-item {
-  display: flex; align-items: center; gap: 10px;
-  padding: 10px 12px; margin: 4px 0; border-radius: 10px;
-  color: #e6edf3; text-decoration: none;
+  display: flex; align-items: center; gap: 10px; padding: 10px 12px; margin: 4px 0;
+  border-radius: 10px; color: #e6edf3; text-decoration: none;
 }
-.nav-item:hover { background: rgba(255,255,255,.08); }
-.nav-item.active { background: rgba(56,139,253,.2); color: #58a6ff; }
+.nav-item:hover { background: rgba(255, 255, 255, .08); }
+.nav-item.active { background: rgba(56, 139, 253, .2); color: #58a6ff; }
 
-/* 子菜单 */
+/* Submenu */
 .subnav { list-style: none; margin: 0; padding: 4px 0 4px 34px; }
 .subnav-item {
-  display: flex; align-items: center; gap: 8px;
-  padding: 8px 10px; margin: 2px 0; border-radius: 8px;
-  color: #c9d1d9; text-decoration: none;
+  display: flex; align-items: center; gap: 8px; padding: 8px 10px; margin: 2px 0;
+  border-radius: 8px; color: #c9d1d9; text-decoration: none;
 }
-.subnav-item:hover { background: rgba(255,255,255,.06); }
-.subnav-item.active { background: rgba(56,139,253,.18); color: #58a6ff; }
+.subnav-item:hover { background: rgba(255, 255, 255, .06); }
+.subnav-item.active { background: rgba(56, 139, 253, .18); color: #58a6ff; }
 
-/* 折叠动画 */
+/* Collapse animation */
 .collapse-enter-from, .collapse-leave-to { max-height: 0; opacity: 0; }
 .collapse-enter-to, .collapse-leave-from { max-height: 180px; opacity: 1; }
 .collapse-enter-active, .collapse-leave-active { transition: all .18s ease; }

@@ -9,6 +9,7 @@ import Epic2Register from '@/pages/Epic2Register.vue'
 import LearningModule from "@/pages/LearningModule.vue";
 import LockPage from "@/pages/LockPage.vue";
 import MarineQuiz from "@/pages/MarineQuiz.vue";
+import BacteriaPatrol from '@/pages/BacteriaPatrol.vue'
 import {useAuth} from "@/assets/security/auth";
 
 const routes = [
@@ -26,16 +27,23 @@ const routes = [
         meta: {title: 'LifeBelowWater | LearningModule'}
     },
     {
+        path: '/learningModule/bacteria-patrol',
+        name: 'BacteriaPatrol',
+        component: BacteriaPatrol,
+        meta: { title: 'LifeBelowWater | Bacteria Patrol' },
+    },
+
+    {
         path: '/epic1',
-        name: 'data_hub', // 与导航栏 AppHeader.vue 的命名一致
+        name: 'data_hub', // Consistent with AppHeader.vue navigation naming
         component: WaterQuality,
         meta: {title: 'LifeBelowWater | Marine Environment Data Hub'}
     },
     {
         path: '/epic2',
-        name: 'activity', // 与导航栏命名一致
+        name: 'activity', // Consistent with navigation naming
         component: Epic2List,
-        meta: {title: 'LifeBelowWater | Volunteer Activity'}
+        meta: {title: 'LifeBelowWater | Volunteer Activity', forceRefresh: true}
     },
     {
         path: '/epic2/register/:id',
@@ -55,7 +63,13 @@ const routes = [
         component: () => import('@/pages/NearbyBeach.vue'),
         meta: {title: 'LifeBelowWater | Nearby Beach'}
     },
-    // 404
+    {
+        path: '/fish_identity',
+        name: 'fish_identity',
+        component: () => import('@/pages/FishIdentity.vue'),
+        meta: {title: 'LifeBelowWater | Fish Identity'}
+    },
+    // 404 Not Found
     {
         path: '/:pathMatch(.*)*',
         name: 'not-found',
@@ -75,8 +89,8 @@ const routes = [
 ]
 
 const router = createRouter({
-    // 如果部署在子路径，改为 createWebHistory('/子路径/')
-    history: createWebHistory('/iter2/'),
+    // If deployed in subpath, change to createWebHistory('/subpath/')
+    history: createWebHistory(import.meta.env.BASE_URL),
     routes,
     scrollBehavior(to, from, savedPosition) {
         if (savedPosition) return savedPosition
@@ -85,17 +99,22 @@ const router = createRouter({
     }
 })
 
-// 访问控制：未登录 → 锁页
+// Access control: unauthenticated users → lock page
 router.beforeEach((to) => {
-  const { isAuthed } = useAuth()
-  if (to.meta?.public) return true
-  if (isAuthed()) return true
-  sessionStorage.setItem('redirect_after_login', to.fullPath || '/home')
-  return { name: 'lock' }
+    const {isAuthed} = useAuth()
+    // If accessing lock page, allow directly
+    if (to.meta?.public || to.name === 'lock') return true
+    // If authenticated, allow
+    if (isAuthed()) return true
+    // Unauthenticated, save target path and redirect to lock page
+    if (to.path !== '/') {
+        sessionStorage.setItem('redirect_after_login', to.fullPath)
+    }
+    return {name: 'lock'}
 })
 
 
-// 动态设置页面标题
+// Dynamically set page title
 router.afterEach((to) => {
     document.title = to.meta?.title || 'LifeBelowWater'
 })

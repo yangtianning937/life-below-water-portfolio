@@ -12,6 +12,21 @@
         </span>
       </p>
 
+      <!-- button -->
+      <div class="m1__cta-row">
+        <router-link
+          class="m1__cta"
+          :to="{ name:'BacteriaPatrol' }"
+          aria-label="Go to Bacteria Patrol"
+        >
+          Protect our Bay · Bacteria Patrol
+          <svg class="m1__cta-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M5 12h14M13 5l7 7-7 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </router-link>
+      </div>
+
+
       <div class="m3__pager">
         <button class="arrow arrow--left" :disabled="page===1" @click="prevPage"><span>Previous</span></button>
         <button class="arrow arrow--right" @click="nextPage"><span>Next Page</span></button>
@@ -73,6 +88,7 @@ import {ref} from 'vue'
 import protectBay from "@/assets/images/protect-bay.png"
 import seaAnimal from "@/assets/images/sea-animal.png"
 import collectRubbish from "@/assets/images/collect-rubbish.png"
+import {RouterLink} from "vue-router";
 
 const total = 3
 const page = ref(1)
@@ -117,7 +133,7 @@ function go(n: number) {
   font-size: 1.05rem;
 }
 
-/* Page 2 列表：左侧色条强调“警示” */
+/* Page 2 列表 */
 .needs {
   margin: 8px 0 0;
   padding-left: 22px;
@@ -128,7 +144,7 @@ function go(n: number) {
   margin: 6px 0;
 }
 
-/* Page 3 列表：做成“对勾”感觉（文本样式即可） */
+/* Page 3 列表 */
 .actions {
   margin: 8px 0 0;
   padding-left: 22px;
@@ -227,6 +243,49 @@ function go(n: number) {
 .dot.active {
   background: #0ea5b5;
 }
+
+/* 容器：控制对齐方式 */
+.m1__cta-row{
+  display:flex;
+  justify-content:center;
+  margin-top: 12px;
+}
+
+/* CTA 按钮样式 */
+.m1__cta{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  padding:12px 18px;
+  border-radius:9999px;              /* 胶囊形 */
+  background:#1e40af;                /* 主题蓝 */
+  color:#fff;
+  text-decoration:none;
+  font-weight:600;
+  line-height:1;
+  box-shadow:0 8px 24px rgba(30,64,175,.28);
+  transition: transform .15s ease, box-shadow .15s ease, background-color .15s ease;
+}
+
+/* 悬停/焦点状态：可访问性 */
+.m1__cta:hover{
+  transform: translateY(-1px);
+  box-shadow:0 12px 28px rgba(30,64,175,.34);
+  background:#2138c7;
+}
+.m1__cta:focus-visible{
+  outline: 3px solid rgba(59,130,246,.6);
+  outline-offset: 2px;
+}
+
+/* 移动端占满一行；大屏保持自适应宽度 */
+@media (max-width: 640px){
+  .m1__cta{ width:100%; justify-content:center; }
+}
+
+/* 小箭头图标 */
+.m1__cta-ico{ opacity:.9; }
+
 
 /* 响应式 */
 @media (max-width: 720px) {
