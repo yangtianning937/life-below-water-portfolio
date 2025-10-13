@@ -354,6 +354,17 @@ onBeforeUnmount(() => {
     </div>
   </div>
 
+  <!-- Loading Progress Bar -->
+  <div v-if="loading" class="fixed top-0 left-0 right-0 z-50">
+    <div class="h-1 bg-gradient-to-r from-blue-100 via-teal-100 to-blue-100 relative overflow-hidden">
+      <div class="h-full bg-gradient-to-r from-blue-500 via-cyan-400 to-teal-500 relative"
+           style="animation: progress 2s ease-in-out infinite;">
+        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-30"
+             style="animation: shimmer 1.5s ease-in-out infinite;"></div>
+      </div>
+    </div>
+  </div>
+
   <!-- Dashboard -->
   <section id="main-content" class="container mx-auto px-3 lg:px-4 py-2 space-y-2">
     <!-- Status Row -->
@@ -523,6 +534,31 @@ onBeforeUnmount(() => {
 /* Text clamping */
 .line-clamp-1 { display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
 .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+/* Loading Progress Bar Animation */
+@keyframes progress {
+  0% {
+    width: 0%;
+    background-position: 0% 50%;
+  }
+  50% {
+    width: 70%;
+    background-position: 100% 50%;
+  }
+  100% {
+    width: 100%;
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
 
 /* Responsive columns (wider first column) */
 #dashboard-grid { grid-template-columns: 1fr; }

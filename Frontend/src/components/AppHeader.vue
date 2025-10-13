@@ -76,7 +76,7 @@ const navigateTo = (routeName: string) => {
       </button>
 
       <button
-        @click="router.push('/')"
+        @click="router.push({ name: 'home' })"
         class="font-extrabold text-base md:text-lg text-white flex justify-center items-center gap-2 hover:opacity-80 transition-opacity"
       >
         <div class="w-12 rounded-lg overflow-hidden ring-1 ring-white/15">
