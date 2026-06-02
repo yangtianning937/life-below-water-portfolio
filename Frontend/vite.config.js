@@ -6,7 +6,7 @@ import path from 'path'
 export default defineConfig(({mode}) => {
     const env = loadEnv(mode, process.cwd(), '')
     return {
-        base: '/iter3/',
+        base: mode === 'production' ? '/Life-Below-Water_TA26/' : '/',
         plugins: [vue()],
         resolve: {
             alias: {
