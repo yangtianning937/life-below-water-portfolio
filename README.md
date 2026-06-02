@@ -1,253 +1,192 @@
-# Life Below Water – Port Phillip Bay Education Website
+# Life Below Water - Marine Environment Data Platform
 
-## Project Overview
-This project was developed as part of **FIT5120 (Final Project)**.  
-Our goal was to design and build an interactive and educational website for children aged **10–12 years old**, focusing on **Port Phillip Bay in Melbourne, Australia**.
+This project is a marine environment education and data display platform focused on **Port Phillip Bay** in Melbourne, Australia. It was built as a team project for a Monash University course and is now organized as a portfolio project.
 
-The website presents engaging and age-appropriate information about:
-- The geography of Port Phillip Bay
-- Its marine life and biodiversity
-- Environmental challenges (e.g., pollution, conservation)
-- Fun facts and activities designed to help children learn while exploring
+The website combines ocean protection education, water quality information, nearby beach recommendations, volunteer activities, quizzes, and a fish identity feature. The goal is to help users understand marine environmental issues in a clearer and more interactive way.
 
-By combining clear educational content with an interactive design, the project supports awareness and understanding of the importance of **sustainable ecosystems** and aligns with the UN Sustainable Development Goal: **Life Below Water**.
+## Live Demo
 
----
+[https://yangtianning937.github.io/life-below-water-portfolio/](https://yangtianning937.github.io/life-below-water-portfolio/)
 
-## Features
-- **Kid-friendly design**: Simple language, visuals, and interactive activities for ages 10–12
-- **Informative content**: Facts about Port Phillip Bay's marine life, history, and environmental concerns
-- **Interactive learning modules**: Step-by-step educational content with quizzes and activities
-- **Marine quiz system**: Comprehensive quiz with multiple question types (MCQ, True/False, Matching, Picture identification)
-- **Water quality data visualization**: Interactive Tableau dashboards showing environmental data
-- **Volunteer activity management**: Registration system for environmental activities
-- **Fish identification tool**: AI-powered marine life recognition
-- **Nearby beach finder**: Location-based beach recommendations with activities
-- **Responsive design**: Accessible across desktop, tablet, and mobile devices
+Note: the GitHub Pages demo deploys the frontend as a static website. Features that depend on backend APIs may require the FastAPI backend to run separately.
 
----
+## Project Highlights
 
-## Technologies Used
+- Built a multi-page Vue application around the theme of **Life Below Water**
+- Designed learning pages for marine ecosystems, Port Phillip Bay beaches, and ocean protection
+- Integrated water quality data display and Tableau visualization
+- Added nearby beach search and recommendation features based on location data
+- Created a volunteer activity module with activity listing and registration flow
+- Developed a Marine Quiz with multiple question types and score feedback
+- Added a Fish Buddy feature that generates a personalized fish identity and avatar-style result
+- Deployed the frontend to GitHub Pages for online portfolio display
+
+## Main Features
+
+### 1. Home Page
+
+The home page introduces the Port Phillip Protectors theme and guides users to different parts of the platform. It includes marine facts, activity cards, and basic explanations of water quality indicators such as dissolved oxygen, salinity, nitrogen, phosphorus, and suspended solids.
+
+### 2. Learning Module
+
+The learning module is designed for simple and guided ocean education. It includes:
+
+- Introduction to marine ecosystems
+- Beaches near Port Phillip Bay
+- Ways to protect the bay
+- A learning quiz section
+
+The module uses tabs, progress indicators, images, and quiz components to make the content easier to follow.
+
+### 3. Water Quality Page
+
+The project includes a water quality page with an embedded Tableau dashboard. This page helps users explore environmental data in a visual way instead of reading raw data tables.
+
+### 4. Nearby Beach Finder
+
+The nearby beach feature allows users to search for a place or use their current location. It connects with location-related APIs and displays:
+
+- Nearest beach information
+- Beach images
+- Recommended activities
+- Nearby attractions
+- Nearby restaurants
+
+### 5. Volunteer Activity Module
+
+The activity module shows environmental activities such as clean-ups and learning events. Users can browse activity details and complete a registration form.
+
+### 6. Marine Quiz
+
+The Marine Quiz includes several question types:
+
+- Multiple choice
+- True or false
+- Matching
+- Picture identification
+
+It gives immediate answer feedback, tracks progress, and shows a final score after submission.
+
+### 7. Fish Buddy
+
+The Fish Buddy feature asks the user for basic input such as name, energy level, and personality traits. It then creates a personalized fish identity result and displays a real fish image together with a cartoon-style avatar area.
+
+## Tech Stack
 
 ### Frontend
-- **Vue.js 3**: Modern reactive framework with Composition API
-- **Vue Router**: Client-side routing and navigation
-- **Vite**: Fast build tool and development server
-- **Tailwind CSS**: Utility-first CSS framework for styling
-- **Chart.js**: Data visualization and charting library
-- **Leaflet**: Interactive maps for location features
-- **Axios**: HTTP client for API requests
+
+- Vue 3
+- Vite
+- Vue Router
+- JavaScript / TypeScript
+- Tailwind CSS
+- Chart.js
+- Leaflet
+- Axios
 
 ### Backend
-- **FastAPI**: Modern Python web framework for APIs
-- **SQLAlchemy**: Python SQL toolkit and ORM
-- **Uvicorn**: ASGI server for FastAPI
-- **Pandas**: Data manipulation and analysis
-- **NumPy**: Numerical computing
-- **PyTorch**: Machine learning framework for AI features
-- **Pillow**: Python imaging library
 
-### Data & Visualization
-- **Tableau**: Interactive data visualization dashboards
-- **CSV**: Data storage and management
-- **Papa Parse**: CSV parsing in the frontend
+- FastAPI
+- Python
+- SQLAlchemy
+- Pydantic
+- Uvicorn
+- CSV data processing
+- Google Places / geocoding related services
+- PyTorch model files for recommendation and fish-related features
 
----
+### Data and Visualization
+
+- Tableau public dashboard
+- CSV files for activity, site, fish, and water quality data
+- Static image assets for learning modules and quiz pages
 
 ## Project Structure
-```
-Life-Below-Water_TA26/
-├── Frontend/                      # Vue.js frontend application
+
+```text
+Life-Below-Water/
+├── Frontend/                 # Vue 3 frontend application
 │   ├── src/
-│   │   ├── components/            # Reusable Vue components
-│   │   │   ├── epic1/            # Epic 1 specific components
-│   │   │   ├── learning/         # Learning module components
-│   │   │   ├── decorations/      # UI decoration components
-│   │   │   ├── AppHeader.vue     # Main header component
-│   │   │   ├── AppFooter.vue     # Main footer component
-│   │   │   └── FullscreenMessage.vue  # Error/message modal
-│   │   ├── pages/                # Page components
-│   │   │   ├── HomePage.vue      # Landing page
-│   │   │   ├── FishIdentity.vue  # Fish buddy generator
-│   │   │   ├── BacteriaPatrol.vue # Water quality dashboard
-│   │   │   ├── Epic1Page.vue     # Data visualization page
-│   │   │   ├── Epic2List.vue     # Activity listing
-│   │   │   ├── Epic2Register.vue # Activity registration
-│   │   │   ├── LearningModule.vue # Educational modules
-│   │   │   ├── MarineQuiz.vue    # Marine life quiz
-│   │   │   ├── NearbyBeach.vue   # Beach finder
-│   │   │   └── LockPage.vue      # Access control page
-│   │   ├── router/               # Vue Router configuration
-│   │   │   └── index.js          # Route definitions
-│   │   ├── assets/               # Static assets and utilities
-│   │   │   ├── ts/              # TypeScript utilities
-│   │   │   ├── images/          # Image assets
-│   │   │   ├── security/        # Security utilities
-│   │   │   └── global.css       # Global styles
-│   │   ├── data/                # Quiz data and CSV files
-│   │   │   ├── learningQuiz.js  # Learning module quizzes
-│   │   │   ├── marineQuiz.js    # Marine life quizzes
-│   │   │   └── *.csv            # Water quality data
-│   │   ├── utils/               # Utility functions
-│   │   └── main.js              # Application entry point
-│   ├── public/                  # Public static files
-│   │   ├── learning/            # Learning module assets
-│   │   └── quiz/                # Quiz images
-│   ├── dist/                    # Production build output
-│   ├── package.json             # Frontend dependencies
-│   ├── vite.config.js           # Vite configuration
-│   └── tailwind.config.js       # Tailwind CSS configuration
+│   │   ├── pages/            # Main pages such as Home, Quiz, Nearby Beach
+│   │   ├── components/       # Reusable UI and learning components
+│   │   ├── assets/           # Images, styles, API utilities, auth logic
+│   │   ├── data/             # Quiz data and frontend CSV data
+│   │   ├── router/           # Vue Router configuration
+│   │   └── main.js           # Frontend entry file
+│   ├── public/               # Static images for learning and quiz pages
+│   ├── package.json
+│   └── vite.config.js
 │
-├── Backend/                     # FastAPI backend application
-│   ├── db/                      # Database layer
-│   │   ├── db.py               # Database connection
-│   │   └── models.py           # SQLAlchemy models
-│   ├── data/                    # CSV data files
-│   │   ├── activity_data.csv   # Activity information
-│   │   ├── fish_names.csv      # Fish species data
-│   │   ├── site_metadata.csv   # Site information
-│   │   └── water_quality_data.csv # Water quality records
-│   ├── fish/                    # Fish identity system
-│   │   ├── info.py             # Fish identity generation
-│   │   ├── avatar.py           # Image cartoon processing
-│   │   └── fne.pt              # PyTorch model weights
-│   ├── recommend/               # AI recommendation system
-│   │   ├── model.py            # Recommendation model
-│   │   ├── process.py          # Processing pipeline
-│   │   └── fav2.pt             # Model weights
-│   ├── geocode/                 # Geocoding services
-│   │   └── geocode.py          # Google Maps API integration
-│   ├── utils/                   # Utility functions
-│   │   └── csv_utils.py        # CSV processing utilities
-│   ├── img/                     # Image assets
-│   ├── dist/                    # Frontend production build
-│   ├── main.py                  # FastAPI application entry point
-│   ├── request_model.py         # Pydantic request models
-│   ├── dynamic_cors_middleware.py # CORS middleware
-│   ├── fish_mapping.py          # Fish data mapping
-│   └── requirements.txt         # Python dependencies
+├── Backend/                  # FastAPI backend application
+│   ├── main.py               # API entry point
+│   ├── request_model.py      # Pydantic request models
+│   ├── db/                   # Database connection and models
+│   ├── data/                 # CSV data files
+│   ├── fish/                 # Fish identity and avatar logic
+│   ├── geocode/              # Location and place search services
+│   ├── recommend/            # Beach recommendation logic
+│   └── requirements.txt
 │
-└── AI/                          # Data processing and ML models
-    ├── data_processing_code/    # Data analysis notebooks
-    │   ├── e1_datap_code.ipynb # Data processing
-    │   ├── site_averages_recent_year_lll.csv
-    │   └── water_quality_classified_lll.csv
-    ├── e3_model/                # Recommendation model
-    │   ├── main.ipynb          # Model training
-    │   └── model.py            # Model definition
-    ├── fish.ipynb              # Fish identity experiments
-    └── fne.pt                  # Fish neural network weights
+└── AI/                       # Data processing and model notebooks
 ```
-
----
-
-## Team Members
-- **Aaditya Sharma**
-- **Haojun Huang**
-- **Tianning**
-- **Yixuan**
-- **Napatcha**
-- **Vida Zhang**
-
----
 
 ## How to Run Locally
 
-### Prerequisites
-- Node.js (v16 or higher)
-- Python (v3.8 or higher)
-- Git
+### Frontend
 
-### Frontend Setup
-1. Navigate to the Frontend directory:
-   ```bash
-   cd Frontend
-   ```
+```bash
+cd Frontend
+npm install
+npm run dev
+```
 
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
+Then open:
 
-3. Start the development server:
-   ```bash
-   npm run dev
-   ```
+```text
+http://localhost:8080
+```
 
-4. Open your browser and navigate to `http://localhost:5173`
+### Backend
 
-### Backend Setup
-1. Navigate to the Backend directory:
-   ```bash
-   cd Backend
-   ```
+```bash
+cd Backend
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+python -m uvicorn main:app --reload --port 8000
+```
 
-2. Create a virtual environment:
-   ```bash
-   python -m venv venv
-   ```
+The backend API will run at:
 
-3. Activate the virtual environment:
-   ```bash
-   # On Windows
-   venv\Scripts\activate
-   
-   # On macOS/Linux
-   source venv/bin/activate
-   ```
+```text
+http://localhost:8000/api
+```
 
-4. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
+## Build for Production
 
-5. Start the FastAPI server:
-   ```bash
-   python main.py
-   ```
-
-6. The API will be available at `http://localhost:8000`
-
-### Production Build
-To build the frontend for production:
 ```bash
 cd Frontend
 npm run build
 ```
 
-The built files will be in the `dist/` directory.
+The production files will be generated in:
 
----
+```text
+Frontend/dist
+```
 
-## Key Features Documentation
+## Deployment
 
-### Learning Modules
-- **Introduction Module**: Overview of Port Phillip Bay and marine ecosystems
-- **Beaches Module**: Information about local beaches and safety guidelines
-- **Protection Module**: Environmental conservation and protection strategies
+The portfolio version is deployed with GitHub Pages. The frontend build output is published from the `gh-pages` branch.
 
-### Quiz System
-- Multiple question types: Multiple Choice, True/False, Matching, Picture Identification
-- Age-appropriate content for 10-12 year olds
-- Immediate feedback and scoring system
-- Progress tracking and completion certificates
+Main website:
 
-### Data Visualization
-- Interactive Tableau dashboards for water quality data
-- Real-time environmental monitoring information
-- Historical data trends and analysis
+[https://yangtianning937.github.io/life-below-water-portfolio/](https://yangtianning937.github.io/life-below-water-portfolio/)
 
-### AI Features
-- Fish identification using computer vision
-- Recommendation system for activities and locations
-- Image processing for marine life recognition
+## My Contributions
 
----
+My work mainly focused on frontend development, page implementation, route configuration, UI adjustment, API integration, and portfolio deployment. I worked with Vue pages and components, connected frontend views with backend data interfaces, improved the display of learning and quiz modules, and deployed the project as an online portfolio using GitHub Pages.
 
-## Contributing
-This is an educational project developed for FIT5120. For questions or contributions, please contact the team members.
+## Team Project Context
 
----
-
-## License
-This project is developed for educational purposes as part of the FIT5120 Final Project.
+This was originally a team project. The repository has been reorganized and deployed as a personal portfolio version to show the project outcome, technical structure, and my development experience.
