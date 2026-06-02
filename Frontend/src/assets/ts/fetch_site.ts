@@ -1,11 +1,13 @@
 import {api_prefix} from "./api_perfix";
+import {staticSites} from "./staticFallback";
 
 /**
  * @method fetch_sites
  * @return Returns the Promise of Data as shown below or return null if request failed.
  */
 export async function fetch_sites(): Promise<any> {
-    return await fetch(`${api_prefix()}/sites`,
+    try {
+        return await fetch(`${api_prefix()}/sites`,
         {mode: 'cors'})
         .then(async r => {
             switch (r.status) {
@@ -13,9 +15,12 @@ export async function fetch_sites(): Promise<any> {
                     return await r.json()
                         .then(json => json);
                 default:
-                    return null;
+                    return staticSites;
             }
         })
+    } catch {
+        return staticSites;
+    }
 }
 /*
 [

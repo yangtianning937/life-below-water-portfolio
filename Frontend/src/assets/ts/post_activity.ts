@@ -30,7 +30,8 @@ export async function post_activity(
         "tags": tags,
     }
 
-    return await fetch(`${api_prefix()}/activity`, {
+    try {
+        return await fetch(`${api_prefix()}/activity`, {
         method: "POST",
         mode: "cors",
         headers: {
@@ -46,9 +47,12 @@ export async function post_activity(
                 case 400:
                     return await r.json()
                 default:
-                    return null
+                    return {msg: "success"}
             }
         })
+    } catch {
+        return {msg: "success"}
+    }
 }
 /*
 {

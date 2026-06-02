@@ -1,4 +1,5 @@
 import {api_prefix} from "./api_perfix";
+import {staticPlacesAutocomplete} from "./staticFallback";
 
 /**
  * @function fetch_places_autocomplete
@@ -22,12 +23,16 @@ export async function fetch_places_autocomplete(
               `&limit=${limit}` +
               `&language=${encodeURIComponent(language)}`;
 
-  return await fetch(url, { mode: "cors" }).then(async (r) => {
-    switch (r.status) {
-      case 200:
-        return await r.json().then((json) => json);
-      default:
-        return null;
-    }
-  });
+  try {
+    return await fetch(url, { mode: "cors" }).then(async (r) => {
+      switch (r.status) {
+        case 200:
+          return await r.json().then((json) => json);
+        default:
+          return staticPlacesAutocomplete(q, limit);
+      }
+    });
+  } catch {
+    return staticPlacesAutocomplete(q, limit);
+  }
 }

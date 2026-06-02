@@ -6,7 +6,8 @@ import {api_prefix} from "./api_perfix";
  * @return Returns the Promise of Data containing cartoon_image or null if request failed
  */
 export async function fetch_fish_avatar(species_en: string): Promise<any> {
-    return await fetch(`${api_prefix()}/fish/avatar`, {
+    try {
+        return await fetch(`${api_prefix()}/fish/avatar`, {
         method: 'POST',
         mode: 'cors',
         headers: {
@@ -23,4 +24,7 @@ export async function fetch_fish_avatar(species_en: string): Promise<any> {
                     return null;
             }
         })
+    } catch {
+        return null;
+    }
 }

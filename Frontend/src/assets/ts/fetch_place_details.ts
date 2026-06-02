@@ -1,4 +1,5 @@
 import {api_prefix} from "./api_perfix";
+import {staticPlaceDetails} from "./staticFallback";
 
 /**
  * @function fetch_place_details
@@ -18,12 +19,16 @@ export async function fetch_place_details(
     `?place_id=${encodeURIComponent(place_id)}` +
     `&language=${encodeURIComponent(language)}`;
 
-  return await fetch(url, { mode: "cors" }).then(async (r) => {
-    switch (r.status) {
-      case 200:
-        return await r.json().then((json) => json);
-      default:
-        return null;
-    }
-  });
+  try {
+    return await fetch(url, { mode: "cors" }).then(async (r) => {
+      switch (r.status) {
+        case 200:
+          return await r.json().then((json) => json);
+        default:
+          return staticPlaceDetails(place_id);
+      }
+    });
+  } catch {
+    return staticPlaceDetails(place_id);
+  }
 }

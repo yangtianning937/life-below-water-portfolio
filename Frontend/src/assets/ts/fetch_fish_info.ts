@@ -1,4 +1,5 @@
 import {api_prefix} from "./api_perfix";
+import {staticFishInfo} from "./staticFallback";
 
 /**
  * @method fetch_fish_info
@@ -6,7 +7,8 @@ import {api_prefix} from "./api_perfix";
  * @return Returns the Promise of Data as shown below or return null if request failed.
  */
 export async function fetch_fish_info(name: string): Promise<any> {
-    return await fetch(`${api_prefix()}/fish/info/${name}`,
+    try {
+        return await fetch(`${api_prefix()}/fish/info/${name}`,
         {mode: 'cors'})
         .then(async r => {
             switch (r.status) {
@@ -14,7 +16,10 @@ export async function fetch_fish_info(name: string): Promise<any> {
                     return await r.json()
                         .then(json => json);
                 default:
-                    return null;
+                    return staticFishInfo(name);
             }
         })
+    } catch {
+        return staticFishInfo(name);
+    }
 }

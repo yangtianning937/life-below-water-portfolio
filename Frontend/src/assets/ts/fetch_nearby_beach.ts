@@ -1,4 +1,5 @@
 import {api_prefix} from "./api_perfix";
+import {staticNearbyBeach} from "./staticFallback";
 
 /**
  * @method fetch_nearby_beach
@@ -8,7 +9,8 @@ import {api_prefix} from "./api_perfix";
  */
 export async function fetch_nearby_beach(latitude: string | number,
                                          longitude: string | number): Promise<any> {
-    return await fetch(`${api_prefix()}/nearby/${latitude}/${longitude}`,
+    try {
+        return await fetch(`${api_prefix()}/nearby/${latitude}/${longitude}`,
         {mode: 'cors'})
         .then(async r => {
             switch (r.status) {
@@ -16,9 +18,12 @@ export async function fetch_nearby_beach(latitude: string | number,
                     return await r.json()
                         .then(json => json);
                 default:
-                    return null;
+                    return staticNearbyBeach(latitude, longitude);
             }
         })
+    } catch {
+        return staticNearbyBeach(latitude, longitude);
+    }
 }
 /*
 [

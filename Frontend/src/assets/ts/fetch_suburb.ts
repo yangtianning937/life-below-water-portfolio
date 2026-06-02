@@ -1,4 +1,5 @@
 import {api_prefix} from "./api_perfix";
+import {staticSuburb} from "./staticFallback";
 
 /**
  * @method fetch_suburb
@@ -8,7 +9,8 @@ import {api_prefix} from "./api_perfix";
  */
 export async function fetch_suburb(latitude: string | number,
                                          longitude: string | number): Promise<any> {
-    return await fetch(`${api_prefix()}/reverse_geocode/${latitude}/${longitude}`,
+    try {
+        return await fetch(`${api_prefix()}/reverse_geocode/${latitude}/${longitude}`,
         {mode: 'cors'})
         .then(async r => {
             switch (r.status) {
@@ -16,9 +18,12 @@ export async function fetch_suburb(latitude: string | number,
                     return await r.json()
                         .then(json => json);
                 default:
-                    return null;
+                    return staticSuburb(latitude, longitude);
             }
         })
+    } catch {
+        return staticSuburb(latitude, longitude);
+    }
 }
 /*
 {"suburbName":"Manly","state":"New South Wales","postcode":"2095","confidence":0.95,"source":"google"}

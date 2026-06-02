@@ -1,4 +1,5 @@
 import {api_prefix} from "./api_perfix";
+import {staticPlaceDetails, staticPlacesAutocomplete} from "./staticFallback";
 
 /**
  * @function fetch_places_find
@@ -20,12 +21,19 @@ export async function fetch_places_find(
               `&country=${encodeURIComponent(country)}` +
               `&language=${encodeURIComponent(language)}`;
 
-  return await fetch(url, { mode: "cors" }).then(async (r) => {
-    switch (r.status) {
-      case 200:
-        return await r.json().then((json) => json);
-      default:
-        return null;
-    }
-  });
+  try {
+    return await fetch(url, { mode: "cors" }).then(async (r) => {
+      switch (r.status) {
+        case 200:
+          return await r.json().then((json) => json);
+        default: {
+          const first = staticPlacesAutocomplete(q, 1).suggestions[0];
+          return first ? staticPlaceDetails(first.place_id) : null;
+        }
+      }
+    });
+  } catch {
+    const first = staticPlacesAutocomplete(q, 1).suggestions[0];
+    return first ? staticPlaceDetails(first.place_id) : null;
+  }
 }

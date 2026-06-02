@@ -1,5 +1,6 @@
 import {format_date} from "./utils";
 import {api_prefix} from "./api_perfix";
+import {staticWaterQuality} from "./staticFallback";
 
 /**
  * @method fetch_water_quality
@@ -8,10 +9,11 @@ import {api_prefix} from "./api_perfix";
  * @return Returns the Promise of Data as shown below or return null if request failed.
  */
 export async function fetch_water_quality(site_id: number | string, date?: Date): Promise<any> {
-    if (date) {
-        let formatted_date = format_date(date, "yyyy-MM-dd");
-        console.log(formatted_date);
-        return await fetch(`${api_prefix()}/water_quality/${site_id}/date/${formatted_date}`,
+    try {
+        if (date) {
+            let formatted_date = format_date(date, "yyyy-MM-dd");
+            console.log(formatted_date);
+            return await fetch(`${api_prefix()}/water_quality/${site_id}/date/${formatted_date}`,
             {mode: "cors"})
             .then(async r => {
                 switch (r.status) {
@@ -19,11 +21,11 @@ export async function fetch_water_quality(site_id: number | string, date?: Date)
                         return await r.json()
                             .then(json => json);
                     default:
-                        return null;
+                        return staticWaterQuality(site_id);
                 }
             })
-    } else {
-        return await fetch(`${api_prefix()}/water_quality/${site_id}`,
+        } else {
+            return await fetch(`${api_prefix()}/water_quality/${site_id}`,
             {mode: "no-cors"})
             .then(async r => {
                 switch (r.status) {
@@ -31,9 +33,12 @@ export async function fetch_water_quality(site_id: number | string, date?: Date)
                         return await r.json()
                             .then(json => json);
                     default:
-                        return null;
+                        return staticWaterQuality(site_id);
                 }
             })
+        }
+    } catch {
+        return staticWaterQuality(site_id);
     }
 }
 /*

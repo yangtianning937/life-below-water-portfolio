@@ -14,7 +14,7 @@ Demo password:
 TA26
 ```
 
-Note: the GitHub Pages demo deploys the frontend as a static website. Features that depend on backend APIs may require the FastAPI backend to run separately.
+Note: the GitHub Pages demo deploys the frontend as a static website. To keep the portfolio demo usable without a running backend server, the frontend falls back to static demo data for activities, beach recommendations, place search, water quality samples, and Fish Buddy results when API requests are unavailable.
 
 ## Project Highlights
 

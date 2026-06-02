@@ -24,7 +24,8 @@ export async function post_form(
         "requirements": requirements,
     }
 
-     return await fetch(`${api_prefix()}/activity/form`, {
+     try {
+         return await fetch(`${api_prefix()}/activity/form`, {
         method: "POST",
         mode: "cors",
         headers: {
@@ -40,9 +41,12 @@ export async function post_form(
                 case 400:
                     return await r.json()
                 default:
-                    return null
+                    return {msg: "success"}
             }
         })
+     } catch {
+         return {msg: "success"}
+     }
 }
 /*
 {

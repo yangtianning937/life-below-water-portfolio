@@ -1,4 +1,5 @@
 import {api_prefix} from "./api_perfix";
+import {staticActivity} from "./staticFallback";
 
 /**
  * @method fetch_activity
@@ -6,8 +7,9 @@ import {api_prefix} from "./api_perfix";
  * @return Returns the Promise of Data as shown below or return null if request failed.
  */
 export async function fetch_activity(id?: number | string): Promise<any> {
-    if (id) {
-        return await fetch(`${api_prefix()}/activity/${id}`,
+    try {
+        if (id) {
+            return await fetch(`${api_prefix()}/activity/${id}`,
             {mode: 'cors'})
             .then(async r => {
                 switch (r.status) {
@@ -15,11 +17,11 @@ export async function fetch_activity(id?: number | string): Promise<any> {
                         return await r.json()
                             .then(json => json);
                     default:
-                        return null;
+                        return staticActivity(id);
                 }
             })
-    } else {
-        return await fetch(`${api_prefix()}/activity`,
+        } else {
+            return await fetch(`${api_prefix()}/activity`,
             {mode: 'cors'})
             .then(async r => {
                 switch (r.status) {
@@ -27,9 +29,12 @@ export async function fetch_activity(id?: number | string): Promise<any> {
                         return await r.json()
                             .then(json => json);
                     default:
-                        return null;
+                        return staticActivity();
                 }
             })
+        }
+    } catch {
+        return staticActivity(id);
     }
 }
 /*

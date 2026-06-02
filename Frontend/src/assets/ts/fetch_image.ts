@@ -1,8 +1,10 @@
 import {api_prefix} from "./api_perfix";
 import {arraybuffer_to_base64} from "./utils";
+import {staticImage} from "./staticFallback";
 
 export async function fetch_image(name: string): Promise<any> {
-    return await fetch(`${api_prefix()}/image/${name}`,
+    try {
+        return await fetch(`${api_prefix()}/image/${name}`,
         {mode: 'cors'})
         .then(async r => {
             switch (r.status) {
@@ -17,7 +19,10 @@ export async function fetch_image(name: string): Promise<any> {
                         return null;
                     }
                 default:
-                    return null;
+                    return staticImage(name);
             }
         })
+    } catch {
+        return staticImage(name);
+    }
 }
