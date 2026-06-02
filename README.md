@@ -8,6 +8,12 @@ The website combines ocean protection education, water quality information, near
 
 [https://yangtianning937.github.io/life-below-water-portfolio/](https://yangtianning937.github.io/life-below-water-portfolio/)
 
+Demo password:
+
+```text
+TA26
+```
+
 Note: the GitHub Pages demo deploys the frontend as a static website. Features that depend on backend APIs may require the FastAPI backend to run separately.
 
 ## Project Highlights
