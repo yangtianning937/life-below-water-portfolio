@@ -7,7 +7,7 @@ from typing import Dict, Tuple, List
 
 import httpx
 
-API_KEY = os.getenv("GOOGLE_MAPS_API_KEY", "AIzaSyDupqg3HPeQuhG5M8YaIFou9Vi0d27CKgQ")
+API_KEY = os.getenv("GOOGLE_MAPS_API_KEY", "")
 
 GEOCODE_TTL = 24 * 60 * 60
 PLACES_TTL  = 6  * 60 * 60

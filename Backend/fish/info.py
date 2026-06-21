@@ -1,4 +1,5 @@
 import hashlib
+import os
 import random
 from typing import Dict, Any, List
 import requests
@@ -7,10 +8,9 @@ import json
 # ==============================================================================
 # Step 1: External Configuration and Marine Life Data
 # ==============================================================================
-# API Key for Google Custom Search (Needs replacement with a real key)
-GOOGLE_API_KEY = "AIzaSyDDW8g-uFNF-R8n4mXAw6jvZAY9wJ5gbqw"
-# Custom Search Engine ID (CX) configured for Wikipedia
-GOOGLE_CSE_ID = "b1f49115b44814094"
+# API Key and Custom Search Engine ID should be configured outside the code.
+GOOGLE_API_KEY = os.getenv("GOOGLE_CUSTOM_SEARCH_API_KEY", "")
+GOOGLE_CSE_ID = os.getenv("GOOGLE_CSE_ID", "")
 # Base URL for the Google Custom Search API (Image search)
 SEARCH_API_URL = "https://www.googleapis.com/customsearch/v1"
 
@@ -393,8 +393,7 @@ def fetch_real_fish_image(species_name_en: str) -> str:
         'safe': 'active'            # Enable safe search
     }
 
-    # Check if API keys are placeholders
-    if GOOGLE_API_KEY == "YOUR_ACTUAL_API_KEY" or GOOGLE_CSE_ID == "YOUR_ACTUAL_GOOGLE_CSE_ID":
+    if not GOOGLE_API_KEY or not GOOGLE_CSE_ID:
         # Using a placeholder image path for error
         return "images/placeholder_api_key_error.png"
 
@@ -567,4 +566,3 @@ def test_process_info():
     print(f"Personality: {personified_card['Personality']}")
     print(f"Hobbies: {personified_card['Hobbies']}")
     print(f"Special_Feature: {personified_card['Special_Feature']}")
-

@@ -1,3 +1,4 @@
+import os
 import requests
 import random
 import json
@@ -16,8 +17,7 @@ import time
 from recommend.model import Generator
 
 # Configuration
-# Replace with actual Google API Key
-GOOGLE_API_KEY = "AIzaSyBlOgil_jAHzwKulAXTeTSxW_WtpQjCicg"
+GOOGLE_API_KEY = os.getenv("GOOGLE_MAPS_API_KEY", "")
 
 # Model weight path
 # Make sure fav2.pt file is uploaded to the correct directory
